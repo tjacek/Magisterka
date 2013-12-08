@@ -12,7 +12,7 @@ def zero():
     return 0
     
 def uniform():
-    scale=8.0
+    scale=1.0
     return scale * random.uniform()
 
 class DataGenerator(object):
