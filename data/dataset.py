@@ -1,0 +1,54 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Dec  8 19:41:55 2013
+
+@author: tjacek
+"""
+import ClassiferGenerator as cg
+import arff as file
+
+def linearPredict(x,y,z):
+    if(x+y>5.0):
+        return 1.0
+    else:
+        return 0.0
+
+def nonLinearPredict(x,y,z):
+    if(x*x+y*y>10.0):
+        return 1.0
+    else:
+        return 0.0
+        
+def checkLabels(points,pred=linearPredict):
+    correct=0    
+    for point in points:
+        trueLabel=pred(point[0],point[1],point[2])
+        if(trueLabel==point[3]):
+            correct+=1
+    return correct/len(points)
+    
+def checkErrors(points,pred=nonLinearPredict):
+    falsePositives=0
+    trueNegatives=0    
+    for point in points:
+        trueLabel=pred(point[0],point[1],point[2])
+        if(trueLabel!=point[3]):
+            if(trueLabel):
+                trueNegatives+=1
+            else:
+                falsePositives+=1
+    falsePositives/=len(points)
+    trueNegatives/=len(points)
+    return falsePositives,trueNegatives
+
+def createInput(name="nonlinear.arff",pred=nonLinearPredict):
+    dataset=cg.createDataset(100,pred,5.0)
+    file.saveArff(dataset,True,"train/"+name)
+    testData=cg.createDataset(30,pred,5.0)
+    file.saveArff(testData,False,"test/"+name)   
+    
+def checkOutput(name=""):
+    path="C:/Users/tjacek/IdeaProjects/ML/"
+    data=file.parseArff(path+"test/nonlinear.arff",path+"result/nonlinearC45.arff")
+    return checkErrors(data)
+   
