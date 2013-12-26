@@ -7,7 +7,7 @@ Created on Thu Dec 26 19:05:45 2013
 import numpy as np
 import mlpy as ml
 import matplotlib.pyplot as plt
-import representation
+import representation as rep
 
 class BOW():
     def __init__(self):
@@ -79,19 +79,22 @@ def visualization(x):
     
 def itemStats(dataset):
     bowRep=createBow(dataset)
-    numList=bow.getItems()
-    avg=avarage(numList)
-    var=std(numList)
+    numList=bowRep.getItems()
+    avg=rep.avarage(numList)
+    var=rep.std(numList)
     return avg,var    
 
 def test(path="/home/user/Desktop/magisterka/transactions/mine_data"):
-    dataset=readDataset(path)
+    dataset=rep.readDataset(path)
     vectors=get2DBow(dataset)
     print(vectors)
     visualization(vectors)
 
-def test2(file):
-    dataset=readDataset(file)
+def test2(path="/home/user/Desktop/magisterka/transactions/mine_data"):
+    dataset=rep.readDataset(path)
     avg,var=itemStats(dataset)
     print(avg)
     print(var)
+
+test2()
+
