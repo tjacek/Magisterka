@@ -8,7 +8,7 @@ import numpy as np
 import mlpy as ml
 import matplotlib.pyplot as plt
 
-path="C:/Users/tjacek/Desktop/Magisterka/Magisterka/ApriorInput/mine_data"
+path="/home/user/Desktop/magisterka/transactions/mine_data"
 
 def readDataset(filename,separator=","):
     dataset=[]
@@ -53,7 +53,11 @@ def toVectors(dataset):
         vectors.append(bowRep.toVector(transaction))
     return vectors
 
-def dimReduction(x,k=2):
+def toMatrix(data):
+    return np.asarray(data)
+
+def dimReduction(vectors,k=2):
+    x=toMatrix(vectors)
     pca=ml.PCA()
     pca.learn(x)
     return pca.transform(x, k)
