@@ -7,10 +7,10 @@ double randomDouble(){
 }
 
 double linearPred(double * x){
-   if(x[0]+x[1]<10.0){
+   if(x[1]+x[2]>10.0){
        return 1.0;
    }else{
-       return 0.0;
+       return -1.0;
    }
 }
 
@@ -19,7 +19,7 @@ Dataset * generateDataset(int n,int k,double (*pred)(double*)){
     Dataset * d=makeDataset(n,k);
     int i,j;
     for(i=0;i<d->n;i++){
-        for(j=0;j<d->k;j++){
+        for(j=1;j<d->k;j++){
             d->samples[i][j]=randomDouble();
         }
         d->labels[i]=pred(d->samples[i]);
@@ -28,13 +28,12 @@ Dataset * generateDataset(int n,int k,double (*pred)(double*)){
 }
 
 Dataset * separableDataset(int n){
-    return generateDataset(n,3,linearPred);
+    return generateDataset(n,2,linearPred);
 }
 
 int main(){
-   int n=4;
-   Dataset * d=separableDataset(10);
+   Dataset * d=separableDataset(100);
    printDataset(d);
-   Perceptron * p=train(d,0.5,10);
+   Perceptron * p=train(d,0.01,0.1,1000);
    printPercept(p);
 }

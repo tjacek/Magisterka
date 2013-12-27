@@ -4,7 +4,6 @@
 typedef struct Perceptron{
    int n;
    double * w;
-   double b;
    double threshold;
 } Perceptron;
 
@@ -13,7 +12,6 @@ void clean(Perceptron * p){
     for(i=0;i<p->n;i++){
        p->w[i]=0.0;
     }
-    p->b=0.0;
 }
 
 Perceptron * makePerceptron(int n){
@@ -28,10 +26,10 @@ Perceptron * makePerceptron(int n){
 double sum(Perceptron * p,double * x){
     double u=0.0;
     int i;
-    for(i=1;i<p->n;i++){
+    for(i=0;i<p->n;i++){
         u+=p->w[i]*x[i];
     }
-    return u+p->w[0];
+    return u;
 }
 
 int activation(Perceptron * p,double * x){
@@ -39,7 +37,7 @@ int activation(Perceptron * p,double * x){
     if(u>p->threshold){
         return 1.0;
     }else{
-        return 0.0;
+        return -1.0;
     }
 } 
 

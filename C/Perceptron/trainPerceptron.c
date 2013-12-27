@@ -16,14 +16,18 @@ double x(Dataset * d,int i,int j){
 Dataset * makeDataset(int n,int k){
     Dataset *d=(Dataset*) malloc(sizeof(Dataset));
     d->n=n;
-    d->k=k;
+    d->k=k+1;
     int i,j;
     d->samples=(double **) malloc(n*sizeof(double*));
     d->labels=(double *) malloc(n*sizeof(double));
     for(i=0;i<n;i++){
-        d->samples[i]=(double *) malloc(k*sizeof(double));
-        for(j=0;j<k;j++){
-            d->samples[i][j]=0.0; 
+        d->samples[i]=(double *) malloc(d->k*sizeof(double));
+        for(j=0;j<d->k;j++){
+            if(j!=0){
+               d->samples[i][j]=0.0;
+            }else{
+               d->samples[i][j]=1.0;
+            } 
         }
         d->labels[i]=0.0;
     }
@@ -51,13 +55,11 @@ double * currentOutput(Dataset *d,Perceptron * p){
 
 void updateWeights(Dataset * d,Perceptron * p,double * y,double alpha){
     int i,j;
-    for(i=0;i<p->n;i++){
-        double update=0.0;
-        for(j=0;j<d->k;j++){
-            update+=(d->labels[j]-y[j]) *x(d,i,j);
-        }
-        update*=alpha;
-        p->w[i]+=update;
+    for(i=0;i<d->n;i++){
+        double delta= d->labels[i] -y[i];              
+        for(j=0;j<p->n;j++){
+            p->w[j]= p->w[j] + alpha * delta * d->samples[i][j];
+        }    
     }
 }
 
@@ -72,18 +74,22 @@ double error(Dataset * d,double * y){
     double * l=d->labels;
     int i;
     for(i=0;i<d->n;i++){
-        err=abs(y[i] - l[i]);
+        if(y[i]!=l[i]){
+           err+=1.0;
+        }
     }
     err/=d->n; 
     return err;
 }
 
-Perceptron * train(Dataset * d,double alpha,int maxIter){
+Perceptron * train(Dataset * d,double alpha,double maxErr,int maxIter){
     int iter=0;
+    double err=1.0;
     Perceptron * p=makePerceptron(d->k);
-    while(iter<maxIter){
+    while(iter<maxIter && err>maxErr){
         double * y=step(d,p,alpha);
-        printf("%d %f \n",iter,error(d,y));
+        err=error(d,y);
+        printf("%d %f \n",iter,err);
         iter+=1;
     }
     return p;
