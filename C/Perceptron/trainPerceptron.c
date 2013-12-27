@@ -94,3 +94,7 @@ Perceptron * train(Dataset * d,double alpha,double maxErr,int maxIter){
     }
     return p;
 }
+
+Perceptron * train(Dataset * d,double alpha){
+    return train(d,alpha,0.1,1000);
+}
