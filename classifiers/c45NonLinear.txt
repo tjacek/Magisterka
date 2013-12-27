@@ -1,0 +1,10 @@
+{classifier,c45,
+            [{attribute,z,continuous,{min,max}},
+             {attribute,x,continuous,{min,max}},
+             {attribute,y,continuous,{min,max}}],
+            {class,cat,[],[true,false]},
+            {root,root,
+                  [{z,{"<",1.35},{leaf,false}},
+                   {z,{">=",1.35},
+                      [{x,{"<",1.75},{leaf,false}},
+                       {x,{">=",1.75},{leaf,true}}]}]}}

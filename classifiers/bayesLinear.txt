@@ -1,0 +1,27 @@
+{classifier,naive_bayes,
+    [{attribute,z,continuous,{min,max}},
+     {attribute,x,continuous,{min,max}},
+     {attribute,y,continuous,{min,max}}],
+    {class,cat,[],[true,false]},
+    {nbClassifier,
+        {dict,2,16,16,8,80,48,
+            {[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]},
+            {{[],[],[],[],[],
+              [[false|59.0],[true|41.0]],
+              [],[],[],[],[],[],[],[],[],[]}}},
+        {dict,6,16,16,8,80,48,
+            {[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]},
+            {{[],[],[],[],[],[],[],[],[],[],[],
+              [[{false,{attribute,x,continuous,{min,max}}}|
+                {1.8271186440677967,1.478907071887785}],
+               [{true,{attribute,x,continuous,{min,max}}}|
+                {2.9682926829268284,1.3272195121951218}]],
+              [[{false,{attribute,y,continuous,{min,max}}}|
+                {2.157627118644068,1.8131735827001754}],
+               [{true,{attribute,y,continuous,{min,max}}}|
+                {2.136585365853659,2.3053780487804882}]],
+              [[{false,{attribute,z,continuous,{min,max}}}|
+                {1.522033898305085,1.5476095850379898}],
+               [{true,{attribute,z,continuous,{min,max}}}|
+                {3.475609756097561,0.950390243902439}]],
+              [],[]}}}}}

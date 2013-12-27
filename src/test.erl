@@ -10,7 +10,7 @@
 -author("tjacek").
 
 %% API
--export([test_arff/0,nominal/2,testLearning/4,testBayes/1]).
+-export([test_arff/0,testLearning/4,testBayes/1,createClassifer/3,testClassifer/3 ]).
 
 test_arff() ->
   {Attributes, TrainingExamples} = mllib:read(arff,[{file,"data/Test3.arff"}]),
@@ -23,23 +23,27 @@ showExample(Classifier, Example) ->
 getData(Filename) -> mllib:read(arff,[{file,Filename}]).
 
 getClassifier(Filename,Alg) ->
-  {Attributes, TrainingExamples} = mllib:read(arff,[{file,Filename}]),
-  ClassName = golf,
+  {Attributes, TrainingExamples} = mllib:read(arff,[{file,"train/linear.arff"}]),
+  ClassName = cat,
   {ok, Classifier} = mllib:learn(Attributes, ClassName, TrainingExamples, Alg, [ ]).
 
-nominal(Alg,Filename) ->
-    {ok, Classifier} = getClassifier(Filename,Alg),
-    Odd = {zero, one, zero},
-    Even = {zero, zero, zero}.
-    %showExample(Classifier,Odd),
-    %showExample(Classifier,Even).
+createClassifer(Alg,Training,Name) ->
+  {ok, Classifier}=getClassifier(Training,Alg),
+  mllib:write_classifier(Name,Classifier).
+
+testClassifer(Filename,Name,Output) ->
+  {ok, Classifier}=mllib:read_classifier(Name),
+  {Attributes, TestExamples} = mllib:read(arff,[{file,Filename}]),
+  Labeled=learn(Classifier,TestExamples),
+  io:format("Obtained Category: ~p~n", [Labeled]),
+  file:write_file(Output, io_lib:fwrite("~p.\n", [Labeled])).
 
 testLearning(Alg,Training,Test,Output) ->
   {ok, Classifier} = getClassifier(Training,Alg),
-  {Attributes, TestExamples} = mllib:read(arff,[{file,Test}]),
-    Labeled=learn(Classifier,TestExamples),
-    io:format("Obtained Category: ~p~n", [Labeled]),
-    file:write_file(Output, io_lib:fwrite("~p.\n", [Labeled])) .
+  {Attributes, TestExamples} = mllib:read(arff,[{file,Test}]).
+%  Labeled=learn(Classifier,TestExamples),
+%    io:format("Obtained Category: ~p~n", [Labeled]),
+%  file:write_file(Output, io_lib:fwrite("~p.\n", [Labeled])) .
 
 
 learn(Classifier,TestExamples) ->  learn(Classifier,TestExamples,[]).
