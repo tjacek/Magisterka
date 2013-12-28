@@ -4,7 +4,21 @@ Created on Thu Dec 26 16:02:50 2013
 
 @author: tjacek
 """
-import math
+import math,re
+
+def convertDataset(filename,newfile):
+    sep=r"( )+"
+    newSep=","
+    newDataset=""
+    endline=r"(\s)*\n"
+    for line in open(filename,'r'):
+        line=re.sub(endline,r'\n',line)
+        line=re.sub(sep,newSep,line)
+        newDataset+=line
+    f = open(newfile,"w")
+    f.write(newDataset)
+    f.close()
+    return newDataset
 
 def readDataset(filename,separator=","):
     dataset=[]
@@ -32,7 +46,7 @@ def transactionStats(dataset):
     var=std(numList)
     return avg,var
 
-path="C:/Users/tjacek/Desktop/Magisterka/Magisterka/transactions/mine_data"
+path="C:/Users/tjacek/Desktop/Magisterka/Magisterka/transactions/"
 
 def test(file):
     dataset=readDataset(file)
