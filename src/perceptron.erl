@@ -9,23 +9,37 @@
 -module(perceptron).
 -author("tjacek").
 
+-include("structures.hrl").
+-include("debug.hrl").
+
 %% API
--export([dot_product/2,test_dot/0,test_perceptron/0]).
+-export([learn/4,classify/3,test_dot/0,test_perceptron/0]).
 
 dot_product(X,Y) -> dot_product(X,Y,0.0).
 dot_product([],[],Acc) -> Acc;
 dot_product([A|Ha],[B|Hb],Acc) -> dot_product(Ha,Hb, A*B +Acc).
 
 
-getPercetron(W,B) ->
+getPercetron(W) ->
   Perceptron =
     fun(X) ->
-      Dp=(dot_product(X,W)+B),
+      Dp=(dot_product(X,W)),
       if
-        Dp>0.0 -> 0.0;
-        true -> 1.0
+        Dp>0.0 -> 1.0;
+        true -> -1.0
       end
     end.
+
+
+classify(_Classifier=#classifier{ algorithm = perceptron,attributes = Attributes, class = _Class, specific_classifier = Perceptron}, Example,Options) ->
+    Perceptron([1.0,Example]).
+
+learn(Attributes, Class, NumberedExamples, Options) ->
+    dummy_perceptron().
+
+dummy_perceptron() ->
+  W=[-10.0,1.0,1.0,0.0],
+  getPercetron(W).
 
 test_dot() ->
    X=dot_product([1.0,2.0,3.0],[2.0,2.0,3.0]),
@@ -33,8 +47,7 @@ test_dot() ->
 
 test_perceptron() ->
     X=[1.0,2.0,3.0],
-    B=-4.0,
     W=[1.0,1.0,1.0],
-    P=getPercetron(W,B),
+    P=getPercetron(W),
     io:format("Obtained X: ~p~n", [P(X)]).
 
