@@ -43,14 +43,15 @@ void fromFile(Dataset * d){
     }
 }
 
-void createPerceptron(int n,int k){
+Perceptron * createPerceptron(int n,int k){
     Dataset * d = makeDataset(n,k);
     fromFile(d);
     Perceptron * p=train2( d,0.01);
-    printPercept(p);
+    //printPercept(p);
     //printDataset(d);
+    return p;
 }
 
-int main(){
+/*int main(){
     createPerceptron(100,3);
-}
+}*/

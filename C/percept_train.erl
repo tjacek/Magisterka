@@ -1,6 +1,6 @@
 -module(percept_train).
 -export([start/1, stop/0, init/1]).
--export([crt/2, add/1]).
+-export([crt/2, per/0]).
 
 start(ExtPrg) ->
     spawn(?MODULE, init, [ExtPrg]).
@@ -9,8 +9,8 @@ stop() ->
 
 crt(X,Y) ->
     call_port({crt, X,Y}).
-add(Y) ->
-    call_port({add, Y}).
+per() ->
+    call_port({per, 1,2}).
 
 call_port(Msg) ->
     complex ! {call, self(), Msg},
