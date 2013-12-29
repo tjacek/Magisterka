@@ -31,15 +31,16 @@ getPercetron(W) ->
     end.
 
 
-classify(_Classifier=#classifier{ algorithm = perceptron,attributes = Attributes, class = _Class, specific_classifier = Perceptron}, Example,Options) ->
-    Perceptron([1.0,Example]).
+classify(_Classifier=#classifier{ algorithm = perceptron,attributes = Attributes, class = _Class, specific_classifier = W}, Example,Options) ->
+  Percept=getPercetron(W),
+  Percept([1.0,Example]).
 
 learn(Attributes, Class, NumberedExamples, Options) ->
-    dummy_perceptron().
+  W = dummy_perceptron(),
+  {ok, #classifier{ algorithm = perceptron, attributes = Attributes, class = Class, specific_classifier = W}}.
 
 dummy_perceptron() ->
-  W=[-10.0,1.0,1.0,0.0],
-  getPercetron(W).
+  W=[-10.0,1.0,1.0,0.0].
 
 test_dot() ->
    X=dot_product([1.0,2.0,3.0],[2.0,2.0,3.0]),

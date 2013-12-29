@@ -15,7 +15,7 @@
 getClassifier(Filename,Alg) ->
   {Attributes, TrainingExamples} = mllib:read(arff,[{file,"train/linear.arff"}]),
   ClassName = cat,
-  {ok, Classifier} = mllib:learn(Attributes, ClassName, TrainingExamples, Alg, [ ]).
+  {ok, Classifier} = mllib:simple_learn(Attributes, ClassName, TrainingExamples, Alg, [ ]).
 
 createClassifer(Alg,Training,Name) ->
   {ok, Classifier}=getClassifier(Training,Alg),

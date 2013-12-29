@@ -1,4 +1,5 @@
 -module(mllib).
+-export([simple_learn/5]).
 -export([learn/5, learn/6, classify/3, transform_attributes/5, transform_example/2]).
 -export([mine/4, mine/3, read_mine_data/1]).
 -export([read/2, read/3, read_attributes/3, read_classes/3, read_examples/1, read_trainingexamples/1, write_classifier/2, read_classifier/1]).
@@ -11,6 +12,10 @@
 -define(RECOGNIZED_LEARN_OPTIONS, [no_check, attributes_ok, class_ok, trainingexamples_ok]).
 
 % @headerfile "structures.hrl"
+
+simple_learn(Attributes, Class, TrainingExamples, Algorithm, Options)  ->
+  %{CheckOptions, AlgorithmOptions} = split_learn_options(Options),
+  Algorithm:learn(Attributes, Class, TrainingExamples, []).
 
 -spec learn(Attributes :: [attribute()], Class :: class() | name(), TrainingExamples :: [training_example()], Algorithm :: atom(), Options :: [Option :: any()]) -> {ok, Classifier :: classifier()} | {error, Reason :: any()}.
 % @spec learn(Attributes, Class, TrainingExamples, Algorithm, Options) -> {ok, Classifier} | {error, Reason} where
@@ -44,6 +49,7 @@ learn(Attributes, ClassName, TrainingExamples, Algorithm, Options) when is_atom(
 
 learn(Attributes, #class{} = Class, TrainingExamples, Algorithm, Options, Nodes)->
   {CheckOptions, AlgorithmOptions} = split_learn_options(Options),
+  io:format("OK"),
   case check_learn_args(Attributes, Class, TrainingExamples, CheckOptions) of
   %ok -> Algorithm:learn(Attributes, Class, TrainingExamples, AlgorithmOptions);
     ok ->
