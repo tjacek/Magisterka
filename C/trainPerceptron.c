@@ -89,7 +89,7 @@ Perceptron * train(Dataset * d,double alpha,double maxErr,int maxIter){
     while(iter<maxIter && err>maxErr){
         double * y=step(d,p,alpha);
         err=error(d,y);
-        printf("%d %f \n",iter,err);
+       // printf("%d %f \n",iter,err);
         iter+=1;
     }
     return p;

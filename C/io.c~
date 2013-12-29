@@ -46,7 +46,7 @@ void fromFile(Dataset * d){
 void createPerceptron(int n,int k){
     Dataset * d = makeDataset(n,k);
     fromFile(d);
-    Perceptron * p=train2( d,0.01);
+    Perceptron * p=train2( d,0.05);
     printPercept(p);
     //printDataset(d);
 }
