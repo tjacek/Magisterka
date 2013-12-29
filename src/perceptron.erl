@@ -20,27 +20,32 @@ dot_product([],[],Acc) -> Acc;
 dot_product([A|Ha],[B|Hb],Acc) -> dot_product(Ha,Hb, A*B +Acc).
 
 
-getPercetron(W) ->
-  Perceptron =
-    fun(X) ->
-      Dp=(dot_product(X,W)),
-      if
+applyPercetron(W,X) ->
+    Dp=(dot_product(X,W)),
+    if
         Dp>0.0 -> 1.0;
         true -> -1.0
-      end
     end.
 
+label2Category(Label) ->
+  if
+    Label==1.0 -> true;
+    true -> false
+  end.
 
 classify(_Classifier=#classifier{ algorithm = perceptron,attributes = Attributes, class = _Class, specific_classifier = W}, Example,Options) ->
-  Percept=getPercetron(W),
-  Percept([1.0,Example]).
+  X=[1.0|tuple_to_list(Example)],
+  Label=applyPercetron(W,X),
+  Cat=label2Category(Label),
+  io:format("Obtained Category: ~p~n", [X]),
+  {ok, Cat}.
 
 learn(Attributes, Class, NumberedExamples, Options) ->
   W = dummy_perceptron(),
   {ok, #classifier{ algorithm = perceptron, attributes = Attributes, class = Class, specific_classifier = W}}.
 
 dummy_perceptron() ->
-  W=[-10.0,1.0,1.0,0.0].
+  W=[-5.0,1.0,1.0,0.0].
 
 test_dot() ->
    X=dot_product([1.0,2.0,3.0],[2.0,2.0,3.0]),
@@ -49,6 +54,6 @@ test_dot() ->
 test_perceptron() ->
     X=[1.0,2.0,3.0],
     W=[1.0,1.0,1.0],
-    P=getPercetron(W),
-    io:format("Obtained X: ~p~n", [P(X)]).
+    P=applyPercetron(W,X),
+    io:format("Obtained X: ~p~n", [P]).
 
