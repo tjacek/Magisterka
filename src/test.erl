@@ -18,14 +18,14 @@ getClassifier(Filename,Alg) ->
   {ok, Classifier} = mllib:simple_learn(Attributes, ClassName, TrainingExamples, Alg, [ ]).
 
 createClassifer(Alg,Training,Name) ->
-  {ok, Classifier}=getClassifier(Training,Alg),
-  mllib:write_classifier(Name,Classifier).
+  {ok, Classifier}=getClassifier(Training,Alg).
+%  mllib:write_classifier(Name,Classifier).
 
 testClassifer(Filename,Name,Output) ->
   {ok, Classifier}=mllib:read_classifier(Name),
   {Attributes, TestExamples} = mllib:read(arff,[{file,Filename}]),
   Labeled=learn(Classifier,TestExamples),
-  io:format("Obtained Category: ~p~n", [Labeled]),
+%  io:format("Obtained Category: ~p~n", [Labeled]),
   file:write_file(Output, io_lib:fwrite("~p.\n", [Labeled])).
 
 learn(Classifier,TestExamples) ->  learn(Classifier,TestExamples,[]).

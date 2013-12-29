@@ -37,11 +37,13 @@ classify(_Classifier=#classifier{ algorithm = perceptron,attributes = Attributes
   X=[1.0|tuple_to_list(Example)],
   Label=applyPercetron(W,X),
   Cat=label2Category(Label),
-  io:format("Obtained Category: ~p~n", [X]),
+  %io:format("Obtained Category: ~p~n", [X]),
   {ok, Cat}.
 
 learn(Attributes, Class, NumberedExamples, Options) ->
   W = dummy_perceptron(),
+  io:format(" ~p~n",[NumberedExamples]),
+  file:write_file("C/train.txt", io_lib:fwrite("~p.\n", [NumberedExamples])),
   {ok, #classifier{ algorithm = perceptron, attributes = Attributes, class = Class, specific_classifier = W}}.
 
 dummy_perceptron() ->
