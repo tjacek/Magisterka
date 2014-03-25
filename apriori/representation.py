@@ -46,11 +46,21 @@ def transactionStats(dataset):
     var=std(numList)
     return avg,var
 
-path="C:/Users/tjacek/Desktop/Magisterka/Magisterka/transactions/"
+#path="C:/Users/tjacek/Desktop/Magisterka/Magisterka/transactions/"
 
-def test(file):
-    dataset=readDataset(file)
+def getDir(path):
+    repres={}
+    dataset=readDataset(path)
     avg,var=transactionStats(dataset)
-    print(avg)
-    print(var)
+    repres["avg"]=avg
+    repres["var"]=var
+    return repres
+
+def test():
+    path="datasets/mine.data"
+    rep=getDir(path)
+    print(rep)
+
+if __name__ == '__main__':
+    test()
     

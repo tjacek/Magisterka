@@ -5,7 +5,7 @@ Created on Thu Dec 26 19:05:45 2013
 @author: tjacek
 """
 import numpy as np
-import mlpy as ml
+import mlpy
 import matplotlib.pyplot as plt
 import representation as rep
 
@@ -64,7 +64,7 @@ def toMatrix(data):
 
 def dimReduction(vectors,k=2):
     x=toMatrix(vectors)
-    pca=ml.PCA()
+    pca=mlpy.PCA()
     pca.learn(x)
     return pca.transform(x, k)
 
@@ -76,6 +76,7 @@ def visualization(x):
     fig = plt.figure(1)
     plot1 = plt.scatter(x[:,0],x[:,1],alpha=0.75)
     plt.show()
+    return plot
     
 def itemStats(dataset):
     bowRep=createBow(dataset)
@@ -84,17 +85,23 @@ def itemStats(dataset):
     var=rep.std(numList)
     return avg,var    
 
+def getPlot(path):
+    dataset=rep.readDataset(path)
+    vectors=get2DBow(dataset)
+    return visualization(vectors)
+
 def test(path="/home/user/Desktop/magisterka/transactions/mine_data"):
     dataset=rep.readDataset(path)
     vectors=get2DBow(dataset)
     print(vectors)
     visualization(vectors)
 
-def test2(path="/home/user/Desktop/magisterka/transactions/mine_data"):
+def test2(path="datasets/mine.data"):
     dataset=rep.readDataset(path)
     avg,var=itemStats(dataset)
     print(avg)
     print(var)
 
-test2()
+if __name__ == '__main__':
+    test("datasets/mine.data")
 
