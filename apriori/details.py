@@ -19,7 +19,7 @@ class DetailWindow(QtGui.QMainWindow):
     def constants(self):
         self.title='Apriori dataset generator'
         self.ends=".data"
-        self.path="/home/user/Desktop/Gui/datasets"
+        self.path="datasets/mine.data"
 	self.margin=5.0
         self.x=500.0
         self.y=300.0
@@ -42,7 +42,7 @@ class DetailWindow(QtGui.QMainWindow):
         self.addAll(formLayout)
 
     def addAll(self,layout):
-        dataset=rep.getDir(path)
+        dataset= rep.getDir(self.path)
         for name in dataset.keys():
             value=dataset[name]
             self.addField(name,value,layout)

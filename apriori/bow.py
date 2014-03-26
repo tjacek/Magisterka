@@ -74,7 +74,7 @@ def get2DBow(dataset):
 
 def visualization(x):
     fig = plt.figure(1)
-    plot1 = plt.scatter(x[:,0],x[:,1],alpha=0.75)
+    plot = plt.scatter(x[:,0],x[:,1],alpha=0.75)
     plt.show()
     return plot
     

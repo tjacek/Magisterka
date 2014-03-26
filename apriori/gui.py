@@ -1,4 +1,4 @@
-import sys, os
+import sys, os,bow
 from PyQt4 import QtCore,QtGui
 
 class MainWindow(QtGui.QMainWindow):
@@ -21,7 +21,7 @@ class MainWindow(QtGui.QMainWindow):
     def constants(self):
         self.title='Apriori dataset generator'
         self.ends=".data"
-        self.path="/home/user/Desktop/Gui/datasets"
+        self.path="/home/user/Desktop/magisterka/apriori/datasets"
 	self.margin=5.0
         self.x=500.0
         self.y=300.0
@@ -57,9 +57,11 @@ class MainWindow(QtGui.QMainWindow):
         direction=QtGui.QBoxLayout.LeftToRight
         buttonsLayout = QtGui.QBoxLayout(direction)
         searchButton = self.addButton("search",self.searchButton)
-        showButton   = self.addButton("show",self.showButton)
+        showButton   = self.addButton("stats",self.showButton)
+        pcaButton   = self.addButton("pca",self.pcaButton)
         buttonsLayout.addWidget(searchButton)
         buttonsLayout.addWidget(showButton)
+        buttonsLayout.addWidget(pcaButton)
         self.buttons.setLayout(buttonsLayout)
         self.layout.addWidget(self.buttons)
 
@@ -75,8 +77,20 @@ class MainWindow(QtGui.QMainWindow):
         self.textFields[name]=text
         layout.addRow(name,text)
 
+    def getPath(self):
+        field=self.textFields["Path"]
+        path=field.toPlainText()
+        return path
+
+    def getCurrentDataset(self):
+        return str(self.listWidget.currentItem().text())
+
     def showButton(self):
 	return 0.0
+
+    def pcaButton(self):
+        dataset=self.getCurrentDataset()
+        bow.getPlot(dataset)
 
     def searchButton(self):
 	self.listWidget.clear()
