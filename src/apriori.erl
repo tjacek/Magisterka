@@ -11,7 +11,7 @@
 %% Exported Functions
 %%
 
--export([mine/2, test/4, testseq/3]).
+-export([mine/2, test/4, testseq/3, experiment/4]).
 %% paralel
 -export([apriori_worker/1, seq_apriori_worker/1]).
 %%
@@ -346,14 +346,19 @@ prune_rules([{Antecedent, Consequent, Nominator}|Rules], Dict, MinConfidence, Ac
   end.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-test(MinSup, MinConf, Workers, Nodes) ->
-  %Data = mllib:read_mine_data("mine_data"),
-  {ok, Data} = mllib:read_mine_data("amazon_access.csv"),
+experiment(MinSup, MinConf, Workers, DatasetName) ->
+  {ok, Data} = mllib:read_mine_data(DatasetName),
+  Nodes= [node()],
   Options = [{min_sup, MinSup}, {workers, Workers}, {min_conf, MinConf}, Nodes],
   Result = mllib:mine(Data, apriori, Options, Nodes),
   ?LOG("Result: ~w\n", [Result]),
   Result.
 
+test(MinSup, MinConf, Workers, Nodes) ->
+  %Data = mllib:read_mine_data("mine_data"),
+  {ok, Data} = mllib:read_mine_data("amazon_access.csv"),
+  Options = [{min_sup, MinSup}, {workers, Workers}, {min_conf, MinConf}, Nodes],
+  Result = mllib:mine(Data, apriori, Options, Nodes).
 
 testseq(MinSup, Workers, Nodes) ->
   %Data = mllib:read_mine_data("mine_data"),
