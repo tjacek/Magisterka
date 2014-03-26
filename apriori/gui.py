@@ -1,4 +1,4 @@
-import sys, os,bow
+import sys, os,bow,details
 from PyQt4 import QtCore,QtGui
 
 class MainWindow(QtGui.QMainWindow):
@@ -86,7 +86,11 @@ class MainWindow(QtGui.QMainWindow):
         return str(self.listWidget.currentItem().text())
 
     def showButton(self):
-	return 0.0
+        dataset=self.getCurrentDataset() 
+       # details.showDetails(dataset)
+        w = details.DetailWindow(dataset,self)
+        w.move(300, 300)
+        w.show()
 
     def pcaButton(self):
         dataset=self.getCurrentDataset()
@@ -103,7 +107,6 @@ class MainWindow(QtGui.QMainWindow):
 			self.listWidget.addItem(path)
 		    except:
 			pass
-
 
 def main():
     app = QtGui.QApplication(sys.argv)

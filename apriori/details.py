@@ -1,10 +1,10 @@
-import sys, os,representation as rep,bow
+import sys, os,representation as rep
 from PyQt4 import QtCore,QtGui
 
 class DetailWindow(QtGui.QMainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, data,parent=None):
         QtGui.QMainWindow.__init__(self, parent)
-        self.dataset="datasets/mine.data"
+        self.path=data
 	self.createMainWindow()
 
     def createMainWindow(self):
@@ -13,8 +13,6 @@ class DetailWindow(QtGui.QMainWindow):
 	widget = self.initWidget()
         self.initLayout(widget)
         self.initNumeric()
-        plot=bow.getPlot(self.path)
-        plot.setLayout(self.layout)
 
     def constants(self):
         self.title='Apriori dataset generator'
@@ -53,12 +51,13 @@ class DetailWindow(QtGui.QMainWindow):
 	text.append(str(value))
         layout.addRow(name,text)
 
-def main():
+def showDetails(data="datasets/mine.data"):
     app = QtGui.QApplication(sys.argv)
-    w = DetailWindow()
+    w = DetailWindow(data)
     w.move(300, 300)
     w.show()
     sys.exit(app.exec_())
 
 if __name__ == '__main__':
-    main()
+    showDetails()
+
