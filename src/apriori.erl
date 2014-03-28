@@ -11,7 +11,7 @@
 %% Exported Functions
 %%
 
--export([mine/2, test/4, testseq/3, experiment/4]).
+-export([mine/2,extCall/1, test/4, testseq/3, experiment/4]).
 %% paralel
 -export([apriori_worker/1, seq_apriori_worker/1]).
 %%
@@ -346,11 +346,19 @@ prune_rules([{Antecedent, Consequent, Nominator}|Rules], Dict, MinConfidence, Ac
   end.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+extCall(Args) ->
+  MinSup= list_to_float(lists:nth(1,Args)), 
+  MinConf=list_to_float(lists:nth(2,Args)),
+  Workers=list_to_integer(lists:nth(3,Args)), 
+  DatasetName=lists:nth(4,Args),
+  apriori:experiment(MinSup, MinConf, Workers,DatasetName). 
+
 experiment(MinSup, MinConf, Workers, DatasetName) ->
   {ok, Data} = mllib:read_mine_data(DatasetName),
   Nodes= [node()],
   Options = [{min_sup, MinSup}, {workers, Workers}, {min_conf, MinConf}, Nodes],
-  Result = mllib:mine(Data, apriori, Options, Nodes),
+  %Result=apriori:mine(Data, Options),
+  Result = mllib:mine(Data, apriori, Options,Nodes),
   ?LOG("Result: ~w\n", [Result]),
   Result.
 
