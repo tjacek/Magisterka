@@ -1,4 +1,4 @@
-import sys, os,bow,details
+import sys, os,bow,details,callApriori
 from PyQt4 import QtCore,QtGui
 
 class MainWindow(QtGui.QMainWindow):
@@ -59,9 +59,11 @@ class MainWindow(QtGui.QMainWindow):
         searchButton = self.addButton("search",self.searchButton)
         showButton   = self.addButton("stats",self.showButton)
         pcaButton   = self.addButton("pca",self.pcaButton)
+        runButton   = self.addButton("run",self.runButton)
         buttonsLayout.addWidget(searchButton)
         buttonsLayout.addWidget(showButton)
         buttonsLayout.addWidget(pcaButton)
+        buttonsLayout.addWidget(runButton)
         self.buttons.setLayout(buttonsLayout)
         self.layout.addWidget(self.buttons)
 
@@ -87,7 +89,6 @@ class MainWindow(QtGui.QMainWindow):
 
     def showButton(self):
         dataset=self.getCurrentDataset() 
-       # details.showDetails(dataset)
         w = details.DetailWindow(dataset,self)
         w.move(300, 300)
         w.show()
@@ -107,6 +108,18 @@ class MainWindow(QtGui.QMainWindow):
 			self.listWidget.addItem(path)
 		    except:
 			pass
+
+    def runButton(self):
+        items=self.getAllItems()
+        results=callApriori.experiment(items)
+        print(results)
+
+    def getAllItems(self):
+        allItems=[] 
+        for i in range(0,self.listWidget.count()):
+            item=self.listWidget.item(i)
+            allItems.append(str(item.text()))
+        return allItems
 
 def main():
     app = QtGui.QApplication(sys.argv)
