@@ -40,7 +40,7 @@ class DetailWindow(QtGui.QMainWindow):
         self.addAll(formLayout)
 
     def addAll(self,layout):
-        dataset= rep.getDir(self.path)
+        dataset= rep.getStats(self.path)
         for name in dataset.keys():
             value=dataset[name]
             self.addField(name,value,layout)

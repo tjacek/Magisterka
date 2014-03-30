@@ -48,7 +48,7 @@ def transactionStats(dataset):
 
 #path="C:/Users/tjacek/Desktop/Magisterka/Magisterka/transactions/"
 
-def getDir(path):
+def getStats(path):
     repres={}
     dataset=readDataset(path)
     avg,var=transactionStats(dataset)
@@ -58,7 +58,7 @@ def getDir(path):
 
 def test():
     path="datasets/mine.data"
-    rep=getDir(path)
+    rep=getStats(path)
     print(rep)
 
 if __name__ == '__main__':

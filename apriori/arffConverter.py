@@ -1,4 +1,10 @@
-import representation
+import representation,callApriori
+
+def saveArffFile(expResult):
+    arff=getArffFile(expResult)
+    arrfFile = open('apriori.arff','w')
+    arrfFile.write(arff)
+    arrfFile.close()
 
 def getArffFile(expResult):
     arffFile="@RELATION aprioriDataset\n"
@@ -10,6 +16,9 @@ def addAttributes(datasets,arffFile):
     stats=representation.getStats(datasets[0])
     for attrName in stats.keys():
 	arffFile=addAttribute(attrName,arffFile)
+    arffFile=addAttribute("minSup",arffFile)
+    arffFile=addAttribute("minConf",arffFile)
+    arffFile=addAttribute("workers",arffFile)
     arffFile=addAttribute("time",arffFile)
     return arffFile
 
@@ -22,7 +31,7 @@ def addSamples(expResult,arffFile):
     arffFile+="@DATA\n"
     for dataset in expResult.keys():
         sample=getStats(dataset)
-        sample+=str(expResult[dataset]) + "\n"
+        sample+=expResult[dataset].__str__()
         arffFile+=sample
     return arffFile 
         
@@ -34,5 +43,12 @@ def getStats(dataset):
     return sample
 
 example={'/home/user/Desktop/magisterka/apriori/datasets/mine.data': 1269L, '/home/user/Desktop/magisterka/apriori/datasets/gen.data': 1112L}
+example2={
+  '/home/user/Desktop/magisterka/apriori/datasets/mine.data': 
+    callApriori.AprioriParametrs(0.5,0.5,1,1269L),
+  '/home/user/Desktop/magisterka/apriori/datasets/gen.data' : 
+    callApriori.AprioriParametrs(0.5,0.5,1,1112L)
+}
 
-print(getArffFile(example))
+saveArffFile(example2)
+#print(getArffFile(example))
