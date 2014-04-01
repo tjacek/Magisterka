@@ -21,6 +21,7 @@ def convertDataset(filename,newfile):
     return newDataset
 
 def readDataset(filename,separator=","):
+    print("****"+filename)
     dataset=[]
     for line in open(filename,'r'):
         line=line.replace('\n',"")
@@ -47,6 +48,8 @@ def transactionStats(dataset):
     return avg,var
 
 #path="C:/Users/tjacek/Desktop/Magisterka/Magisterka/transactions/"
+def getAttributes():
+    return ["avg","var"]
 
 def getStats(path):
     repres={}

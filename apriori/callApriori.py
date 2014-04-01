@@ -3,10 +3,12 @@ import os,time
 def experiment(datasets,bounds):
     results={}
     for aprioriDataset in datasets:
+        expsForDataset=[]
         for params in getParams(bounds):
  	    time=execute(params.minSup,params.minConf,params.workers,aprioriDataset)
             params.time=time
-            results[aprioriDataset]=params
+            expsForDataset.append(params)
+        results[aprioriDataset]=expsForDataset
     return results
 
 def getParams(bounds):

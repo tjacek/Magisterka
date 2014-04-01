@@ -13,8 +13,8 @@ def getArffFile(expResult):
     return arffFile
 
 def addAttributes(datasets,arffFile):
-    stats=representation.getStats(datasets[0])
-    for attrName in stats.keys():
+    stats=representation.getAttributes() #getStats(datasets[0])
+    for attrName in stats:
 	arffFile=addAttribute(attrName,arffFile)
     arffFile=addAttribute("minSup",arffFile)
     arffFile=addAttribute("minConf",arffFile)
@@ -28,11 +28,12 @@ def addAttribute(attrName,arffFile):
     return arffFile
 
 def addSamples(expResult,arffFile):
-    arffFile+="@DATA\n"
+    arffFile+="@DATA\n"    
     for dataset in expResult.keys():
-        sample=getStats(dataset)
-        sample+=expResult[dataset].__str__()
-        arffFile+=sample
+        for instance in expResult[dataset]:
+            sample=getStats(dataset)
+            sample+=instance.__str__()
+            arffFile+=sample
     return arffFile 
         
 def getStats(dataset):
@@ -50,5 +51,6 @@ example2={
     callApriori.AprioriParametrs(0.5,0.5,1,1112L)
 }
 
-saveArffFile(example2)
+if __name__ == '__main__':
+    saveArffFile(example2)
 #print(getArffFile(example))

@@ -1,4 +1,4 @@
-import sys, os,bow,details,callApriori
+import sys, os,bow,details,callApriori,arffConverter as arff
 from PyQt4 import QtCore,QtGui
 
 class MainWindow(QtGui.QMainWindow):
@@ -119,7 +119,8 @@ class MainWindow(QtGui.QMainWindow):
         items=self.getAllItems()
         bounds=self.getBounds()
         results=callApriori.experiment(items,bounds)
-        print(results)
+	#print(results.keys())        
+	arff.saveArffFile(results)
 
     def getAllItems(self):
         allItems=[] 
