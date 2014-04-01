@@ -24,7 +24,7 @@ class MainWindow(QtGui.QMainWindow):
         self.path="/home/user/Desktop/magisterka/apriori/datasets"
 	self.margin=5.0
         self.x=500.0
-        self.y=300.0
+        self.y=500.0
 
     def initWidget(self):
         widget = QtGui.QWidget(self)
@@ -45,10 +45,16 @@ class MainWindow(QtGui.QMainWindow):
 
     def initInputs(self):
         inputs = QtGui.QWidget()
-        inputs.resize(300,300)
+        inputs.resize(300,400)
         formLayout=QtGui.QFormLayout()
         self.addField("Path",self.path,formLayout)
-        self.addField("Output file","",formLayout)
+        self.addField("Output file","apriori.arff",formLayout)
+        self.addField("lower MinSup","0.3",formLayout)
+        self.addField("upper MinSup","0.7",formLayout)
+        self.addField("lower MinConf","0.3",formLayout)
+        self.addField("upper MinConf","0.7",formLayout)
+        self.addField("lower Workers","1",formLayout)
+        self.addField("upper Workers","2",formLayout)
         inputs.setLayout(formLayout)
         self.layout.addWidget(inputs)
 
