@@ -117,7 +117,8 @@ class MainWindow(QtGui.QMainWindow):
 
     def runButton(self):
         items=self.getAllItems()
-        results=callApriori.experiment(items)
+        bounds=self.getBounds()
+        results=callApriori.experiment(items,bounds)
         print(results)
 
     def getAllItems(self):
@@ -126,6 +127,19 @@ class MainWindow(QtGui.QMainWindow):
             item=self.listWidget.item(i)
             allItems.append(str(item.text()))
         return allItems
+
+    def getBounds(self):
+        lSup=self.getInput("lower MinSup")
+        uSup=self.getInput("upper MinSup")
+        lConf=self.getInput("lower MinConf")
+        uConf=self.getInput("upper MinConf")
+        lWorkers=self.getInput("lower Workers")
+        uWorkers=self.getInput("upper Workers")
+        return callApriori.Bounds(lSup,uSup,lConf,uConf,lWorkers,uWorkers)
+
+    def getInput(self,name):
+        field=self.textFields[name]
+        return field.toPlainText()
 
 def main():
     app = QtGui.QApplication(sys.argv)

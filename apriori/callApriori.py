@@ -28,12 +28,12 @@ def getRange(a,b,h=0.1):
 
 class Bounds(object):
     def __init__(self,lowerSup,upperSup,lowerConf,upperConf,lowerWorkers,upperWorkers):
-        self.lowerSup=lowerSup
-        self.upperSup=upperSup
-        self.lowerConf=lowerConf
-        self.upperConf=upperConf
-        self.lowerWorkers=lowerWorkers
-        self.upperWorkers=upperWorkers
+        self.lowerSup=float(lowerSup)
+        self.upperSup=float(upperSup)
+        self.lowerConf=float(lowerConf)
+        self.upperConf=float(upperConf)
+        self.lowerWorkers=int(lowerWorkers)
+        self.upperWorkers=int(upperWorkers)
 
 class AprioriParametrs(object):
     def __init__(self,minSup,minConf,workers,time=0.0):
