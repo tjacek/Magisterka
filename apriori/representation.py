@@ -5,6 +5,7 @@ Created on Thu Dec 26 16:02:50 2013
 @author: tjacek
 """
 import math,re
+from sets import Set
 
 def convertDataset(filename,newfile):
     sep=r"( )+"
@@ -21,7 +22,6 @@ def convertDataset(filename,newfile):
     return newDataset
 
 def readDataset(filename,separator=","):
-    print("****"+filename)
     dataset=[]
     for line in open(filename,'r'):
         line=line.replace('\n',"")
@@ -30,34 +30,61 @@ def readDataset(filename,separator=","):
         dataset.append(transaction)
     return dataset
 
-def avarage(numList):
+def average(numList):
     return sum(numList)/len(numList)
     
 def std(numList):
-    av=avarage(numList)
+    av=average(numList)
     sq=lambda x:(x-av)**2
     newList=list(map(sq,numList))
-    var=avarage(newList)
+    var=average(newList)
     return math.sqrt(var)
     
 def transactionStats(dataset):
     listSize=lambda x:float(len(x))
     numList=list(map(listSize,dataset))
-    avg=avarage(numList)
+    avg=average(numList)
     var=std(numList)
     return avg,var
 
-#path="C:/Users/tjacek/Desktop/Magisterka/Magisterka/transactions/"
+def itemsStats(items,dataset):
+    freq=itemsFreq(items,dataset)
+    avg=average(freq)
+    var=std(freq)
+    return avg,var
+
+def itemsFreq(items,dataset):
+    freq=[]
+    for item in list(items):
+        counter=0
+        for transaction in dataset:
+            if(item in Set(transaction)):
+		counter+=1
+        freq.append(counter)
+    return freq
+
+def getItems(dataset):
+    items=Set([])
+    for transaction in dataset:
+	items=items.union(Set(transaction))
+    return items
+
 def getAttributes():
-    return ["avg","var"]
+    return ["transactions","items","avg transaction","var transaction","avg items","var items"]
 
 def getStats(path):
-    repres={}
+    stats={}
     dataset=readDataset(path)
-    avg,var=transactionStats(dataset)
-    repres["avg"]=avg
-    repres["var"]=var
-    return repres
+    items=getItems(dataset)
+    avgTrans,varTrans=transactionStats(dataset)
+    avgItems,varItems=itemsStats(items,dataset)
+    stats["transactions"]=len(dataset)
+    stats["items"]=len(items)   
+    stats["avg transaction"]=avgTrans
+    stats["var transaction"]=varTrans
+    stats["avg items"]=avgItems
+    stats["var items"]=varItems
+    return stats
 
 def test():
     path="datasets/mine.data"

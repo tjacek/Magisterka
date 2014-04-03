@@ -17,7 +17,7 @@ class DetailWindow(QtGui.QMainWindow):
     def constants(self):
         self.title='Apriori dataset generator'
         self.ends=".data"
-        self.path="datasets/mine.data"
+        #self.path="datasets/mine.data"
 	self.margin=5.0
         self.x=500.0
         self.y=300.0

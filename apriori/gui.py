@@ -118,8 +118,7 @@ class MainWindow(QtGui.QMainWindow):
     def runButton(self):
         items=self.getAllItems()
         bounds=self.getBounds()
-        results=callApriori.experiment(items,bounds)
-	#print(results.keys())        
+        results=callApriori.experiment(items,bounds)     
 	arff.saveArffFile(results)
 
     def getAllItems(self):
