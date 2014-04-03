@@ -1,6 +1,11 @@
 import os
 
-def execute(sup,conf,work,data,path): 
+def experiment(datasets):
+    results={}
+    for aprioriDataset in datasets:
+ 	time=execute(sup,conf,work,aprioriDataset)
+
+def execute(sup,conf,work,data,path="/home/user/Desktop/ML/src"): 
     cmd ="erl -pa " + path +" -run apriori extCall " 
     MinSup=str(sup)
     MinConf=str(conf)
