@@ -1,25 +1,30 @@
 import representation,callApriori
 
 def saveArffFile(expResult):
-    arff=getArffFile(expResult)
+    arff=getArffFile(expResult,True)
     arrfFile = open('apriori.arff','w')
     arrfFile.write(arff)
     arrfFile.close()
 
-def getArffFile(expResult):
+def getArffFile(expResult,discrete=False):
     arffFile="@RELATION aprioriDataset\n"
-    arffFile=addAttributes(expResult.keys(),arffFile)
+    arffFile=addAttributes(expResult.keys(),arffFile,discrete)
+    if(discrete):
+	discretize(expResult)
     arffFile=addSamples(expResult,arffFile)
     return arffFile
 
-def addAttributes(datasets,arffFile):
-    stats=representation.getAttributes() #getStats(datasets[0])
+def addAttributes(datasets,arffFile,discrete=False):
+    stats=representation.getAttributes()
     for attrName in stats:
 	arffFile=addAttribute(attrName,arffFile)
     arffFile=addAttribute("minSup",arffFile)
     arffFile=addAttribute("minConf",arffFile)
     arffFile=addAttribute("workers",arffFile)
-    arffFile=addAttribute("time",arffFile)
+    if(discrete):
+	arffFile+="@ATTRIBUTE class {true,false}\n"
+    else:
+    	arffFile=addAttribute("time",arffFile)
     return arffFile
 
 def addAttribute(attrName,arffFile):
@@ -42,6 +47,19 @@ def getStats(dataset):
     for key in stats.keys():
         sample+=str(stats[key])+","
     return sample
+
+def discretize(expResult):
+    for dataset in expResult.values():
+        average=0.0
+        for result in dataset:
+	    average+=result.time
+        average/=len(dataset)
+        threshold=1.1*average
+	for result in dataset:
+	    if(threshold<result.time):
+		result.time="false"
+            else:
+                result.time="true"
 
 example={'/home/user/Desktop/magisterka/apriori/datasets/mine.data': 1269L, '/home/user/Desktop/magisterka/apriori/datasets/gen.data': 1112L}
 example2={
