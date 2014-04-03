@@ -70,7 +70,7 @@ def getItems(dataset):
     return items
 
 def getAttributes():
-    return ["transactions","items","avg transaction","var transaction","avg items","var items"]
+    return ["transactions","items","avg_transaction","var_transaction","avg_items","var_items"]
 
 def getStats(path):
     stats={}
@@ -80,10 +80,10 @@ def getStats(path):
     avgItems,varItems=itemsStats(items,dataset)
     stats["transactions"]=len(dataset)
     stats["items"]=len(items)   
-    stats["avg transaction"]=avgTrans
-    stats["var transaction"]=varTrans
-    stats["avg items"]=avgItems
-    stats["var items"]=varItems
+    stats["avg_transaction"]=avgTrans
+    stats["var_transaction"]=varTrans
+    stats["avg_items"]=avgItems
+    stats["var_items"]=varItems
     return stats
 
 def test():

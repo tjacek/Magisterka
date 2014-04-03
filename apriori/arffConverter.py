@@ -22,7 +22,7 @@ def addAttributes(datasets,arffFile,discrete=False):
     arffFile=addAttribute("minConf",arffFile)
     arffFile=addAttribute("workers",arffFile)
     if(discrete):
-	arffFile+="@ATTRIBUTE class {true,false}\n"
+	arffFile+="@ATTRIBUTE class {negative,positive}\n"
     else:
     	arffFile=addAttribute("time",arffFile)
     return arffFile
@@ -57,9 +57,9 @@ def discretize(expResult):
         threshold=1.1*average
 	for result in dataset:
 	    if(threshold<result.time):
-		result.time="false"
+		result.time="negative"
             else:
-                result.time="true"
+                result.time="positive"
 
 example={'/home/user/Desktop/magisterka/apriori/datasets/mine.data': 1269L, '/home/user/Desktop/magisterka/apriori/datasets/gen.data': 1112L}
 example2={
