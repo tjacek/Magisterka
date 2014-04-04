@@ -76,8 +76,6 @@ apriori_worker(Data) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % @doc Working thread for frequent sequences checking
 seq_apriori_worker(Data) ->
-  io:format("I'm alive ~p\n", [self()]),
-
   receive
     {_, stop} ->
       io:format("Stop ~p\n", [self()]),

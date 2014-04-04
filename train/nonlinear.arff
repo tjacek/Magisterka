@@ -1,8 +1,8 @@
 @relation TestData 
  
+@attribute z numeric
 @attribute x numeric
 @attribute y numeric
-@attribute z numeric
 @attribute cat {true,false}
 
 @data

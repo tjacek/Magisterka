@@ -4,4 +4,4 @@
              {attribute,y,continuous,{min,max}},
              {attribute,cat,nominal,[true,false]}],
             cat,
-            [-5.0,1.0,1.0,0.0]}
+            [-1.01,2.97,3.85,-12.95]}

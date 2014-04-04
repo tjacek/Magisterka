@@ -4,7 +4,6 @@
              {attribute,y,continuous,{min,max}}],
             {class,cat,[],[true,false]},
             {root,root,
-                  [{z,{"<",1.35},{leaf,false}},
-                   {z,{">=",1.35},
-                      [{x,{"<",1.75},{leaf,false}},
-                       {x,{">=",1.75},{leaf,true}}]}]}}
+                  [{x,{"<",2.3499999999999996},
+                      [{z,{"<",3.0},{leaf,false}},{z,{">=",3.0},{leaf,true}}]},
+                   {x,{">=",2.3499999999999996},{leaf,true}}]}}

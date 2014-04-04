@@ -13,13 +13,13 @@
 -export([createClassifer/3,testClassifer/3 ]).
 
 getClassifier(Filename,Alg) ->
-  {Attributes, TrainingExamples} = mllib:read(arff,[{file,"train/linear.arff"}]),
+  {Attributes, TrainingExamples} = mllib:read(arff,[{file,Filename}]),
   ClassName = cat,
-  {ok, Classifier} = mllib:simple_learn(Attributes, ClassName, TrainingExamples, Alg, [ ]).
+  {ok, Classifier} = mllib:learn(Attributes, ClassName, TrainingExamples, Alg, [ ]).
 
 createClassifer(Alg,Training,Name) ->
-  {ok, Classifier}=getClassifier(Training,Alg).
-%  mllib:write_classifier(Name,Classifier).
+  {ok, Classifier}=getClassifier(Training,Alg),
+  mllib:write_classifier(Name,Classifier).
 
 testClassifer(Filename,Name,Output) ->
   {ok, Classifier}=mllib:read_classifier(Name),
