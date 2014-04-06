@@ -10,7 +10,25 @@
 -author("tjacek").
 
 %% API
--export([test/0]).
+-export([test/0,test_regression/1]).
+
+kernel_regression(Samples) ->
+  {Labels,Instances}=parse_labels(Samples),
+  io:format("~p~n",[Instances]).
+
+parse_labels(Samples) ->
+  Extract_Labels=fun(Sample) ->
+    N=size(Sample),
+    element(N,Sample)
+  end,
+  Extract_Instances=fun(Sample) ->
+    ListSample=tuple_to_list(Sample) ,
+    Label=lists:last(ListSample),
+    lists:delete(Label,ListSample)
+  end,
+  Labels=lists:map(Extract_Labels,Samples),
+  Instances =lists:map(Extract_Instances,Samples),
+  {Labels,Instances}.
 
 get_kernel(B) ->
   fun(X,Y) ->
@@ -19,7 +37,7 @@ get_kernel(B) ->
 
 exp_kernel(X,Y,B) ->
   D=distance(X,Y),
-  Exponent= (-1.0*D*D) / (2* B),
+  Exponent= (-1.0*D*D) / (2.0* B),
   math:exp(Exponent).
 
 distance(X,Y) ->  distance(X,Y,0.0).
@@ -34,3 +52,7 @@ test() ->
   MyKernel=get_kernel(2.0),
   Res=MyKernel(H,T),
   io:format("~p~n",[Res]).
+
+test_regression(Filename) ->
+  {Attributes, TrainingExamples} = mllib:read(arff,[{file,Filename}]),
+  kernel_regression(TrainingExamples).
