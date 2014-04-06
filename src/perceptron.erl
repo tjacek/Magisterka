@@ -13,15 +13,10 @@
 -include("debug.hrl").
 
 %% API
--export([learn/4,classify/3,test_dot/0,test_perceptron/0]).
-
-dot_product(X,Y) -> dot_product(X,Y,0.0).
-dot_product([],[],Acc) -> Acc;
-dot_product([A|Ha],[B|Hb],Acc) -> dot_product(Ha,Hb, A*B +Acc).
-
+-export([learn/4,classify/3,test_perceptron/0]).
 
 applyPercetron(W,X) ->
-    Dp=(dot_product(X,W)),
+    Dp=(utils:dot_product(X,W)),
     if
         Dp>0.0 -> 1.0;
         true -> -1.0
@@ -48,10 +43,6 @@ learn(Attributes, Class, NumberedExamples, Options) ->
 
 dummy_perceptron() ->
   W=[-5.0,1.0,1.0,0.0].
-
-test_dot() ->
-   X=dot_product([1.0,2.0,3.0],[2.0,2.0,3.0]),
-   io:format("Obtained X: ~p~n", [X]).
 
 test_perceptron() ->
     X=[1.0,2.0,3.0],

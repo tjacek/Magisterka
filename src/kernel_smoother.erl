@@ -12,9 +12,13 @@
 %% API
 -export([test/0,test_regression/1]).
 
-kernel_regression(Samples) ->
+kernel_regression(X0,Samples) ->
   {Labels,Instances}=parse_labels(Samples),
-  io:format("~p~n",[Instances]).
+  Y=utils:labels2reals(Labels),
+  X=get_weights(X0,Instances),
+  Norm=lists:sum(X),
+  R=utils:dot_product(X,Y)/Norm,
+  io:format("~p~n",[R]).
 
 parse_labels(Samples) ->
   Extract_Labels=fun(Sample) ->
@@ -29,6 +33,13 @@ parse_labels(Samples) ->
   Labels=lists:map(Extract_Labels,Samples),
   Instances =lists:map(Extract_Instances,Samples),
   {Labels,Instances}.
+
+get_weights(X0,Instances) ->
+  Exp_kernel=get_kernel(1.0),
+  K=fun(X) ->
+    Exp_kernel(X0,X)
+  end,
+  lists:map(K,Instances).
 
 get_kernel(B) ->
   fun(X,Y) ->
@@ -55,4 +66,5 @@ test() ->
 
 test_regression(Filename) ->
   {Attributes, TrainingExamples} = mllib:read(arff,[{file,Filename}]),
-  kernel_regression(TrainingExamples).
+  X0=[1.0,1.0,1.0],
+  kernel_regression(X0,TrainingExamples).
