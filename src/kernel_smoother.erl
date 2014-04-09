@@ -10,29 +10,25 @@
 -author("tjacek").
 
 %% API
--export([test/0,test_regression/1]).
+-export([test/0,test_regression/1,learn/1,regression/2]).
 
-kernel_regression(X0,Samples) ->
-  {Labels,Instances}=parse_labels(Samples),
+learn(Samples) ->
+  {Labels,Instances}=regression:parse_labels(Samples),
   Y=utils:labels2reals(Labels),
-  X=get_weights(X0,Instances),
-  Norm=lists:sum(X),
-  R=utils:dot_product(X,Y)/Norm,
-  io:format("~p~n",[R]).
+  {Y,Instances}.
 
-parse_labels(Samples) ->
-  Extract_Labels=fun(Sample) ->
-    N=size(Sample),
-    element(N,Sample)
-  end,
-  Extract_Instances=fun(Sample) ->
-    ListSample=tuple_to_list(Sample) ,
-    Label=lists:last(ListSample),
-    lists:delete(Label,ListSample)
-  end,
-  Labels=lists:map(Extract_Labels,Samples),
-  Instances =lists:map(Extract_Instances,Samples),
-  {Labels,Instances}.
+regression(X0,Model) ->
+  X=getX(Model),
+  Y=getY(Model),
+  W=get_weights(X0,X),
+  Norm=lists:sum(W),
+  R=utils:dot_product(W,Y)/Norm.
+
+getX(Model) ->
+  element(2,Model).
+
+getY(Model) ->
+  element(1,Model).
 
 get_weights(X0,Instances) ->
   Exp_kernel=get_kernel(1.0),
@@ -66,5 +62,6 @@ test() ->
 
 test_regression(Filename) ->
   {Attributes, TrainingExamples} = mllib:read(arff,[{file,Filename}]),
+  Model=learn(TrainingExamples),
   X0=[1.0,1.0,1.0],
-  kernel_regression(X0,TrainingExamples).
+  regression(X0,Model).
