@@ -7,6 +7,9 @@ Created on Mon Nov  4 19:37:42 2013
 
 import re
 
+def readArffFile(filename):
+    return ""
+
 def attrToText(labeled):
     s="@relation TestData \n \n"
     attr=["x","y","z"]    
@@ -97,14 +100,4 @@ def parseArff(dataFile,labelsFile):
         point.append(labels[i])
         points.append(point)
         i+=1
-    return points    
-    
-def showInput(filename):
-    path="C:/Users/tjacek/IdeaProjects/ML/train/"
-    points=parseLabeledData(path+filename)
-    visualizePoints(points)    
-
-def showOutput(points="test/nonlinear.arff",labels="result/nonlinearC45.arff"):
-    path="C:/Users/tjacek/IdeaProjects/ML/"
-    points=parseArff(path+points,path+labels)
-    visualizePoints(points)      
+    return points          

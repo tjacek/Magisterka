@@ -5,18 +5,23 @@ class MainWindow(QtGui.QMainWindow):
 
     def __init__(self, parent=None):
 	QtGui.QMainWindow.__init__(self, parent)
+        self.init()
+	
+    def init(self):
         self.createMainWindow()
-
-    def createMainWindow(self):
-        self.constants()
-        self.textFields={}
-	self.setWindowTitle(self.title)
-        self.resize(self.x,self.y)
         widget = self.initWidget()
         self.initLayout(widget)
         self.initList(widget)
+        self.initInputs()
         self.initButtons()
-
+    
+    def createMainWindow(self):
+        self.constants()
+        self.textFields={}
+        self.button={}
+	self.setWindowTitle(self.title)
+        self.resize(self.x,self.y)
+        
     def constants(self):
         self.title='Arff dataset generator'
         self.ends=".arff"
@@ -43,18 +48,63 @@ class MainWindow(QtGui.QMainWindow):
         self.layout.addWidget(self.listWidget);
 
     def initButtons(self):
-	self.buttons = QtGui.QWidget()
-        direction=QtGui.QBoxLayout.LeftToRight
-        buttonsLayout = QtGui.QBoxLayout(direction)
-        searchButton = self.addButton("search",self.searchButton)
-        buttonsLayout.addWidget(searchButton)
-        self.buttons.setLayout(buttonsLayout)
-        self.layout.addWidget(self.buttons)
+        return None
+
+    def initInputs(self):
+	return None
 
     def addButton(self,name,listener):
         button = QtGui.QPushButton(name, self)
         button.clicked.connect(listener)
+        self.button[name]=button
         return button
+
+    def addField(self,name,default,layout):
+        text = QtGui.QTextEdit()
+	text.append(default)
+        text.setMaximumSize(400,40);
+        self.textFields[name]=text
+        layout.addRow(name,text)
+
+class ArffWindow(MainWindow):
+
+    def __init__(self, parent=None):
+	MainWindow.__init__(self, parent)
+
+    def initButtons(self):
+	self.buttons = QtGui.QWidget()
+        direction=QtGui.QBoxLayout.LeftToRight
+        buttonsLayout = QtGui.QBoxLayout(direction)
+        searchButton = self.addButton("search",self.searchButton)
+        showButton = self.addButton("show",self.showButton)
+        createButton = self.addButton("create",self.createButton)
+        runButton = self.addButton("run",self.runButton)
+        buttonsLayout.addWidget(searchButton)
+        buttonsLayout.addWidget(showButton)
+        buttonsLayout.addWidget(createButton)
+        buttonsLayout.addWidget(runButton)
+        self.buttons.setLayout(buttonsLayout)
+        self.layout.addWidget(self.buttons)
+
+    def initInputs(self):
+        inputs = QtGui.QWidget()
+        inputs.resize(300,400)
+        formLayout=QtGui.QFormLayout()
+        self.addField("Path",self.path,formLayout)
+        self.addField("Filename","",formLayout)
+        self.addField("Numbers of point","100.0",formLayout)
+        self.addField("Numbers of dim","2.0",formLayout)
+        inputs.setLayout(formLayout)
+        self.layout.addWidget(inputs)
+
+    def showButton(self):
+	return None
+
+    def createButton(self):
+        return None
+
+    def runButton(self):
+        return None
 
     def searchButton(self):
 	self.listWidget.clear()
@@ -70,7 +120,7 @@ class MainWindow(QtGui.QMainWindow):
 
 def main():
     app = QtGui.QApplication(sys.argv)
-    w = MainWindow()
+    w = ArffWindow()
     w.move(300, 300)
     w.show()
     sys.exit(app.exec_())
