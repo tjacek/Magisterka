@@ -13,6 +13,7 @@ class MainWindow(QtGui.QMainWindow):
         self.initLayout(widget)
         self.initList(widget)
         self.initInputs()
+        self.initComboBox()
         self.initButtons()
     
     def createMainWindow(self):
@@ -52,6 +53,9 @@ class MainWindow(QtGui.QMainWindow):
 
     def initInputs(self):
 	return None
+
+    def initComboBox():
+        return None
 
     def addButton(self,name,listener):
         button = QtGui.QPushButton(name, self)
@@ -96,6 +100,13 @@ class ArffWindow(MainWindow):
         self.addField("Numbers of dim","2.0",formLayout)
         inputs.setLayout(formLayout)
         self.layout.addWidget(inputs)
+
+    def initComboBox(self):
+        generator_combo = QtGui.QComboBox()
+        generators = ["Linear", "Nonlinear"]
+        for generator in generators:
+            generator_combo.addItem(generator)
+        self.layout.addWidget(generator_combo)
 
     def showButton(self):
 	return None
