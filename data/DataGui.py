@@ -1,4 +1,4 @@
-import sys, os,ClassiferGenerator as gen
+import sys, os,arff,ClassiferGenerator as gen
 from PyQt4 import QtCore,QtGui
 
 class MainWindow(QtGui.QMainWindow):
@@ -26,7 +26,7 @@ class MainWindow(QtGui.QMainWindow):
     def constants(self):
         self.title='Arff dataset generator'
         self.ends=".arff"
-        self.path="/home/user/Desktop/ML/data"
+        self.path="/home/user/Desktop/ML/data/"
 	self.margin=5.0
         self.x=500.0
         self.y=500.0
@@ -99,7 +99,7 @@ class ArffWindow(MainWindow):
         inputs.resize(300,400)
         formLayout=QtGui.QFormLayout()
         self.addField("Path",self.path,formLayout)
-        self.addField("Filename","",formLayout)
+        self.addField("Filename","data.arff",formLayout)
         self.addField("Numbers of point","100",formLayout)
         self.addField("Numbers of dim","2",formLayout)
         inputs.setLayout(formLayout)
@@ -116,11 +116,12 @@ class ArffWindow(MainWindow):
 	return None
 
     def createButton(self):
+	path=self.getInput("Path")
+	filename=self.getInput("Filename")
         n=int(self.getInput("Numbers of point"))
         dim=int(self.getInput("Numbers of dim"))
         data=gen.generateDataset(n,dim,pred=gen.linearPredict)
-	for d in data:
-	    print(str(d))        
+	arff.saveArff(data,path,filename)      
 
     def runButton(self):
         return None
