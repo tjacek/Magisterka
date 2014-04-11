@@ -71,7 +71,7 @@ def nonLinearPredict(point):
     else:
         return 0.0
 
-predDir ={ "linear":linearPredict,"nonLinear":nonLinearPredict}
+predDir ={ "Linear":linearPredict,"NonLinear":nonLinearPredict}
 #def getPositives(dataset):
 #    categories=list(map(lambda p:p[3], dataset))
 #    return sum(categories)/len(categories)    

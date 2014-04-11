@@ -106,11 +106,11 @@ class ArffWindow(MainWindow):
         self.layout.addWidget(inputs)
 
     def initComboBox(self):
-        generator_combo = QtGui.QComboBox()
+        self.gen_combo = QtGui.QComboBox()
         generators = ["Linear", "Nonlinear"]
         for generator in generators:
-            generator_combo.addItem(generator)
-        self.layout.addWidget(generator_combo)
+            self.gen_combo.addItem(generator)
+        self.layout.addWidget(self.gen_combo)
 
     def showButton(self):
 	return None
@@ -120,8 +120,10 @@ class ArffWindow(MainWindow):
 	filename=self.getInput("Filename")
         n=int(self.getInput("Numbers of point"))
         dim=int(self.getInput("Numbers of dim"))
-        data=gen.generateDataset(n,dim,pred=gen.linearPredict)
-	arff.saveArff(data,path,filename)      
+	predName=str(self.gen_combo.currentText())
+        pred=gen.predDir[predName]
+        instances=gen.generateDataset(n,dim,pred)
+	arff.saveArff(instances,path,filename)
 
     def runButton(self):
         return None

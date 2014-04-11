@@ -44,7 +44,3 @@ def visualise(data):
     y=data[1]
     scatter(x,y)
     show()
-    
-#def test():
-#    gen=DataGenerator()
-#    visualise(gen.generate(10))
