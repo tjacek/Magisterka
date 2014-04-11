@@ -1,4 +1,4 @@
-import sys, os
+import sys, os,ClassiferGenerator as gen
 from PyQt4 import QtCore,QtGui
 
 class MainWindow(QtGui.QMainWindow):
@@ -70,6 +70,10 @@ class MainWindow(QtGui.QMainWindow):
         self.textFields[name]=text
         layout.addRow(name,text)
 
+    def getInput(self,name):
+        field=self.textFields[name]
+        return field.toPlainText()
+
 class ArffWindow(MainWindow):
 
     def __init__(self, parent=None):
@@ -96,8 +100,8 @@ class ArffWindow(MainWindow):
         formLayout=QtGui.QFormLayout()
         self.addField("Path",self.path,formLayout)
         self.addField("Filename","",formLayout)
-        self.addField("Numbers of point","100.0",formLayout)
-        self.addField("Numbers of dim","2.0",formLayout)
+        self.addField("Numbers of point","100",formLayout)
+        self.addField("Numbers of dim","2",formLayout)
         inputs.setLayout(formLayout)
         self.layout.addWidget(inputs)
 
@@ -112,7 +116,11 @@ class ArffWindow(MainWindow):
 	return None
 
     def createButton(self):
-        return None
+        n=int(self.getInput("Numbers of point"))
+        dim=int(self.getInput("Numbers of dim"))
+        data=gen.generateDataset(n,dim,pred=gen.linearPredict)
+	for d in data:
+	    print(str(d))        
 
     def runButton(self):
         return None

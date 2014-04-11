@@ -8,13 +8,6 @@ import numpy
 from numpy import random
 from pylab import scatter,show
 
-def zero():
-    return 0
-    
-def uniform():
-    scale=1.0
-    return scale * random.uniform()
-
 class DataGenerator(object):
     def __init__(self,x=uniform,y=numpy.sin,noise=zero):
         self.x=x
@@ -39,12 +32,19 @@ class DataGenerator(object):
         Y = self.generateY(X)
         return [X,Y]
 
+def zero():
+    return 0
+    
+def uniform():
+    scale=1.0
+    return scale * random.uniform()
+
 def visualise(data):
     x=data[0]
     y=data[1]
     scatter(x,y)
     show()
     
-def test():
-    gen=DataGenerator()
-    visualise(gen.generate(10))
+#def test():
+#    gen=DataGenerator()
+#    visualise(gen.generate(10))
