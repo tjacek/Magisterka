@@ -10,10 +10,17 @@ class Instance(object):
     def __init__(self,point,category):
 	self.point=point
 	self.category=category
+	self.size=len(point)
+
+    def getLabel(self):
+        s= str(bool(self.category))
+        return s.lower()
 
     def __str__(self):
-        s=str(self.point)+"\n"
-        s+=str(self.category)
+        s=""
+        for cord in self.point:
+	    s+=str(cord)+","
+        s+=self.getLabel()+"\n"
         return s
 
 def generateDataset(n,dim,pred,scale=10):

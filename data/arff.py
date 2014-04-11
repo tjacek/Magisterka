@@ -7,44 +7,31 @@ Created on Mon Nov  4 19:37:42 2013
 
 import re
 
-def readArffFile(filename):
-    return ""
+def saveArff(instances,path,filename):
+    arff=toArff(instances)    
+    myFile = open(path+filename, 'w')
+    myFile.write(arff)
+    myFile.close()
 
-def attrToText(labeled):
-    s="@relation TestData \n \n"
-    attr=["x","y","z"]    
-    for key in attr:
-        s+="@attribute "+ key + " numeric\n"
+def toArff(points,labeled=True):
+    arff=attrToText(points[0].size,labeled)
+    arff+="@data\n"
+    for point in points:
+        arff+=str(point)    
+    return arff +"\n"
+
+def attrToText(n,labeled=True):
+    s="@relation TestData \n \n"  
+    for i in range(0,n):
+        atrrName= "cord"+str(i)
+        s+="@attribute "+ atrrName + " numeric\n"
     if(labeled):
         s+="@attribute cat {true,false}\n";
     return s +"\n"
-    
-def getLabel(x):
-    s= str(bool(x))
-    return s.lower()
 
 def toStr(numeric):
     short=int(numeric*10)/10
     return str(short)
-
-def pointToStr(p,labeled):
-    s=toStr(p[0]) +"," + toStr(p[1]) + ","+ toStr(p[2])
-    if(labeled):
-        s+="," + getLabel(p[3])
-    return s
-
-def toArff(points,labeled):
-    arff=attrToText(labeled)
-    arff+="@data\n"
-    for point in points:
-        arff+=pointToStr(point,labeled) +"\n"    
-    return arff +"\n"
-
-def saveArff(points,labeled=True,file="Test3.arff",path="C:/Users/tjacek/IdeaProjects/ML/" ):
-    arff=toArff(points,labeled)    
-    myFile = open(path+file, 'w')
-    myFile.write(arff)
-    myFile.close()
 
 def toFloat(raw):
     p = re.compile(r"true|false")
