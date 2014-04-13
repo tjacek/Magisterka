@@ -1,5 +1,5 @@
 import sys, os,arff,ClassiferGenerator as gen
-import Visualization as vis
+import Visualization as vis,utils
 from PyQt4 import QtCore,QtGui
 
 class MainWindow(QtGui.QMainWindow):
@@ -132,7 +132,8 @@ class ArffWindow(MainWindow):
 	arff.saveArff(instances,path,filename)
 
     def runButton(self):
-        return None
+        filename=self.getCurrentDataset()
+        utils.execute(filename)
 
     def searchButton(self):
 	self.listWidget.clear()

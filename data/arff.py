@@ -69,39 +69,3 @@ def toCat(raw):
   	   return 1.0
        return -1.0     
     return 0.0
-
-def parseLabeledData(filename):
-    reg=r"(\S)+,(\S)+,(\S)+,(true|false)"
-    p = re.compile(reg)
-    points=[]
-    for line in open(filename,'r').readlines():
-        if(p.match(line)):
-            point=line.split(",")
-            points.append(toFloat(point))
-    return points
-    
-def parseData(filename):
-    p = re.compile('(\S)+,(\S)+,(\S)+')
-    points=[]
-    for line in open(filename,'r').readlines():
-        if(p.match(line)):
-            point=line.split(",")
-            points.append(toFloat(point))
-    return points
-
-def toLabel(label):
-    label=label.replace("\n","")
-    if(label=="true"):
-        return 1.0
-    return 0.0
-            
-def parseLabels(filename):
-    file=open(filename,'r')
-    rawLabels=file.read()
-    file.close()
-    rawLabels=rawLabels.replace("[","").replace("].","")
-    labels=[]    
-    for label in rawLabels.split(","):
-        labels.append(toLabel(label))
-    return labels
-             
