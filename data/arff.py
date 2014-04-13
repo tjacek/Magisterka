@@ -5,13 +5,19 @@ Created on Mon Nov  4 19:37:42 2013
 @author: tjacek
 """
 
-import re
+import re,ClassiferGenerator as gen
 
 def saveArff(dataset,path,filename):
     arff=toArff(dataset)    
     myFile = open(path+filename, 'w')
     myFile.write(arff)
     myFile.close()
+
+def readArff(filename):
+    file=open(filename,'r')
+    arff=file.read()
+    file.close()
+    return arff
 
 def toArff(dataset,labeled=True):
     arff=attrToText(dataset.dim,labeled)
@@ -28,19 +34,41 @@ def attrToText(n,labeled=True):
         s+="@attribute cat {true,false}\n";
     return s +"\n"
 
-def toStr(numeric):
-    short=int(numeric*10)/10
-    return str(short)
+def parseArff(filename):
+    arff=readArff(filename)
+    attr,data=arff.split("@data\n")
+    dim=getDim(attr)
+    points,labels=parsePoints(data)
+    return gen.createNewDataset(points,labels)
 
-def toFloat(raw):
+def getDim(attr):
+    lines=attr.split("\n")
+    reg = re.compile('@attribute(.)+numeric(.)*')
+    dim=0
+    for line in lines:
+	if(reg.match(line)):
+	    dim+=1
+    return dim
+
+def parsePoints(data):
+    lines=data.split("\n")
+    lines=filter(lambda l: len(l)>0.0,lines)
+    lines=map(lambda x:x.split(","),lines)
+    labels=map(lambda x:x.pop(-1),lines)
+    points=map(toFloat,lines)
+    labels=map(toCat,labels)
+    return points,labels
+
+def toFloat(rawPoint):
+    return map(float,rawPoint)
+
+def toCat(raw):
     p = re.compile(r"true|false")
-    point=[]
-    for s in raw:
-        if(p.match(s)):
-            point.append(toLabel(s))
-        else:    
-            point.append(float(s))
-    return point
+    if(p.match(raw)):
+       if(raw=="true"):
+  	   return 1.0
+       return -1.0     
+    return 0.0
 
 def parseLabeledData(filename):
     reg=r"(\S)+,(\S)+,(\S)+,(true|false)"
@@ -76,14 +104,4 @@ def parseLabels(filename):
     for label in rawLabels.split(","):
         labels.append(toLabel(label))
     return labels
-    
-def parseArff(dataFile,labelsFile):
-    data=parseData(dataFile)
-    labels=parseLabels(labelsFile)
-    i=0
-    points=[]
-    for point in data:
-        point.append(labels[i])
-        points.append(point)
-        i+=1
-    return points          
+             

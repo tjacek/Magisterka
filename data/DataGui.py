@@ -1,4 +1,5 @@
 import sys, os,arff,ClassiferGenerator as gen
+import Visualization as vis
 from PyQt4 import QtCore,QtGui
 
 class MainWindow(QtGui.QMainWindow):
@@ -74,6 +75,9 @@ class MainWindow(QtGui.QMainWindow):
         field=self.textFields[name]
         return field.toPlainText()
 
+    def getCurrentDataset(self):
+        return str(self.listWidget.currentItem().text())
+
 class ArffWindow(MainWindow):
 
     def __init__(self, parent=None):
@@ -113,7 +117,9 @@ class ArffWindow(MainWindow):
         self.layout.addWidget(self.gen_combo)
 
     def showButton(self):
-	return None
+        filename=self.getCurrentDataset()
+        dataset=arff.parseArff(filename)
+        vis.visualizeLabels(dataset)
 
     def createButton(self):
 	path=self.getInput("Path")
@@ -123,8 +129,7 @@ class ArffWindow(MainWindow):
 	predName=str(self.gen_combo.currentText())
         pred=gen.predDir[predName]
         instances=gen.generateDataset(n,dim,pred)
-	#arff.saveArff(instances,path,filename)
-        print(instances.separate())
+	arff.saveArff(instances,path,filename)
 
     def runButton(self):
         return None
