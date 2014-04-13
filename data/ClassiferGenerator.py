@@ -21,7 +21,10 @@ class Dataset(object):
        for instance in self.instances:
 	   cat=instance.getLabel()
            dataSeries.setdefault(cat,[])
-	   dataSeries[cat].append(instance.point)
+	   dataSeries[cat].append(instance)
+       for key in dataSeries:
+	   rawData=dataSeries[key]
+	   dataSeries[key]=Dataset(self.size,self.dim,rawData)
        return dataSeries
 
    def __str__(self):
@@ -35,8 +38,14 @@ class Instance(object):
 	self.point=point
 	self.category=category
 
+    def toBool(self):
+	if(self.category>0):
+            return True
+        else:
+            return False    
+
     def getLabel(self):
-        s= str(bool(self.category))
+        s= str(self.toBool())
         return s.lower()
 
     def __str__(self):
@@ -82,7 +91,7 @@ def classification(seq,pred):
     return rawInstances
 
 def linearPredict(point):
-    if(sum(point)>5.0):
+    if(sum(point)>9.0):
         return 1.0
     else:
         return 0.0
@@ -90,7 +99,7 @@ def linearPredict(point):
 def nonLinearPredict(point):
     sqr=list(map(lambda x:x*x,point))
     sqr=sum(sqr)
-    if(sqr>10.0):
+    if(sqr>20.0):
         return 1.0
     else:
         return 0.0
