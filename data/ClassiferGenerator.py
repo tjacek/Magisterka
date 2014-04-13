@@ -12,6 +12,14 @@ class Dataset(object):
        self.dim=dim
        self.instances=instances
 
+   def separate(self):
+       dataSeries={}
+       for instance in self.instances:
+	   cat=instance.getLabel()
+           dataSeries.setdefault(cat,[])
+	   dataSeries[cat].append(instance.point)
+       return dataSeries
+
    def __str__(self):
        s=""
        for instance in self.instances:
@@ -84,7 +92,3 @@ def nonLinearPredict(point):
         return 0.0
 
 predDir ={ "Linear":linearPredict,"NonLinear":nonLinearPredict}
-#def getPositives(dataset):
-#    categories=list(map(lambda p:p[3], dataset))
-#    return sum(categories)/len(categories)    
-        

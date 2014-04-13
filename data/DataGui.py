@@ -123,7 +123,8 @@ class ArffWindow(MainWindow):
 	predName=str(self.gen_combo.currentText())
         pred=gen.predDir[predName]
         instances=gen.generateDataset(n,dim,pred)
-	arff.saveArff(instances,path,filename)
+	#arff.saveArff(instances,path,filename)
+        print(instances.separate())
 
     def runButton(self):
         return None
