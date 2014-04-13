@@ -7,17 +7,16 @@ Created on Mon Nov  4 19:37:42 2013
 
 import re
 
-def saveArff(instances,path,filename):
-    arff=toArff(instances)    
+def saveArff(dataset,path,filename):
+    arff=toArff(dataset)    
     myFile = open(path+filename, 'w')
     myFile.write(arff)
     myFile.close()
 
-def toArff(points,labeled=True):
-    arff=attrToText(points[0].size,labeled)
+def toArff(dataset,labeled=True):
+    arff=attrToText(dataset.dim,labeled)
     arff+="@data\n"
-    for point in points:
-        arff+=str(point)    
+    arff+=str(dataset)
     return arff +"\n"
 
 def attrToText(n,labeled=True):

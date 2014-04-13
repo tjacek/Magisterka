@@ -6,11 +6,22 @@ Created on Thu Oct 17 15:15:59 2013
 """
 import math,random
 
+class Dataset(object):
+   def __init__(self,size,dim,instances):
+       self.size=size
+       self.dim=dim
+       self.instances=instances
+
+   def __str__(self):
+       s=""
+       for instance in self.instances:
+	   s+=str(instance)
+       return s
+
 class Instance(object):
     def __init__(self,point,category):
 	self.point=point
 	self.category=category
-	self.size=len(point)
 
     def getLabel(self):
         s= str(bool(self.category))
@@ -25,7 +36,8 @@ class Instance(object):
 
 def generateDataset(n,dim,pred,scale=10):
     seq=randomSeq(n,dim,scale)
-    return classification(seq,pred)
+    instances=classification(seq,pred)
+    return Dataset(n,dim,instances)
 
 def randomSeq(n=10,dim=3,scale=1.0):
     rList=[]
@@ -50,12 +62,12 @@ def getUniformDist(scale,a=0.0,b=1.0):
     return lambda : uniform(scale,a,b)
     
 def classification(seq,pred):
-    cseq=[]
+    rawInstances=[]
     for point in seq:
         category=pred(point)
         instance=Instance(point,category)
-        cseq.append(instance)
-    return cseq
+        rawInstances.append(instance)
+    return rawInstances
 
 def linearPredict(point):
     if(sum(point)>5.0):

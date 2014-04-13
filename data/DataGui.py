@@ -120,15 +120,10 @@ class ArffWindow(MainWindow):
 	filename=self.getInput("Filename")
         n=int(self.getInput("Numbers of point"))
         dim=int(self.getInput("Numbers of dim"))
-<<<<<<< HEAD
 	predName=str(self.gen_combo.currentText())
         pred=gen.predDir[predName]
         instances=gen.generateDataset(n,dim,pred)
 	arff.saveArff(instances,path,filename)
-=======
-        data=gen.generateDataset(n,dim,pred=gen.linearPredict)
-	arff.saveArff(data,path,filename)      
->>>>>>> 57e5dfdaa63443df9567c080e94767945b6d0a1d
 
     def runButton(self):
         return None
