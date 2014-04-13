@@ -12,6 +12,14 @@ class Dataset(object):
        self.dim=dim
        self.instances=instances
 
+   def getPoints(self):
+       fun=lambda inst : inst.point
+       return map(fun,self.instances)
+   
+   def getLabels(self):
+       fun=lambda inst : inst.category
+       return map(fun,self.instances)
+
    def getDim(self,i):
        fun=lambda inst:inst.point[i]
        return map(fun,self.instances)
@@ -55,6 +63,14 @@ class Instance(object):
         s+=self.getLabel()+"\n"
         return s
 
+def createNewDataset(reduPoints,labels):
+    instances=[]
+    size=len(labels)
+    for i in range(0,size):
+        instance=Instance(reduPoints[i],labels[i])
+        instances.append(instance)
+    return Dataset(size,3,instances)
+
 def generateDataset(n,dim,pred,scale=10):
     seq=randomSeq(n,dim,scale)
     instances=classification(seq,pred)
@@ -91,7 +107,7 @@ def classification(seq,pred):
     return rawInstances
 
 def linearPredict(point):
-    if(sum(point)>9.0):
+    if(sum(point)>12.0):
         return 1.0
     else:
         return 0.0
