@@ -12,6 +12,10 @@ class Dataset(object):
        self.dim=dim
        self.instances=instances
 
+   def getDim(self,i):
+       fun=lambda inst:inst.point[i]
+       return map(fun,self.instances)
+
    def separate(self):
        dataSeries={}
        for instance in self.instances:

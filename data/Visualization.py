@@ -4,37 +4,28 @@ Created on Mon Nov  4 17:49:27 2013
 
 @author: tjacek
 """
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt,ClassiferGenerator as gen
 from mpl_toolkits.mplot3d import Axes3D
 
-class Dataset(object):
-    def __init__(self):
-        self.X=[]
-        self.Y=[]
-        self.Z=[]
-    
-    def add(self,x,y,z):
-        self.X.append(x)
-        self.Y.append(y)
-        self.Z.append(z)
+def prepare(dataset):
+    dataSeries=[]
+    for i in range(0,3):
+        dataSeries.append(dataset.getDim(i))
+    return dataSeries	
 
-    def size():
-        return len(self.X)
+def visualize(preparedData):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(prepData[0],prepData[1],prepData[2],c='r',marker='o')
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    ax.set_zlabel("Z")
+    plt.show()
 
-    def toStr(self,i):
-        return self.X[i] +"," + self.Y[i] +"," + self.Z[i]
-    
-    def __str__(self):
-        s=""
-        for i in range(0,len(self.X)):
-            s+=self.toStr(i)+"\n"
-        return s 
+dataset=gen.generateDataset(20,3,gen.linearPredict)
+prepData=prepare(dataset)
+visualize(prepData)
 
-def toDataset(points):
-    dataset=Dataset()
-    for point in points:
-        dataset.add(point[0],point[1],point[2])
-    return dataset
 
 def separate(points,predict):
     pos=[]
@@ -49,15 +40,6 @@ def separate(points,predict):
 def separatePoints(points):
     predict =lambda point: point[3]==1.0
     return separate(points,predict)
-
-def visualize(dataset):
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.scatter(dataset.X,dataset.Y,dataset.Z,c='r',marker='o')
-    ax.set_xlabel("X")
-    ax.set_ylabel("Y")
-    ax.set_zlabel("Z")
-    plt.show()
     
 def visualizeLabels(pos,neg):
     fig = plt.figure()
