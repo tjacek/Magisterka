@@ -15,8 +15,28 @@
 experiment(Algorithm,Filename) ->
   {Attributes, Instances} = mllib:read(arff,[{file,Filename}]),
   Pred=get_rand(0.3),
-  {TestSet,TrainingSet} = split(Instances,Pred),
-  io:format("~p",[TrainingSet]).
+  {TrainingSet,TestSet} = split(Instances,Pred),
+  ClassName=cat,
+  {ok, Classifier} = mllib:learn(Attributes, ClassName, TrainingSet, Algorithm, [ ]),
+  {TrueLabels,TestList}=regression:parse_labels(TestSet),
+  TestInstances=lists:map(fun(X)-> to_tuple(X) end,TestList),
+  PredLabels=learn(Classifier,TestInstances),
+  Sucess=count_sucess(TrueLabels,PredLabels)/ length(TestInstances),
+  io:format("~p",[Sucess]).
+
+count_sucess(TrueLabels,PredLabels) -> count_sucess(TrueLabels,PredLabels,0.0).
+count_sucess([T|Ht],[P|Pt],Counter) ->
+  if T==P -> count_sucess(Ht,Pt,Counter+1.0);
+     true -> count_sucess(Ht,Pt,Counter)
+  end;
+count_sucess([],[],Counter) ->  Counter.
+
+
+  to_tuple(L) ->
+  X=lists:nth(1,L),
+  Y=lists:nth(2,L),
+  Z=lists:nth(3,L),
+  {X,Y,Z}.
 
 split(Instances,Rand) -> split([],[],Instances,Rand).
 split(TestSet,TrainingSet,[T|H],Rand) ->
