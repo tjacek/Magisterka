@@ -43,15 +43,9 @@ get_kernel(B) ->
   end.
 
 exp_kernel(X,Y,B) ->
-  D=distance(X,Y),
+  D=utils:distance(X,Y),
   Exponent= (-1.0*D*D) / (2.0* B),
   math:exp(Exponent).
-
-distance(X,Y) ->  distance(X,Y,0.0).
-distance([],[],Acc) ->  math:sqrt(Acc);
-distance([A|Ha],[B|Hb],Acc) ->
-  Det=A-B,
-  distance(Ha,Hb,Acc + Det*Det).
 
 test() ->
   H=[1.0,1.0],

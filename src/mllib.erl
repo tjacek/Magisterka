@@ -49,7 +49,7 @@ learn(Attributes, ClassName, TrainingExamples, Algorithm, Options) when is_atom(
 
 learn(Attributes, #class{} = Class, TrainingExamples, Algorithm, Options, Nodes)->
   {CheckOptions, AlgorithmOptions} = split_learn_options(Options),
-  io:format("OK"),
+ % io:format("OK"),
   case check_learn_args(Attributes, Class, TrainingExamples, CheckOptions) of
   %ok -> Algorithm:learn(Attributes, Class, TrainingExamples, AlgorithmOptions);
     ok ->
