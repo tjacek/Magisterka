@@ -118,7 +118,7 @@ class ArffWindow(MainWindow):
 
     def showButton(self):
         filename=self.getCurrentDataset()
-        dataset=arff.parseArff(filename)
+        dataset,attr=arff.parseArff(filename)
         vis.visualizeLabels(dataset)
 
     def createButton(self):

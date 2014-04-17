@@ -37,18 +37,26 @@ def attrToText(n,labeled=True):
 def parseArff(filename):
     arff=readArff(filename)
     attr,data=arff.split("@data\n")
-    dim=getDim(attr)
+    dim,attrNames=parseAttr(attr)
     points,labels=parsePoints(data)
-    return gen.createNewDataset(points,labels)
+    dataset=gen.createNewDataset(points,labels)
+    return dataset,attrNames
 
-def getDim(attr):
+def parseAttr(attr):
     lines=attr.split("\n")
+    attrNames=[]
     reg = re.compile('@attribute(.)+numeric(.)*')
     dim=0
     for line in lines:
 	if(reg.match(line)):
 	    dim+=1
-    return dim
+            name=extractAttrName(line)
+            attrNames.append(name) 
+    return dim,attrNames
+
+def extractAttrName(line):
+    line=line.replace("numeric","")
+    return line.replace("@attribute","")
 
 def parsePoints(data):
     lines=data.split("\n")
@@ -69,3 +77,8 @@ def toCat(raw):
   	   return 1.0
        return -1.0     
     return 0.0
+
+if __name__ == '__main__':
+    data,attr=parseArff("apriori/apriori.arff")
+    print(attr)
+    

@@ -22,7 +22,7 @@ def addAttributes(datasets,arffFile,discrete=False):
     arffFile=addAttribute("minConf",arffFile)
     arffFile=addAttribute("workers",arffFile)
     if(discrete):
-	arffFile+="@ATTRIBUTE class {negative,positive}\n"
+	arffFile+="@attribute class {negative,positive}\n"
     else:
     	arffFile=addAttribute("time",arffFile)
     return arffFile
@@ -33,7 +33,7 @@ def addAttribute(attrName,arffFile):
     return arffFile
 
 def addSamples(expResult,arffFile):
-    arffFile+="@DATA\n"    
+    arffFile+="@data\n"    
     for dataset in expResult.keys():
         for instance in expResult[dataset]:
             sample=getStats(dataset)
