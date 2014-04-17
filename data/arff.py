@@ -39,7 +39,7 @@ def parseArff(filename):
     attr,data=arff.split("@data\n")
     dim,attrNames=parseAttr(attr)
     points,labels=parsePoints(data)
-    dataset=gen.createNewDataset(points,labels)
+    dataset=gen.createNewDataset(points,labels,dim)
     return dataset,attrNames
 
 def parseAttr(attr):

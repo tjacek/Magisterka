@@ -23,7 +23,14 @@ class Dataset(object):
    def getDim(self,i):
        fun=lambda inst:inst.point[i]
        return map(fun,self.instances)
-
+   
+   def getAllDims(self):
+       dims=[]
+       for i in range(0,self.dim):
+	   dim=self.getDim(i)
+           dims.append(dim)
+       return dims
+   
    def separate(self):
        dataSeries={}
        for instance in self.instances:
@@ -63,13 +70,13 @@ class Instance(object):
         s+=self.getLabel()+"\n"
         return s
 
-def createNewDataset(reduPoints,labels):
+def createNewDataset(reduPoints,labels,dim=3):
     instances=[]
     size=len(labels)
     for i in range(0,size):
         instance=Instance(reduPoints[i],labels[i])
         instances.append(instance)
-    return Dataset(size,3,instances)
+    return Dataset(size,dim,instances)
 
 def generateDataset(n,dim,pred,scale=10):
     seq=randomSeq(n,dim,scale)
