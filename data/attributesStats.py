@@ -56,6 +56,7 @@ class Histogram(object):
         self.matrix=np.zeros(shape=(bins,bins))
         self.getRange(X,Y)
         self.updateAll(X,Y)
+        self.norm()
 
     def getRange(self,X,Y):
         self.minX=min(X)
@@ -92,20 +93,28 @@ class Histogram(object):
     def xRange(self,x,i):
         l=self.minX + i*self.detX
         u=l+self.detX 
-        return (l<=x) and (x<u) 
+        return (l<=x) and (x<=u) 
 
     def yRange(self,y,i):
         l=self.minY + i*self.detY
         u=l+self.detY 
-        return (l<=y) and (y<u)
+        return (l<=y) and (y<=u)
 
+    def norm(self):
+        f=lambda x: sum(x)
+        C=sum(map(f,self.matrix))
+        div=lambda x: (x/C)
+        self.matrix=map(lambda y:map(div,y),self.matrix)
+        return C
+    
     def __str__(self):
         return str(self.matrix)
 
 def test():
-    X=[1.0,1.0, -1.0,-1.0]
-    Y=[1.0,-1.0,1.0,-1.0]
+    X=[1.0, 1.0, -1.0,-1.0]
+    Y=[1.0,-1.0,  1,0,-1.0]
     H=Histogram(X,Y,2)
+    #H.norm()
     print(H)
 
 if __name__ == '__main__':
