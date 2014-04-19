@@ -57,6 +57,7 @@ class Histogram(object):
         self.getRange(X,Y)
         self.updateAll(X,Y)
         self.norm()
+        self.marginalize()
 
     def getRange(self,X,Y):
         self.minX=min(X)
@@ -77,9 +78,21 @@ class Histogram(object):
         i,j=self.findBin(x,y)
         self.matrix[i][j]+=1.0
 
+    def marginalize(self):
+        self.px=map(lambda x:sum(x),self.matrix)
+        self.py=[]
+        for i in range(0,self.bins):
+	    f=lambda x:x[i]
+            yi=sum(map(f,self.matrix))
+            self.py.append(yi)
+
     def p(self,x,y): 
         i,j=self.findBin(x,y)
         return self.matrix[i][j]
+
+    def margP(self,x,y):
+        i,j=self.findBin(x,y)
+        return self.px[i],self.py[j]
 
     def findBin(self,x,y):
         for i in range(0,self.bins):
@@ -110,12 +123,27 @@ class Histogram(object):
     def __str__(self):
         return str(self.matrix)
 
+def mutualEntropy(x,y):
+    hist=Histogram(x,y,2)
+    mutualInf = np.zeros(shape=(len(x),len(y)))
+    for i in range(0,len(x)):
+        for j in range(0,len(y)):
+	    mutualInf[i][j]=entropyDensity(x[i],y[j],hist)
+    return mutualInf
+
+def entropyDensity(x,y,hist):
+    pxy=hist.p(x,y)
+    px,py=hist.margP(x,y)
+    return  pxy*np.log(pxy/(px*py))
+
 def test():
     X=[1.0, 1.0, -1.0,-1.0]
     Y=[1.0,-1.0,  1,0,-1.0]
-    H=Histogram(X,Y,2)
-    #H.norm()
-    print(H)
+    #X=[1.0, 2.0, 3.0,4.0]
+    #Y=[2.0, 4.0,  9,0,16.0]
+    #H=Histogram(X,Y,2)
+    #print(H.px)
+    print(mutualEntropy(X,Y))
 
 if __name__ == '__main__':
     #data=getCorelationMatrix("apriori/apriori.arff")
