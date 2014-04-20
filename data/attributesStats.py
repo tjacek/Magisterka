@@ -1,11 +1,17 @@
 import scipy.stats as stats,arff
 import numpy as np
 
-def getCorelationMatrix(filename):
+def getCorlMatrix(filename):
+    return getMatrix(filename,computeCorelationMatrix)
+
+def getEntropyMatrix(filename):
+    return getMatrix(filename,mutualEntropyMatrix)
+
+def getMatrix(filename,compute):
     data,attr=arff.parseArff(filename)
     series=data.getAllDims()
-    corelMatrix=computeCorelationMatrix(series)
-    printCorlMatrix(corelMatrix,attr)
+    corelMatrix=compute(series)
+    printMatrix(corelMatrix,attr)
     return corelMatrix
 
 def computeCorelationMatrix(series):
@@ -19,13 +25,14 @@ def computeCorelationMatrix(series):
             corelMatrix[i][j]=round(corl,2)  
     return corelMatrix
 
-def printCorlMatrix(corel,attr):
+def printMatrix(corel,attr):
     size=len(corel)
     print(getFirstLine(size))
     for i in range(0,size):
         line=str(i)+": "
         for j in range(0,size):
-            line+=getStr(corel[i][j])
+            value=round(corel[i][j],2) 
+            line+=getStr(value)
         print(line)
     printAttributes(attr)
 
@@ -68,7 +75,7 @@ class Histogram(object):
         self.detY=self.getDet(self.minY,self.maxY)
 
     def getDet(self,inf,sup):
-        return (sup-inf)/self.bins
+        return (sup-inf)/float(self.bins)
 
     def updateAll(self,X,Y):
         for i in range(0,len(X)):
@@ -123,28 +130,40 @@ class Histogram(object):
     def __str__(self):
         return str(self.matrix)
 
+def mutualEntropyMatrix(series):
+    size=len(series)
+    entropyMatrix = np.zeros(shape=(size,size))
+    for i in range(0,size):
+        for j in range(0,size):
+            x=series[i]
+            y=series[j]   
+            entropyMatrix[i][j]=mutualEntropy(x,y) 
+    return entropyMatrix
+
 def mutualEntropy(x,y):
-    hist=Histogram(x,y,2)
-    mutualInf = np.zeros(shape=(len(x),len(y)))
+    hist=Histogram(x,y)
+    entropy=0.0
     for i in range(0,len(x)):
-        for j in range(0,len(y)):
-	    mutualInf[i][j]=entropyDensity(x[i],y[j],hist)
-    return mutualInf
+	entropy+=entropyDensity(x[i],y[i],hist)
+    return entropy
 
 def entropyDensity(x,y,hist):
-    pxy=hist.p(x,y)
+    pxy=hist.p(x,y) 
+    i,j=hist.findBin(x,y)
     px,py=hist.margP(x,y)
     return  pxy*np.log(pxy/(px*py))
 
 def test():
-    X=[1.0, 1.0, -1.0,-1.0]
-    Y=[1.0,-1.0,  1,0,-1.0]
-    #X=[1.0, 2.0, 3.0,4.0]
-    #Y=[2.0, 4.0,  9,0,16.0]
+    #X=[1.0, 1.0, -1.0,-1.0]
+    #Y=[1.0,-1.0,  1,0,-1.0]
+    X=[1.0, 2.0, 3.0,4.0]
+    Y=[2.0, 4.0, 9.0,16.0]
     #H=Histogram(X,Y,2)
     #print(H.px)
-    print(mutualEntropy(X,Y))
+    #print(
+    matrix=printMatrix(corelMatrix,attr)
+    print(mutualEntropyMatrix([X,Y]))
 
 if __name__ == '__main__':
-    #data=getCorelationMatrix("apriori/apriori.arff")
-    test()
+    data=getEntropyMatrix("apriori/apriori.arff")
+    #test()
