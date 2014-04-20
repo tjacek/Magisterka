@@ -93,7 +93,11 @@ class Histogram(object):
             yi=sum(map(f,self.matrix))
             self.py.append(yi)
 
-    def p(self,x,y): 
+    def p(self,x,y):
+        if(x<self.minX or self.maxX<x):
+            return 0.0 
+        if(y<self.minY or self.maxY<y):
+            return 0.0 
         i,j=self.findBin(x,y)
         return self.matrix[i][j]
 
@@ -145,12 +149,15 @@ def mutualEntropy(x,y):
     entropy=0.0
     for i in range(0,len(x)):
 	entropy+=entropyDensity(x[i],y[i],hist)
+        #if(entropy<0.0):
     return entropy
 
 def entropyDensity(x,y,hist):
     pxy=hist.p(x,y) 
     i,j=hist.findBin(x,y)
     px,py=hist.margP(x,y)
+    if(pxy/(px*py)<1.0):
+        return 0.0
     return  pxy*np.log(pxy/(px*py))
 
 def test():
