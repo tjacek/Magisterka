@@ -63,8 +63,8 @@ class Histogram(object):
         self.matrix=np.zeros(shape=(bins,bins))
         self.getRange(X,Y)
         self.updateAll(X,Y)
-        self.norm()
         self.marginalize()
+        self.norm()
 
     def getRange(self,X,Y):
         self.minX=min(X)
@@ -86,12 +86,14 @@ class Histogram(object):
         self.matrix[i][j]+=1.0
 
     def marginalize(self):
-        self.px=map(lambda x:sum(x),self.matrix)
-        self.py=[]
+        self.px=map(lambda x:0.0,self.matrix)
+        self.py=map(lambda x:0.0,self.matrix)
         for i in range(0,self.bins):
-	    f=lambda x:x[i]
-            yi=sum(map(f,self.matrix))
-            self.py.append(yi)
+	    for j in range(0,self.bins):
+                self.px[i]+=self.matrix[i][j]
+        for i in range(0,self.bins):
+	    for j in range(0,self.bins):
+                self.py[i]+=self.matrix[j][i]        
 
     def p(self,x,y):
         if(x<self.minX or self.maxX<x):
@@ -129,8 +131,18 @@ class Histogram(object):
         C=sum(map(f,self.matrix))
         div=lambda x: (x/C)
         self.matrix=map(lambda y:map(div,y),self.matrix)
+        self.px=map(div,self.px)
+        self.py=map(div,self.py)
         return C
-    
+
+    def check(self):
+        for i in range(0,self.bins):
+            for j in range(0,self.bins):
+                pxy=self.matrix[i][j]
+                p2=self.px[i]*self.py[j]
+                if(pxy!=0.0 and pxy <p2):
+                    print(i,j,pxy,p2,self.px[i],self.py[i])
+
     def __str__(self):
         return str(self.matrix)
 
@@ -145,20 +157,29 @@ def mutualEntropyMatrix(series):
     return entropyMatrix
 
 def mutualEntropy(x,y):
-    hist=Histogram(x,y)
+    hist=Histogram(x,y,10)
+    return entropy(hist.px) + entropy(hist.py) - jointEntropy(hist)
+
+def entropy(pmarg):
+    p=filter(nonzero,pmarg)
+    fun=lambda x:x*np.log(1.0/x)
+    return sum(map(fun,p))
+
+def nonzero(x):
+    return x>0.0
+
+def jointEntropy(hist):
     entropy=0.0
-    for i in range(0,len(x)):
-	entropy+=entropyDensity(x[i],y[i],hist)
-        #if(entropy<0.0):
+    for i in range(0,hist.bins):
+        for j in range(0,hist.bins):
+	    entropy+=entropyDensity(i,j,hist)
     return entropy
 
-def entropyDensity(x,y,hist):
-    pxy=hist.p(x,y) 
-    i,j=hist.findBin(x,y)
-    px,py=hist.margP(x,y)
-    if(pxy/(px*py)<1.0):
+def entropyDensity(i,j,hist):
+    pxy=hist.matrix[i][j]
+    if(pxy==0.0):
         return 0.0
-    return  pxy*np.log(pxy/(px*py))
+    return  pxy*np.log(1.0/pxy)
 
 def test():
     #X=[1.0, 1.0, -1.0,-1.0]
