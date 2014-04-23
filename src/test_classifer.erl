@@ -21,16 +21,29 @@ experiment(Algorithm,Filename) ->
   {TrueLabels,TestList}=regression:parse_labels(TestSet),
   TestInstances=lists:map(fun(X)-> to_tuple(X) end,TestList),
   PredLabels=learn(Classifier,TestInstances),
-  Sucess=count_sucess(TrueLabels,PredLabels)/ length(TestInstances),
+  %Sucess=accuracy(TrueLabels,PredLabels)/ length(TestInstances),
+  Sucess=confusion_matrix(TrueLabels,PredLabels),
   io:format("~p",[Sucess]).
 
-count_sucess(TrueLabels,PredLabels) -> count_sucess(TrueLabels,PredLabels,0.0).
-count_sucess([T|Ht],[P|Pt],Counter) ->
-  if T==P -> count_sucess(Ht,Pt,Counter+1.0);
-     true -> count_sucess(Ht,Pt,Counter)
+accuracy(TrueLabels,PredLabels) ->
+  Size =length(TrueLabels) + length(PredLabels),
+  accuracy(TrueLabels,PredLabels,0.0)/Size.
+accuracy([T|Ht],[P|Pt],Counter) ->
+  if T==P -> accuracy(Ht,Pt,Counter+1.0);
+     true -> accuracy(Ht,Pt,Counter)
   end;
-count_sucess([],[],Counter) ->  Counter.
+accuracy([],[],Counter) ->  Counter.
 
+confusion_matrix(TrueLabels,PredLabels) ->
+  confusion_matrix(TrueLabels,PredLabels,dict:new()).
+
+confusion_matrix([],[],Dict) -> Dict;
+confusion_matrix( [TrueCategory|TrueLabels],[PredCategory|PredLabels],Dict) ->
+  UpdatedDict1 = dict:update(TrueCategory,fun(X)->X end,dict:new(),Dict),
+  CategoryDict = dict:fetch(TrueCategory,UpdatedDict1),
+  NewCategoryDict = dict:update_counter(PredCategory,1.0,CategoryDict),
+  UpdatedDict=  dict:store(TrueCategory, NewCategoryDict, UpdatedDict1),
+  confusion_matrix(TrueLabels,PredLabels,UpdatedDict).
 
   to_tuple(L) ->
   X=lists:nth(1,L),
