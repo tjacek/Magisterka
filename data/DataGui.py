@@ -27,7 +27,7 @@ class MainWindow(QtGui.QMainWindow):
     def constants(self):
         self.title='Arff dataset generator'
         self.ends=".arff"
-        self.path="/home/user/Desktop/ML/data"
+        self.path="/home/user/Desktop/ML/newdata/"
 	self.margin=5.0
         self.x=500.0
         self.y=500.0
@@ -129,7 +129,7 @@ class ArffWindow(MainWindow):
 	predName=str(self.gen_combo.currentText())
         pred=gen.predDir[predName]
         instances=gen.generateDataset(n,dim,pred)
-	arff.saveArff(instances,path,filename)
+	arff.saveArff(instances,self.path,filename)
 
     def runButton(self):
         filename=self.getCurrentDataset()

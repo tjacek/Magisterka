@@ -13,6 +13,12 @@ def visualizeLabels(dataset):
     if(dataset.dim>3):
 	dataset=dimReduction(dataset)
     dataSeries=dataset.separate()
+    if(dataset.dim):
+        visualizeLabels2D(dataSeries)
+        return
+    visualizeLabels3D(dataSeries)
+
+def visualizeLabels3D(dataSeries):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     i=0
@@ -25,9 +31,21 @@ def visualizeLabels(dataset):
     ax.set_zlabel("Z")
     plt.show()
 
+def visualizeLabels2D(dataSeries):
+    fig = plt.figure()
+    ax = fig.add_subplot(111)#, projection='2d')
+    i=0
+    for key in dataSeries.keys():
+       prepData=prepare(dataSeries[key])
+       ax.scatter(prepData[0],prepData[1],c=colors[i],marker='o')
+       i+=1 
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    plt.show()
+
 def prepare(dataset):
     dataSeries=[]
-    for i in range(0,3):
+    for i in range(0,dataset.dim):
         dataSeries.append(dataset.getDim(i))
     return dataSeries	
 
@@ -54,8 +72,3 @@ def applyPCA(vectors):
 
 def toMatrix(data):
     return np.asarray(data)
-
-#dataset=gen.generateDataset(20,4,gen.linearPredict)
-#print(dataset)
-#prepData=prepare(dataset)
-#visualizeLabels(dataset)
