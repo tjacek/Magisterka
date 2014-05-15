@@ -10,7 +10,12 @@
 -author("tjacek").
 
 %% API
--export([experiment/2,createClassifer/3,testClassifer/3 ]).
+-export([run_exp/1,experiment/2,createClassifer/3,testClassifer/3 ]).
+
+run_exp(Args) ->
+  Filename = lists:nth(1,Args),
+  io:format("~p",[Filename]),
+  experiment(c45,Filename).
 
 experiment(Algorithm,Filename) ->
   {Attributes, Instances} = mllib:read(arff,[{file,Filename}]),
