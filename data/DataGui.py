@@ -27,7 +27,7 @@ class MainWindow(QtGui.QMainWindow):
     def constants(self):
         self.title='Arff dataset generator'
         self.ends=".arff"
-        self.path="/home/user/Desktop/ML/newdata/"
+        self.path="/home/user/Desktop/ML/data/"
 	self.margin=5.0
         self.x=500.0
         self.y=500.0
