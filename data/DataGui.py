@@ -27,7 +27,7 @@ class MainWindow(QtGui.QMainWindow):
     def constants(self):
         self.title='Arff dataset generator'
         self.ends=".arff"
-        self.path="/home/user/Desktop/ML/data/"
+        self.path="/home/user/Desktop/ML/data"
 	self.margin=5.0
         self.x=500.0
         self.y=500.0
@@ -122,7 +122,7 @@ class ArffWindow(MainWindow):
         vis.visualizeLabels(dataset)
 
     def createButton(self):
-	path=self.getInput("Path")
+        self.updatePath()
 	filename=self.getInput("Filename")
         n=int(self.getInput("Numbers of point"))
         dim=int(self.getInput("Numbers of dim"))
@@ -136,6 +136,7 @@ class ArffWindow(MainWindow):
         utils.execute(filename)
 
     def searchButton(self):
+        self.updatePath()
 	self.listWidget.clear()
 	sender = self.sender()
 	for root, dirs, files in os.walk(self.path):
@@ -146,6 +147,9 @@ class ArffWindow(MainWindow):
 			self.listWidget.addItem(path)
 		    except:
 			pass
+
+    def updatePath(self):
+        self.path=str(self.getInput("Path"))
 
 def main():
     app = QtGui.QApplication(sys.argv)
