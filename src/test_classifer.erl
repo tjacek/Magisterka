@@ -10,25 +10,29 @@
 -author("tjacek").
 
 %% API
--export([run_exp/1,experiment/2,createClassifer/3,testClassifer/3 ]).
+-export([run_exp/1,experiment/4,createClassifer/3,testClassifer/3 ]).
 
 run_exp(Args) ->
-  Filename = lists:nth(1,Args),
-  io:format("~p",[Filename]),
-  experiment(c45,Filename).
+  TrainFile = lists:nth(1,Args),
+  TestFile = lists:nth(2,Args),
+  Output = lists:nth(3,Args),
+  io:format("~p",[TrainFile]),
+  experiment(c45,TrainFile,TestFile,Output).
 
-experiment(Algorithm,Filename) ->
-  {Attributes, Instances} = mllib:read(arff,[{file,Filename}]),
-  Pred=get_rand(0.3),
-  {TrainingSet,TestSet} = split(Instances,Pred),
+experiment(Algorithm,TrainFile,TestFile,Output) ->
+  {Attributes, TrainSet} = mllib:read(arff,[{file,TrainFile}]),
+  {Attributes, TestSet} = mllib:read(arff,[{file,TestFile}]),
   ClassName=cat,
-  {ok, Classifier} = mllib:learn(Attributes, ClassName, TrainingSet, Algorithm, [ ]),
+  {ok, Classifier} = mllib:learn(Attributes, ClassName, TrainSet, Algorithm, [ ]),
   {TrueLabels,TestList}=regression:parse_labels(TestSet),
   TestInstances=lists:map(fun(X)-> list_to_tuple(X)  end,TestList),
   PredLabels=learn(Classifier,TestInstances),
-  Sucess=accuracy(TrueLabels,PredLabels)/ length(TestInstances),
+  file:write_file(Output, io_lib:fwrite("~p.\n", [PredLabels])),
+  %Pred=get_rand(0.3),
+  %{TrainingSet,TestSet} = split(Instances,Pred),
+  %Sucess=accuracy(TrueLabels,PredLabels)/ length(TestInstances),
   %Sucess=confusion_matrix(TrueLabels,PredLabels),
-  io:format("~p",[Sucess]).
+  io:format("~p",[TrueLabels]).
 
 accuracy(TrueLabels,PredLabels) ->
   Size =length(TrueLabels) + length(PredLabels),
