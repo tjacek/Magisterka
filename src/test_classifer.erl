@@ -24,10 +24,10 @@ experiment(Algorithm,Filename) ->
   ClassName=cat,
   {ok, Classifier} = mllib:learn(Attributes, ClassName, TrainingSet, Algorithm, [ ]),
   {TrueLabels,TestList}=regression:parse_labels(TestSet),
-  TestInstances=lists:map(fun(X)-> to_tuple(X) end,TestList),
+  TestInstances=lists:map(fun(X)-> list_to_tuple(X)  end,TestList),
   PredLabels=learn(Classifier,TestInstances),
-  %Sucess=accuracy(TrueLabels,PredLabels)/ length(TestInstances),
-  Sucess=confusion_matrix(TrueLabels,PredLabels),
+  Sucess=accuracy(TrueLabels,PredLabels)/ length(TestInstances),
+  %Sucess=confusion_matrix(TrueLabels,PredLabels),
   io:format("~p",[Sucess]).
 
 accuracy(TrueLabels,PredLabels) ->
@@ -49,12 +49,6 @@ confusion_matrix( [TrueCategory|TrueLabels],[PredCategory|PredLabels],Dict) ->
   NewCategoryDict = dict:update_counter(PredCategory,1.0,CategoryDict),
   UpdatedDict=  dict:store(TrueCategory, NewCategoryDict, UpdatedDict1),
   confusion_matrix(TrueLabels,PredLabels,UpdatedDict).
-
-  to_tuple(L) ->
-  X=lists:nth(1,L),
-  Y=lists:nth(2,L),
-  Z=lists:nth(3,L),
-  {X,Y,Z}.
 
 split(Instances,Rand) -> split([],[],Instances,Rand).
 split(TestSet,TrainingSet,[T|H],Rand) ->
