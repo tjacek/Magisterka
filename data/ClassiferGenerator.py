@@ -78,6 +78,11 @@ class Instance(object):
         s= str(self.toBool())
         return s.lower()
 
+    def setLabel(self,label):
+        if(label=="true"):
+            self.category=1.0
+        else:
+            self.category=-1.0
     def __str__(self):
         s=""
         for cord in self.point:

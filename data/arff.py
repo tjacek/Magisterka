@@ -20,6 +20,33 @@ def saveArff(dataset,path,filename):
     myFile.write(arff)
     myFile.close()
 
+def prepareOutput(outputfile):
+    f=open(outputfile,'r')
+    output=f.read()
+    f.close()
+    labels=extractLabels(output)
+    dataset=readTestset(outputfile)[0]
+    i=0
+    for instance in dataset.instances:
+        instance.setLabel(labels[i])
+        i+=1
+    arffOutput=toArff(dataset)    
+    f=open(outputfile, 'w')
+    f.write(arffOutput)
+    f.close()
+
+def extractLabels(output):
+    output=output.replace("[","")
+    output=output.replace("].","")
+    labels=output.split(",")
+    pattern = re.compile(r'\s+')
+    clean =lambda x: re.sub(pattern, '', x)
+    return map(clean,labels)
+
+def readTestset(output):
+    test=output.replace("Output.arff","Test.arff")
+    return parseArff(test)
+
 def readArff(filename):
     file=open(filename,'r')
     arff=file.read()
@@ -86,6 +113,8 @@ def toCat(raw):
     return 0.0
 
 if __name__ == '__main__':
-    data,attr=parseArff("apriori/apriori.arff")
-    print(attr)
+    path="/home/user/Desktop/ML/data/dataOutput.arff"
+    prepareOutput(path)
+    #data,attr=parseArff("apriori/apriori.arff")
+    #print(attr)
     

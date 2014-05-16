@@ -4,11 +4,17 @@ Created on Tue Nov  5 19:42:24 2013
 
 @author: tjacek
 """
-import os
+import os,arff
 
-def execute(filename,path="/home/user/Desktop/ML/src"):
+def execute(trainfile,path="/home/user/Desktop/ML/src"):
     cmd="erl -pa " + path +" -run test_classifer run_exp "
-    cmd+=" " + filename
+    cmd+=" " + trainfile
+    testfile=  trainfile.replace("Train.arff","Test.arff")
+    cmd+=" " + testfile
+    outputfile=  trainfile.replace("Train.arff","Output.arff")
+    cmd+=" " + outputfile
     cmd+=" -run init stop -noshell "
     os.system(cmd)
-    print(cmd) 
+    arff.prepareOutput(outputfile)
+    #print(cmd)
+ 
