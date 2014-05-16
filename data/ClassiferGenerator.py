@@ -42,6 +42,21 @@ class Dataset(object):
 	   dataSeries[key]=Dataset(self.size,self.dim,rawData)
        return dataSeries
 
+   def split(self,p):
+       inst1=[]
+       inst2=[]
+       size=float(len(self.instances))
+       c=0.0
+       for inst in self.instances:
+           if(p < (c/size)):
+               inst1.append(inst)
+           else:
+               inst2.append(inst)
+           c+=1.0 
+       data1=Dataset(len(inst1),self.dim,inst1)
+       data2=Dataset(len(inst2),self.dim,inst2)
+       return data1,data2
+
    def __str__(self):
        s=""
        for instance in self.instances:

@@ -7,6 +7,13 @@ Created on Mon Nov  4 19:37:42 2013
 
 import re,ClassiferGenerator as gen
 
+def saveSplitedArff(dataset,path,filename):
+    data1,data2=dataset.split(0.3)
+    trainfile=filename.replace(".arff","Train.arff")
+    saveArff(data1,path,trainfile)
+    testfile=filename.replace("Train.arff","Test.arff")
+    saveArff(data2,path,testfile)
+
 def saveArff(dataset,path,filename):
     arff=toArff(dataset)    
     myFile = open(path+filename, 'w')
