@@ -35,7 +35,7 @@ experiment(Algorithm,TrainFile,TestFile,Output,Options) ->
   %{TrainingSet,TestSet} = split(Instances,Pred),
   %Sucess=accuracy(TrueLabels,PredLabels)/ length(TestInstances),
   %Sucess=confusion_matrix(TrueLabels,PredLabels),
-  io:format("~p",["OK"]).
+  io:format("~p",[PredLabels]).
 
 accuracy(TrueLabels,PredLabels) ->
   Size =length(TrueLabels) + length(PredLabels),
@@ -95,7 +95,7 @@ testClassifer(Filename,Name,Output) ->
   file:write_file(Output, io_lib:fwrite("~p.\n", [Labeled])).
 
 learn(Classifier,TestExamples) ->  learn(Classifier,TestExamples,[]).
-learn(Classifier,[],LabeledExamples) -> LabeledExamples;
+learn(Classifier,[],LabeledExamples) -> lists:reverse(LabeledExamples);
 learn(Classifier,[A|Ha],LabeledExamples) ->
     {ok,Label}=mllib:classify(Classifier, A, [ ]),
     learn(Classifier ,Ha,[Label|LabeledExamples]).

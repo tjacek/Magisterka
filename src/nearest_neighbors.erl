@@ -22,7 +22,7 @@ learn(Attributes, Class, NumberedExamples, Options) ->
 classify(_Classifier=#classifier{ algorithm = nearest_neighbors,attributes = Attributes, class = _Class, specific_classifier = LabeledPoints}, Example,Options) ->
   %Cat=true,
   Point=tuple_to_list(Example),
-  Cat=nn_kernel(Point,LabeledPoints,3),
+  Cat=nn_kernel(Point,LabeledPoints,10),
   %io:format("Example: ~p~n", [Distances]),
   {ok, Cat}.
 
