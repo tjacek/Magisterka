@@ -82,6 +82,7 @@ class ArffWindow(MainWindow):
 
     def __init__(self, parent=None):
 	MainWindow.__init__(self, parent)
+        self.searchButton()
 
     def initButtons(self):
 	self.buttons = QtGui.QWidget()
@@ -110,11 +111,8 @@ class ArffWindow(MainWindow):
         self.layout.addWidget(inputs)
 
     def initComboBox(self):
-        self.gen_combo = QtGui.QComboBox()
-        generators = ["Linear", "Nonlinear"]
-        for generator in generators:
-            self.gen_combo.addItem(generator)
-        self.layout.addWidget(self.gen_combo)
+        self.initAlgs()
+        self.initGens()
 
     def showButton(self):
         filename=self.getCurrentDataset()
@@ -130,10 +128,13 @@ class ArffWindow(MainWindow):
         pred=gen.predDir[predName]
         instances=gen.generateDataset(n,dim,pred)
 	arff.saveSplitedArff(instances,self.path,filename)
+        self.searchButton()
 
     def runButton(self):
         filename=self.getCurrentDataset()
-        utils.execute(filename)
+	algName=str(self.alg_combo.currentText())
+        utils.execute(algName,filename)
+        self.searchButton()
 
     def searchButton(self):
         self.updatePath()
@@ -150,6 +151,19 @@ class ArffWindow(MainWindow):
 
     def updatePath(self):
         self.path=str(self.getInput("Path"))
+
+    def initAlgs(self):
+	self.alg_combo = QtGui.QComboBox()
+        for alg in utils.algorithms:
+            self.alg_combo.addItem(alg)
+        self.layout.addWidget(self.alg_combo)
+
+    def initGens(self):
+        self.gen_combo = QtGui.QComboBox()
+        generators = ["Linear", "Nonlinear"]
+        for generator in generators:
+            self.gen_combo.addItem(generator)
+        self.layout.addWidget(self.gen_combo)
 
 def main():
     app = QtGui.QApplication(sys.argv)

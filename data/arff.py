@@ -20,12 +20,12 @@ def saveArff(dataset,path,filename):
     myFile.write(arff)
     myFile.close()
 
-def prepareOutput(outputfile):
+def prepareOutput(testfile,outputfile):
     f=open(outputfile,'r')
     output=f.read()
     f.close()
     labels=extractLabels(output)
-    dataset=readTestset(outputfile)[0]
+    dataset=readTestset(testfile)[0]
     i=0
     for instance in dataset.instances:
         instance.setLabel(labels[i])
@@ -43,9 +43,9 @@ def extractLabels(output):
     clean =lambda x: re.sub(pattern, '', x)
     return map(clean,labels)
 
-def readTestset(output):
-    test=output.replace("Output.arff","Test.arff")
-    return parseArff(test)
+def readTestset(testfile):
+    print(testfile)
+    return parseArff(testfile)
 
 def readArff(filename):
     file=open(filename,'r')
