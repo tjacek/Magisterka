@@ -147,4 +147,9 @@ def nonLinearPredict(point):
     else:
         return 0.0
 
-predDir ={ "Linear":linearPredict,"NonLinear":nonLinearPredict}
+def box(point):
+    boxes=list(map(lambda x:int(x>5.0),point))
+    parity= sum(boxes) % 2
+    return float(parity)
+
+predDir ={ "Linear":linearPredict,"NonLinear":nonLinearPredict,"Box":box}
