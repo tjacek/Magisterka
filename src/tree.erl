@@ -10,8 +10,17 @@
 -author("tjacek").
 
 %% API
+-export([height/1]).
 -export([is_root/1,is_decision_node/1,is_leaf/1]).
 -export([node_name/1,node_value/1,left_child/1,right_child/1,is_root/1,is_leaf/1]).
+
+height(Tree) ->
+  case(not has_child(Tree)) of
+    true -> 1.0;
+    false -> Left_height=height(left_child(Tree)),
+             Right_height=height(right_child(Tree)),
+             max(Left_height,Right_height) + 1.0
+  end.
 
 is_root(Tree) ->
   Node_name=node_name(Tree),
@@ -19,6 +28,9 @@ is_root(Tree) ->
 
 is_decision_node(Tree) ->
   (not is_root(Tree)) and (not is_leaf(Tree)).
+
+has_child(Tree) ->
+  is_list(element(3,Tree)).
 
 is_leaf(Tree) ->
   Node_name=node_name(Tree),

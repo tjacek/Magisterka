@@ -54,7 +54,7 @@ learn(Attributes, Class, NumberedExamples, Options) ->
   Tree = {root, root, build_tree(Attributes, Class, ExamplesNumbers, get_default_category(Class, TrainingExamples), Attributes,
     [{stop, Stop}, {test_choice, TestChoice}])},
 
-  io:format("~p \n",[tree:is_decision_node(tree:left_child(Tree))]),
+  io:format("~p \n",[tree:height(Tree)]),
   %print_tree(Tree),
 
   ?LOG("Trimming: ~p~n", [Trim]),
