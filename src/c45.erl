@@ -54,7 +54,8 @@ learn(Attributes, Class, NumberedExamples, Options) ->
   Tree = {root, root, build_tree(Attributes, Class, ExamplesNumbers, get_default_category(Class, TrainingExamples), Attributes,
     [{stop, Stop}, {test_choice, TestChoice}])},
 
-  print_tree(Tree),
+  io:format("~p \n",[tree:is_decision_node(tree:left_child(Tree))]),
+  %print_tree(Tree),
 
   ?LOG("Trimming: ~p~n", [Trim]),
   TrimmedTree = make_trimming(Attributes, Class, Tree, TrainingExamples, Trim),
@@ -62,7 +63,7 @@ learn(Attributes, Class, NumberedExamples, Options) ->
   ?LOG("After trimming:~n", []),
   %print_tree(TrimmedTree),
 
-  {ok, #classifier{ algorithm = c45, attributes = Attributes, class = Class, specific_classifier = Tree}}.
+  {ok, #classifier{ algorithm = c45, attributes = Attributes, class = Class, specific_classifier = TrimmedTree}}.
 
 
 classify(_Classifier=#classifier{ algorithm = c45, attributes = Attributes, class = _Class, specific_classifier = {root, root, Tree}}, Example, _Options) ->

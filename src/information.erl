@@ -256,7 +256,7 @@ get_mid_value(#attribute{type = ordered} = Attribute, LastValue, CurrentValue) -
 get_mid_value(#attribute{type = continuous} = _Attribute, LastValue, CurrentValue) ->
   if
     is_number(LastValue) ->(LastValue + CurrentValue)/2;
-    true ->(CurrentValue)/2
+    true -> (CurrentValue)
   end.
 
 
