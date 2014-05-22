@@ -49,11 +49,12 @@ learn(Attributes, Class, NumberedExamples, Options) ->
 
   TrainingExamples = mllib_tools:denumber_tes(NumberedExamples),
   ExamplesNumbers = mllib_tools:get_numbers(NumberedExamples),
-
+  %io:format("TrainingExamples ~p \n",[TrainingExamples]),
+  %io:format("ExamplesNumbers ~p \n",[ExamplesNumbers]),
   Tree = {root, root, build_tree(Attributes, Class, ExamplesNumbers, get_default_category(Class, TrainingExamples), Attributes,
     [{stop, Stop}, {test_choice, TestChoice}])},
 
-  %print_tree(Tree),
+  print_tree(Tree),
 
   ?LOG("Trimming: ~p~n", [Trim]),
   TrimmedTree = make_trimming(Attributes, Class, Tree, TrainingExamples, Trim),
@@ -61,7 +62,7 @@ learn(Attributes, Class, NumberedExamples, Options) ->
   ?LOG("After trimming:~n", []),
   %print_tree(TrimmedTree),
 
-  {ok, #classifier{ algorithm = c45, attributes = Attributes, class = Class, specific_classifier = TrimmedTree}}.
+  {ok, #classifier{ algorithm = c45, attributes = Attributes, class = Class, specific_classifier = Tree}}.
 
 
 classify(_Classifier=#classifier{ algorithm = c45, attributes = Attributes, class = _Class, specific_classifier = {root, root, Tree}}, Example, _Options) ->
@@ -75,11 +76,13 @@ build_tree(Attributes, Class, ExamplesNumbers, DefaultCategory, AttributesLeft, 
   {NumberedExamples, TrainingExamples} = mllib_tools:get_tes(tes_table, ExamplesNumbers),
   {stop, StopDecision} = lists:keyfind(stop, 1, Options),
   {test_choice, ChoiceCriterion} = lists:keyfind(test_choice, 1, Options),
+
   ?LOG("In c45:build_tree/6: start: AttributesLeft: ~p, TrainingExamples: ~p~n======~n", [AttributesLeft, TrainingExamples]),
   case stop_decision(Class, AttributesLeft, TrainingExamples, DefaultCategory, StopDecision) of
     {stop, Category} -> ?LOG("In c45:build_tree/6: stop!: {leaf, ~p}~n======~n", [Category]), {leaf, Category};
     ok ->
       {CurrentTest, NextAttributes} = choose_attribute(Attributes, Class, TrainingExamples, AttributesLeft, ChoiceCriterion),
+
       ?LOG("In c45:build_tree/6: with: AttributesLeft: ~p, TrainingExamples: ~p~n>>>>~n", [AttributesLeft, TrainingExamples]),
       ?LOG("In c45:build_tree/6: Current test: ~p~n==============~n", [CurrentTest]),
       NewDefaultCategory = get_default_category(Class, TrainingExamples),

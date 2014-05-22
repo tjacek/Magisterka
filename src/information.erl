@@ -254,7 +254,6 @@ get_mid_value(#attribute{type = ordered} = Attribute, LastValue, CurrentValue) -
   mllib_tools:get_attribute_nth_value(Attribute, SplitPos);
 
 get_mid_value(#attribute{type = continuous} = _Attribute, LastValue, CurrentValue) ->
-  io:format("Obtained Category: ~p~n", [CurrentValue]),
   if
     is_number(LastValue) ->(LastValue + CurrentValue)/2;
     true ->(CurrentValue)/2

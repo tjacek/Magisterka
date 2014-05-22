@@ -10,7 +10,7 @@
 -author("tjacek").
 
 %% API
--export([run_exp/1,experiment/5,createClassifer/3,testClassifer/3,test_c45/0 ]).
+-export([run_exp/1,experiment/5,createClassifer/3,testClassifer/3,test_c45/0,build_c45/0 ]).
 
 run_exp(Args) ->
   Algorithm = list_to_atom(lists:nth(1,Args)),
@@ -91,7 +91,6 @@ testClassifer(Filename,Name,Output) ->
   {ok, Classifier}=mllib:read_classifier(Name),
   {Attributes, TestExamples} = mllib:read(arff,[{file,Filename}]),
   Labeled=learn(Classifier,TestExamples),
-%  io:format("Obtained Category: ~p~n", [Labeled]),
   file:write_file(Output, io_lib:fwrite("~p.\n", [Labeled])).
 
 learn(Classifier,TestExamples) ->  learn(Classifier,TestExamples,[]).
@@ -107,3 +106,9 @@ test_c45() ->
   io:format("~p",[Label]),
   {ok,Label2}=mllib:classify(Classifier, {2.0,2.0,1.5}, [ ]),
   io:format("~p",[Label2]).
+
+build_c45() ->
+  {Attributes, TrainSet} = mllib:read(arff,[{file,"data/linearInput.arff"}]),
+  ClassName=cat,
+  {ok, Classifier} = mllib:learn(Attributes, ClassName, TrainSet, c45, []),
+  io:format("~p",[Classifier]).
