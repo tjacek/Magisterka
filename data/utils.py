@@ -13,7 +13,7 @@ def execute(algName,trainfile,path="/home/user/Desktop/ML/src"):
     cmd+=algName + " " + trainfile
     testfile= copy.copy(trainfile).replace("Train.arff","Test.arff")
     cmd+=" " + testfile
-    outputfile=  trainfile.replace("Train.arff",algName+"_Output.arff")
+    outputfile=  trainfile.replace("Train.arff","_"+algName+".arff")
     cmd+=" " + outputfile
     cmd+=" -run init stop -noshell "
     #print(cmd)

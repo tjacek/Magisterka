@@ -13,7 +13,7 @@ def visualizeLabels(dataset):
     if(dataset.dim>3):
 	dataset=dimReduction(dataset)
     dataSeries=dataset.separate()
-    if(dataset.dim):
+    if(dataset.dim==2):
         visualizeLabels2D(dataSeries)
         return
     visualizeLabels3D(dataSeries)
