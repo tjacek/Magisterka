@@ -10,7 +10,7 @@
 -author("tjacek").
 
 %% API
--export([run_exp/1,experiment/5,createClassifer/3,testClassifer/3 ]).
+-export([run_exp/1,experiment/5,createClassifer/3,testClassifer/3,test_c45/0 ]).
 
 run_exp(Args) ->
   Algorithm = list_to_atom(lists:nth(1,Args)),
@@ -22,7 +22,7 @@ run_exp(Args) ->
   experiment(Algorithm,TrainFile,TestFile,Output,Options).
 
 experiment(Algorithm,TrainFile,TestFile,Output,Options) ->
-  io:format("~p",[TrainFile]),
+  %io:format("~p",[TrainFile]),
   {Attributes, TrainSet} = mllib:read(arff,[{file,TrainFile}]),
   {Attributes, TestSet} = mllib:read(arff,[{file,TestFile}]),
   ClassName=cat,
@@ -99,3 +99,11 @@ learn(Classifier,[],LabeledExamples) -> lists:reverse(LabeledExamples);
 learn(Classifier,[A|Ha],LabeledExamples) ->
     {ok,Label}=mllib:classify(Classifier, A, [ ]),
     learn(Classifier ,Ha,[Label|LabeledExamples]).
+
+
+test_c45() ->
+  {ok, Classifier}=mllib:read_classifier("classifiers/c45Linear.txt"),
+  {ok,Label}=mllib:classify(Classifier, {1.0,2.0,3.0}, [ ]),
+  io:format("~p",[Label]),
+  {ok,Label2}=mllib:classify(Classifier, {2.0,2.0,1.5}, [ ]),
+  io:format("~p",[Label2]).
