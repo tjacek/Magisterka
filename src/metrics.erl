@@ -14,7 +14,20 @@
 
 compute(TrueLabels,PredLabels) ->
   Confusion_matrix=confusion_matrix(TrueLabels,PredLabels),
-  print_cm(Confusion_matrix).
+  Length=length(TrueLabels),
+  print_cm(Confusion_matrix),
+  io:format("~p ",[accuracy(Confusion_matrix,Length)]).
+
+accuracy(Confusion_matrix,Length) ->
+  Keys=dict:fetch_keys(Confusion_matrix),
+  CorrectLabels=
+    fun(Key) ->
+      Col=dict:fetch(Key,Confusion_matrix),
+      dict:fetch(Key,Col)
+    end,
+  TP=lists:map(CorrectLabels,Keys),
+  Accuracy=lists:sum(TP)/Length,
+  {accuracy,Accuracy}.
 
 print_cm(Confusion_matrix)->
   CM=dict:to_list(Confusion_matrix),

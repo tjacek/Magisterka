@@ -38,15 +38,6 @@ experiment(Algorithm,TrainFile,TestFile,Output,Options) ->
   %file:write_file(Output, io_lib:fwrite("~p.\n", [PredLabels])),
   metrics:compute(TrueLabels,PredLabels).
 
-accuracy(TrueLabels,PredLabels) ->
-  Size =length(TrueLabels) + length(PredLabels),
-  accuracy(TrueLabels,PredLabels,0.0)/Size.
-accuracy([T|Ht],[P|Pt],Counter) ->
-  if T==P -> accuracy(Ht,Pt,Counter+1.0);
-     true -> accuracy(Ht,Pt,Counter)
-  end;
-accuracy([],[],Counter) ->  Counter.
-
 split(Instances,Rand) -> split([],[],Instances,Rand).
 split(TestSet,TrainingSet,[T|H],Rand) ->
   R=Rand(),
