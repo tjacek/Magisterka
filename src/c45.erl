@@ -80,7 +80,9 @@ build_tree(Attributes, Class, ExamplesNumbers, DefaultCategory, AttributesLeft, 
 
   ?LOG("In c45:build_tree/6: start: AttributesLeft: ~p, TrainingExamples: ~p~n======~n", [AttributesLeft, TrainingExamples]),
   case stop_decision(Class, AttributesLeft, TrainingExamples, DefaultCategory, StopDecision) of
-    {stop, Category} -> ?LOG("In c45:build_tree/6: stop!: {leaf, ~p}~n======~n", [Category]), {leaf, Category};
+    {stop, Category} -> ?LOG("In c45:build_tree/6: stop!: {leaf, ~p}~n======~n", [Category]),%io:format("Cat \n ~p \n",[utils:choose_category(TrainingExamples)]),
+                         CorrectCategory = utils:choose_category(TrainingExamples),
+                         {leaf, CorrectCategory};
     ok ->
       {CurrentTest, NextAttributes} = choose_attribute(Attributes, Class, TrainingExamples, AttributesLeft, ChoiceCriterion),
 
@@ -239,6 +241,8 @@ only_one_category([_NotReally|_TrainingExamples], _OnlyCategory) ->
   {error, multiple_categories}.
 
 stop_decision(_Class, Tests, TrainingExamples, DefaultCategory, all_in_one_category) ->
+  %io:format("############################~p \n",[TrainingExamples]),
+  %io:format("~p",[DefaultCategory]),
   all_in_one_category(Tests, TrainingExamples, DefaultCategory).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

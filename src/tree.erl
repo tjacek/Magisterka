@@ -14,6 +14,12 @@
 -export([is_root/1,is_decision_node/1,is_leaf/1]).
 -export([node_name/1,node_value/1,left_child/1,right_child/1,is_root/1,is_leaf/1]).
 
+make_split(SplitValue) ->
+  [{"<", SplitValue}, {">=", SplitValue}].
+
+make_leaf(Category) ->
+  {leaf,Category}.
+
 height(Tree) ->
   case(not has_child(Tree)) of
     true -> 1.0;

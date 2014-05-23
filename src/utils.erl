@@ -10,6 +10,7 @@
 -author("tjacek").
 
 %% API
+-export([choose_category/1]).
 -export([labels2reals/1,dot_product/2,subs/2,distance/2]).
 
 labels2reals(Labels)->
@@ -34,6 +35,30 @@ distance([A|Ha],[B|Hb],Acc) ->
 subs(X,Y) -> subs(X,Y,0.0).
 subs([],[],Acc) -> Acc;
 subs([A|Ha],[B|Hb],Acc) -> subs(Ha,Hb, A-B +Acc).
+
+
+choose_category(Examples) ->
+  Labels=get_labels(Examples),
+  Categories=count_categories(Labels),
+  find_most_comon(Categories).
+
+get_labels(Examples) ->
+  lists:map(fun(Tuple) ->element(2,Tuple) end,Examples).
+
+count_categories(Labels) -> count_categories(Labels,dict:new()).
+count_categories([],Categories) -> Categories;
+count_categories([H|T],Categories) ->  count_categories(T,dict:update_counter(H,1,Categories)).
+
+find_most_comon(Categories) ->
+  ListOfTuples=dict:to_list(Categories),
+  Comp = fun(T1,T2)->
+    Count1=element(2,T1),
+    Count2=element(2,T2),
+    Count1<Count2
+  end,
+  SortedCategories=lists:sort(Comp,ListOfTuples),
+  Cat=lists:last(SortedCategories),
+  element(1,Cat).
 
 %max_element(L) -> max_element(L,Max,0,0).
 

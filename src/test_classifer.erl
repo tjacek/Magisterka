@@ -110,5 +110,6 @@ test_c45() ->
 build_c45() ->
   {Attributes, TrainSet} = mllib:read(arff,[{file,"data/linearInput.arff"}]),
   ClassName=cat,
-  {ok, Classifier} = mllib:learn(Attributes, ClassName, TrainSet, c45, []),
+  Options =[{test_choice,information_gain_criterion},{trim,none}],
+  {ok, Classifier} = mllib:learn(Attributes, ClassName, TrainSet, c45, Options),
   io:format("~p",[Classifier]).
