@@ -17,9 +17,15 @@ run_exp(Args) ->
   TrainFile = lists:nth(2,Args),
   TestFile = lists:nth(3,Args),
   Output = lists:nth(4,Args),
-  %io:format("~p",[Algorithm]),
-  Options=[],
+  Options=get_options(Algorithm),
+  io:format("~p",[Options]),
   experiment(Algorithm,TrainFile,TestFile,Output,Options).
+
+get_options(Algorithm) ->
+  case Algorithm of
+    c45 -> [{test_choice,information_gain_criterion},{trim,none}];
+    _Other -> []
+  end.
 
 experiment(Algorithm,TrainFile,TestFile,Output,Options) ->
   %io:format("~p",[TrainFile]),
@@ -31,10 +37,6 @@ experiment(Algorithm,TrainFile,TestFile,Output,Options) ->
   TestInstances=lists:map(fun(X)-> list_to_tuple(X)  end,TestList),
   PredLabels=learn(Classifier,TestInstances),
   file:write_file(Output, io_lib:fwrite("~p.\n", [PredLabels])),
-  %Pred=get_rand(0.3),
-  %{TrainingSet,TestSet} = split(Instances,Pred),
-  %Sucess=accuracy(TrueLabels,PredLabels)/ length(TestInstances),
-  %Sucess=confusion_matrix(TrueLabels,PredLabels),
   io:format("~p",[PredLabels]).
 
 accuracy(TrueLabels,PredLabels) ->
