@@ -28,7 +28,6 @@ get_options(Algorithm) ->
   end.
 
 experiment(Algorithm,TrainFile,TestFile,Output,Options) ->
-  %io:format("~p",[TrainFile]),
   {Attributes, TrainSet} = mllib:read(arff,[{file,TrainFile}]),
   {Attributes, TestSet} = mllib:read(arff,[{file,TestFile}]),
   ClassName=cat,
@@ -36,8 +35,8 @@ experiment(Algorithm,TrainFile,TestFile,Output,Options) ->
   {TrueLabels,TestList}=regression:parse_labels(TestSet),
   TestInstances=lists:map(fun(X)-> list_to_tuple(X)  end,TestList),
   PredLabels=learn(Classifier,TestInstances),
-  file:write_file(Output, io_lib:fwrite("~p.\n", [PredLabels])),
-  io:format("~p",[PredLabels]).
+  %file:write_file(Output, io_lib:fwrite("~p.\n", [PredLabels])),
+  metrics:compute(TrueLabels,PredLabels).
 
 accuracy(TrueLabels,PredLabels) ->
   Size =length(TrueLabels) + length(PredLabels),
@@ -47,17 +46,6 @@ accuracy([T|Ht],[P|Pt],Counter) ->
      true -> accuracy(Ht,Pt,Counter)
   end;
 accuracy([],[],Counter) ->  Counter.
-
-confusion_matrix(TrueLabels,PredLabels) ->
-  confusion_matrix(TrueLabels,PredLabels,dict:new()).
-
-confusion_matrix([],[],Dict) -> Dict;
-confusion_matrix( [TrueCategory|TrueLabels],[PredCategory|PredLabels],Dict) ->
-  UpdatedDict1 = dict:update(TrueCategory,fun(X)->X end,dict:new(),Dict),
-  CategoryDict = dict:fetch(TrueCategory,UpdatedDict1),
-  NewCategoryDict = dict:update_counter(PredCategory,1.0,CategoryDict),
-  UpdatedDict=  dict:store(TrueCategory, NewCategoryDict, UpdatedDict1),
-  confusion_matrix(TrueLabels,PredLabels,UpdatedDict).
 
 split(Instances,Rand) -> split([],[],Instances,Rand).
 split(TestSet,TrainingSet,[T|H],Rand) ->
