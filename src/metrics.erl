@@ -11,12 +11,21 @@
 
 %% API
 -export([compute/2]).
+-export([accuracy/2,error_rate/2]).
 
 compute(TrueLabels,PredLabels) ->
   Confusion_matrix=confusion_matrix(TrueLabels,PredLabels),
   Length=length(TrueLabels),
   print_cm(Confusion_matrix),
-  io:format("~p ",[accuracy(Confusion_matrix,Length)]).
+ % Metrics=[],
+  Metrics=[fun metrics:accuracy/2,fun metrics:error_rate/2],
+  Lambda=fun(F)->  F(Confusion_matrix,Length) end,
+  Statistics = lists:map(Lambda,Metrics),
+  io:format("~p ",[Statistics]).
+
+error_rate(Confusion_matrix,Length) ->
+  Error_rate = 1.0 - accuracy(Confusion_matrix,Length),
+  {error_rate,Error_rate}.
 
 accuracy(Confusion_matrix,Length) ->
   Keys=dict:fetch_keys(Confusion_matrix),
@@ -27,7 +36,7 @@ accuracy(Confusion_matrix,Length) ->
     end,
   TP=lists:map(CorrectLabels,Keys),
   Accuracy=lists:sum(TP)/Length,
-  {accuracy,Accuracy}.
+  Accuracy.
 
 print_cm(Confusion_matrix)->
   CM=dict:to_list(Confusion_matrix),
