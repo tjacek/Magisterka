@@ -11,13 +11,14 @@
 
 %% API
 -export([compute/2]).
--export([accuracy/2,error_rate/2,sensitivity/2]).
+-export([accuracy/2,error_rate/2,recall/2,precision/2]).
 
 compute(TrueLabels,PredLabels) ->
   Confusion_matrix=confusion_matrix(TrueLabels,PredLabels),
   Length=length(TrueLabels),
   print_cm(Confusion_matrix),
-  Metrics=[fun metrics:accuracy/2,fun metrics:error_rate/2,fun metrics:sensitivity/2],
+  Metrics=[fun metrics:accuracy/2,fun metrics:error_rate/2,fun metrics:recall/2,
+    fun metrics:precision/2],
   Lambda=fun(F)->  F(Confusion_matrix,Length) end,
   Statistics = lists:map(Lambda,Metrics),
   io:format("~p ",[Statistics]).
@@ -27,13 +28,13 @@ error_rate(Confusion_matrix,Length) ->
   Error_rate = 1.0 - Accuracy,
   {error_rate,Error_rate}.
 
-sensitivity(Confusion_matrix,Length) ->
+recall(Confusion_matrix,Length) ->
   Lambda=fun(Category) ->
     TP=true_positives(Category,Confusion_matrix),
     P=all_positives(Category,Confusion_matrix),
     {Category,TP/P}
   end,
-  {sensitivity,for_all_categories(Lambda,Confusion_matrix)}.
+  {recall,for_all_categories(Lambda,Confusion_matrix)}.
 
 accuracy(Confusion_matrix,Length) ->
   Lambda =fun(Category) ->
@@ -43,12 +44,26 @@ accuracy(Confusion_matrix,Length) ->
   Accuracy=lists:sum(TP)/Length,
   {accuracy,Accuracy}.
 
+precision(Confusion_matrix,Length) ->
+  Lambda=fun(Category) ->
+    TP=true_positives(Category,Confusion_matrix),
+    P=all_true(Category,Confusion_matrix),
+    {Category,TP/P}
+  end,
+  {precision,for_all_categories(Lambda,Confusion_matrix)}.
+
 true_positives(Category,Confusion_matrix) ->
   get_value(Category,Category,Confusion_matrix).
 
 all_positives(Category,Confusion_matrix) ->
   Lambda = fun(Key) ->
     get_value(Key,Category,Confusion_matrix)
+  end,
+  lists:sum(for_all_categories(Lambda,Confusion_matrix)).
+
+all_true(Category,Confusion_matrix) ->
+  Lambda = fun(Key) ->
+    get_value(Category,Key,Confusion_matrix)
   end,
   lists:sum(for_all_categories(Lambda,Confusion_matrix)).
 
