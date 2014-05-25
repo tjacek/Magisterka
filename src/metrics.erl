@@ -11,14 +11,14 @@
 
 %% API
 -export([compute/2]).
--export([accuracy/2,error_rate/2,recall/2,precision/2]).
+-export([accuracy/2,error_rate/2,recall/2,precision/2,f_measure/2,f_beta/2]).
 
 compute(TrueLabels,PredLabels) ->
   Confusion_matrix=confusion_matrix(TrueLabels,PredLabels),
   Length=length(TrueLabels),
   print_cm(Confusion_matrix),
   Metrics=[fun metrics:accuracy/2,fun metrics:error_rate/2,fun metrics:recall/2,
-    fun metrics:precision/2],
+    fun metrics:precision/2,fun metrics:f_measure/2,fun metrics:f_beta/2],
   Lambda=fun(F)->  F(Confusion_matrix,Length) end,
   Statistics = lists:map(Lambda,Metrics),
   io:format("~p ",[Statistics]).
@@ -51,6 +51,29 @@ precision(Confusion_matrix,Length) ->
     {Category,TP/P}
   end,
   {precision,for_all_categories(Lambda,Confusion_matrix)}.
+
+f_measure(Confusion_matrix,Length) ->
+  Precision_values=element(2,precision(Confusion_matrix,Length)),
+  Recall_values=element(2,recall(Confusion_matrix,Length)),
+  Lambda=fun(Category) ->
+    Precision=element(2,lists:keyfind(Category, 1, Precision_values)),
+    Recall=element(2,lists:keyfind(Category, 1, Recall_values)),
+    F_measure=2.0*Precision*Recall/(Precision+Recall),
+    {Category,F_measure}
+  end,
+  {f_measure,for_all_categories(Lambda,Confusion_matrix)}.
+
+f_beta(Confusion_matrix,Length) ->
+  Beta=2.0,
+  Precision_values=element(2,precision(Confusion_matrix,Length)),
+  Recall_values=element(2,recall(Confusion_matrix,Length)),
+  Lambda=fun(Category) ->
+    Precision=element(2,lists:keyfind(Category, 1, Precision_values)),
+    Recall=element(2,lists:keyfind(Category, 1, Recall_values)),
+    F_beta=(1.0+Beta*Beta)*(Precision * Recall)/(Beta*Beta*(Precision+Recall)),
+    {Category,F_beta}
+  end,
+  {f_beta,for_all_categories(Lambda,Confusion_matrix)}.
 
 true_positives(Category,Confusion_matrix) ->
   get_value(Category,Category,Confusion_matrix).
