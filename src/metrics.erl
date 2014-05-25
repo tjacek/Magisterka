@@ -33,27 +33,24 @@ sensitivity(Confusion_matrix,Length) ->
     P=all_positives(Category,Confusion_matrix),
     {Category,TP/P}
   end,
-  for_all_categories(Lambda,Confusion_matrix).
+  {sensitivity,for_all_categories(Lambda,Confusion_matrix)}.
+
+accuracy(Confusion_matrix,Length) ->
+  Lambda =fun(Category) ->
+    true_positives(Category,Confusion_matrix)
+  end,
+  TP=for_all_categories(Lambda,Confusion_matrix),
+  Accuracy=lists:sum(TP)/Length,
+  {accuracy,Accuracy}.
 
 true_positives(Category,Confusion_matrix) ->
-   get_value(Category,Category,Confusion_matrix).
+  get_value(Category,Category,Confusion_matrix).
 
 all_positives(Category,Confusion_matrix) ->
   Lambda = fun(Key) ->
     get_value(Key,Category,Confusion_matrix)
   end,
   lists:sum(for_all_categories(Lambda,Confusion_matrix)).
-
-accuracy(Confusion_matrix,Length) ->
-  Keys=dict:fetch_keys(Confusion_matrix),
-  CorrectLabels=
-    fun(Key) ->
-      Col=dict:fetch(Key,Confusion_matrix),
-      dict:fetch(Key,Col)
-    end,
-  TP=lists:map(CorrectLabels,Keys),
-  Accuracy=lists:sum(TP)/Length,
-  {accuracy,Accuracy}.
 
 for_all_categories(Lambda,Confusion_matrix) ->
   Categories=dict:fetch_keys(Confusion_matrix),
