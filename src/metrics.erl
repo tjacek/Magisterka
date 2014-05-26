@@ -10,8 +10,13 @@
 -author("tjacek").
 
 %% API
--export([compute/2]).
+-export([compute/2,save_stats/3]).
 -export([accuracy/2,error_rate/2,recall/2,precision/2,f_measure/2,f_beta/2]).
+
+save_stats(TrueLabels,PredLabels,Output)->
+  Statistics=compute(TrueLabels,PredLabels),
+  Str=to_str(Statistics),
+  file:write_file(Output, Str).%io_lib:write_string(Str)).
 
 compute(TrueLabels,PredLabels) ->
   Confusion_matrix=confusion_matrix(TrueLabels,PredLabels),
@@ -20,8 +25,7 @@ compute(TrueLabels,PredLabels) ->
   Metrics=[fun metrics:accuracy/2,fun metrics:error_rate/2,fun metrics:recall/2,
     fun metrics:precision/2,fun metrics:f_measure/2,fun metrics:f_beta/2],
   Lambda=fun(F)->  F(Confusion_matrix,Length) end,
-  Statistics = lists:map(Lambda,Metrics),
-  io:format("~p ",[Statistics]).
+  Statistics = lists:map(Lambda,Metrics).
 
 error_rate(Confusion_matrix,Length) ->
   Accuracy=element(2,accuracy(Confusion_matrix,Length)),
@@ -97,6 +101,21 @@ for_all_categories(Lambda,Confusion_matrix) ->
 get_value(TrueCat,PredCat,Confusion_matrix) ->
   Predictions=dict:fetch(TrueCat,Confusion_matrix),
   dict:fetch(PredCat,Predictions).
+
+to_str(Statistics) ->
+  to_str(Statistics,"").
+
+to_str([],Acc) -> Acc;
+to_str([H|T],Acc)->
+  Key=atom_to_list(element(1,H)),
+  Value=element(2,H),
+  Line=case(is_list(Value)) of
+    true  ->   Key  ++ ":" ++ to_str(Value) ++ io_lib:nl();
+    false ->   StrValue =  float_to_list(Value),
+               Key ++ ":" ++ StrValue
+  end,
+  NewStr= Acc ++ io_lib:nl() ++Line,
+  to_str(T,NewStr).
 
 print_cm(Confusion_matrix)->
   CM=dict:to_list(Confusion_matrix),

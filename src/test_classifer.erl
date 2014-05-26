@@ -27,7 +27,10 @@ get_options(Algorithm) ->
     _Other -> []
   end.
 
-experiment(Algorithm,TrainFile,TestFile,Output,Options) ->
+experiment(Algorithm,TrainFile,TestFile,Output,Options)->
+  experiment(Algorithm,TrainFile,TestFile,Output,"result/output.txt",Options).
+
+experiment(Algorithm,TrainFile,TestFile,Output,Result,Options) ->
   {Attributes, TrainSet} = mllib:read(arff,[{file,TrainFile}]),
   {Attributes, TestSet} = mllib:read(arff,[{file,TestFile}]),
   ClassName=cat,
@@ -35,8 +38,7 @@ experiment(Algorithm,TrainFile,TestFile,Output,Options) ->
   {TrueLabels,TestList}=regression:parse_labels(TestSet),
   TestInstances=lists:map(fun(X)-> list_to_tuple(X)  end,TestList),
   PredLabels=learn(Classifier,TestInstances),
-  %file:write_file(Output, io_lib:fwrite("~p.\n", [PredLabels])),
-  metrics:compute(TrueLabels,PredLabels).
+  metrics:save_stats(TrueLabels,PredLabels,Result).
 
 split(Instances,Rand) -> split([],[],Instances,Rand).
 split(TestSet,TrainingSet,[T|H],Rand) ->
