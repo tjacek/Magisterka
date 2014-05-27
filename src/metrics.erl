@@ -49,6 +49,7 @@ precision(Confusion_matrix,Length) ->
 precision_metric(Category,Confusion_matrix) ->
   Tp=true_positives(Category,Confusion_matrix),
   P=all_true(Category,Confusion_matrix),
+  %io:format("%%%% ~p \n",[Tp,P])
   Tp/P.
 
 recall(Confusion_matrix,Length) ->
@@ -93,7 +94,7 @@ true_positives(Category,Confusion_matrix) ->
 
 all_positives(Category,Confusion_matrix) ->
   Lambda = fun(Key) ->
-    get_value(Key,Category,Confusion_matrix)
+     get_value(Key,Category,Confusion_matrix)
   end,
   lists:sum(for_all_categories(Lambda,Confusion_matrix)).
 
@@ -109,7 +110,10 @@ for_all_categories(Lambda,Confusion_matrix) ->
 
 get_value(TrueCat,PredCat,Confusion_matrix) ->
   Predictions=dict:fetch(TrueCat,Confusion_matrix),
-  dict:fetch(PredCat,Predictions).
+  case dict:is_key(PredCat, Predictions) of
+    true -> dict:fetch(PredCat,Predictions);
+    false -> 0.0
+  end.
 
 to_str(Statistics) ->
   to_str(Statistics,"").
