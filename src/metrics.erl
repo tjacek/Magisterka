@@ -16,8 +16,10 @@
 
 save_stats(TrueLabels,PredLabels,Output)->
   Statistics=compute(TrueLabels,PredLabels),
+  io:format("~p \n",[Statistics]),
   Str=to_str(Statistics),
-  file:write_file(Output, Str).%io_lib:write_string(Str)).
+  io:format("~p \n",[Str]),
+  file:write_file(Output, Str).
 
 compute(TrueLabels,PredLabels) ->
   Confusion_matrix=confusion_matrix(TrueLabels,PredLabels),

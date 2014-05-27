@@ -17,9 +17,9 @@ run_exp(Args) ->
   TrainFile = lists:nth(2,Args),
   TestFile = lists:nth(3,Args),
   Output = lists:nth(4,Args),
+  Stats = lists:nth(5,Args),
   Options=get_options(Algorithm),
-  io:format("~p",[Options]),
-  experiment(Algorithm,TrainFile,TestFile,Output,Options).
+  experiment(Algorithm,TrainFile,TestFile,Output,Stats,Options).
 
 get_options(Algorithm) ->
   case Algorithm of
@@ -38,7 +38,8 @@ experiment(Algorithm,TrainFile,TestFile,Output,Result,Options) ->
   {TrueLabels,TestList}=regression:parse_labels(TestSet),
   TestInstances=lists:map(fun(X)-> list_to_tuple(X)  end,TestList),
   PredLabels=learn(Classifier,TestInstances),
-  metrics:save_stats(TrueLabels,PredLabels,Result).
+  metrics:save_stats(TrueLabels,PredLabels,Result),
+  file:write_file(Output, io_lib:fwrite("~p.\n", [PredLabels])).
 
 split(Instances,Rand) -> split([],[],Instances,Rand).
 split(TestSet,TrainingSet,[T|H],Rand) ->
@@ -81,7 +82,6 @@ learn(Classifier,[],LabeledExamples) -> lists:reverse(LabeledExamples);
 learn(Classifier,[A|Ha],LabeledExamples) ->
     {ok,Label}=mllib:classify(Classifier, A, [ ]),
     learn(Classifier ,Ha,[Label|LabeledExamples]).
-
 
 test_c45() ->
   {ok, Classifier}=mllib:read_classifier("classifiers/c45Linear.txt"),
