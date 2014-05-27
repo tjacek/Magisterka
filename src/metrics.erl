@@ -66,13 +66,15 @@ f_measure_metric(Category,Confusion_matrix) ->
   2.0*Precision*Recall/(Precision+Recall).
 
 f_beta(Confusion_matrix,Length) ->
-  Beta=2.0,
+  f_beta(Confusion_matrix,Length,2.0).
+
+f_beta(Confusion_matrix,Length,Beta) ->
   Metric=fun(Category,Confusion_matrix) ->
-    f_beta(Category,Confusion_matrix,Beta)
+    f_beta_metric(Category,Confusion_matrix,Beta)
   end,
   apply_metrics(f_beta,Metric,Confusion_matrix).
 
-f_beta(Category,Confusion_matrix,Beta) ->
+f_beta_metric(Category,Confusion_matrix,Beta) ->
   Precision=precision_metric(Category,Confusion_matrix),
   Recall=recall_metric(Category,Confusion_matrix),
  (1.0+Beta*Beta)*(Precision * Recall)/(Beta*Beta*(Precision+Recall)).
@@ -115,8 +117,8 @@ to_str([H|T],Acc)->
   Key=atom_to_list(element(1,H)),
   Value=element(2,H),
   Line=case(is_list(Value)) of
-    true  ->   Key  ++ ":" ++ to_str(Value) ++ io_lib:nl();
-    false ->   StrValue =  float_to_list(Value),
+    true  ->   io_lib:nl() ++ Key  ++ ":" ++ to_str(Value);
+    false ->   StrValue =  io_lib:format("~.3f",[Value]),%float_to_list(Value),
                Key ++ ":" ++ StrValue
   end,
   NewStr= Acc ++ io_lib:nl() ++Line,
