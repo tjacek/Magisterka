@@ -16,6 +16,7 @@ def execute(algName,trainfile,path="/home/user/Desktop/ML/src"):
     outputfile=  trainfile.replace("Train.arff","_"+algName+".arff")
     cmd+=" " + outputfile
     statsfile= path.replace("src","stats/output_"+algName+".txt")
+    print("&&&&&&&&&&&&"+statsfile)
     cmd+=" " + statsfile
     cmd+=" -run init stop -noshell "   
     os.system(cmd)
