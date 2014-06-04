@@ -12,6 +12,9 @@ colors=['r','b','g']
 def visualizeLabels(dataset):
     if(dataset.dim>3):
 	dataset=dimReduction(dataset)
+        #dataSeries=dataset.separate()
+        #visualizeLabels2D(dataSeries)
+        #return
     dataSeries=dataset.separate()
     if(dataset.dim==2):
         visualizeLabels2D(dataSeries)

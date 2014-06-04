@@ -154,4 +154,13 @@ def box(point):
     parity= sum(boxes) % 2
     return float(parity)
 
-predDir ={ "Linear":linearPredict,"NonLinear":nonLinearPredict,"Box":box}
+def sphere(point):
+    point=map(lambda x:0.2*x-1.0,point)
+    dist=sum(map(lambda x:x*x,point))
+    if(math.sqrt(dist)<1.41):
+        return 1.0
+    else:
+        return 0.0
+
+predDir ={ "Linear":linearPredict,"NonLinear":nonLinearPredict,
+"Box":box,"Sphere":sphere}
