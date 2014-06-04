@@ -47,10 +47,9 @@ precision(Confusion_matrix,Length) ->
   apply_metrics(precision,fun metrics:precision_metric/2,Confusion_matrix).
 
 precision_metric(Category,Confusion_matrix) ->
-  Tp=true_positives(Category,Confusion_matrix),
+  TP=true_positives(Category,Confusion_matrix),
   P=all_true(Category,Confusion_matrix),
-  %io:format("%%%% ~p \n",[Tp,P])
-  Tp/P.
+  safe_division(TP,P).
 
 recall(Confusion_matrix,Length) ->
   apply_metrics(recall,fun metrics:recall_metric/2,Confusion_matrix).
@@ -58,7 +57,13 @@ recall(Confusion_matrix,Length) ->
 recall_metric(Category,Confusion_matrix)->
   TP=true_positives(Category,Confusion_matrix),
   P=all_positives(Category,Confusion_matrix),
-  TP/P.
+  safe_division(TP,P).
+
+safe_division(A,B) ->
+  case B>0.0 of
+    true  -> A/B;
+    false -> 0.0
+  end.
 
 f_measure(Confusion_matrix,Length) ->
   apply_metrics(f_measure,fun metrics:f_measure_metric/2,Confusion_matrix).
@@ -66,7 +71,7 @@ f_measure(Confusion_matrix,Length) ->
 f_measure_metric(Category,Confusion_matrix) ->
   Precision=precision_metric(Category,Confusion_matrix),
   Recall=recall_metric(Category,Confusion_matrix),
-  2.0*Precision*Recall/(Precision+Recall).
+  safe_division(2.0*Precision*Recall,(Precision+Recall)).
 
 f_beta(Confusion_matrix,Length) ->
   f_beta(Confusion_matrix,Length,2.0).
@@ -80,7 +85,9 @@ f_beta(Confusion_matrix,Length,Beta) ->
 f_beta_metric(Category,Confusion_matrix,Beta) ->
   Precision=precision_metric(Category,Confusion_matrix),
   Recall=recall_metric(Category,Confusion_matrix),
- (1.0+Beta*Beta)*(Precision * Recall)/(Beta*Beta*(Precision+Recall)).
+  M=(1.0+Beta*Beta)*(Precision * Recall),
+  D=(Beta*Beta*(Precision+Recall)),
+  safe_division(M,D).
 
 apply_metrics(Atom,Metric,Confusion_matrix) ->
   Lambda=fun(Category) ->
