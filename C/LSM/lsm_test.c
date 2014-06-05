@@ -1,4 +1,4 @@
-#include "lsm.c"
+#include "lsm_matrix.c"
 #include <time.h>
 
 Samples * generateSamples(int n,int k);
@@ -11,9 +11,10 @@ void test(int k,int n){
   Samples * train=generateSamples(k*2,n);
   //printSamples(train);
   Samples * test=generateSamples(k,n);
+  Vector * theta=linearRegression(test);
   //printSamples(test);
-  Vector  * theta=learn(train,0.000001,1.0);
-  printVector(theta);
+  //Vector  * theta=learn(train,0.000001,0.01);
+ // printVector(theta);
   double error=mse(theta,test);
   printf("Error %f \n",error);
 }
@@ -29,13 +30,23 @@ Samples * generateSamples(int k,int n){
     return samples;    
 }
 
-double eval(Vector * x){
+double eval2(Vector * x){
   double y;
   double sign=1.0;
   for(int i=0;i<x->n;i++){
     y+=sign*x->data[i];
     sign*=-1.0;
   }
+  return y;//+eps();
+}
+
+double eval(Vector * x){
+  double y;
+  double sign=1.0;
+  //for(int i=0;i<x->n;i++){
+    y+=x->data[1];
+    //sign*=-1.0;
+  //}
   return y;//+eps();
 }
 
@@ -56,5 +67,5 @@ double randomDouble(){
 }
 
 int main(){
-  test(500,2);
+  test(1000,3);
 }
