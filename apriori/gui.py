@@ -21,7 +21,7 @@ class MainWindow(QtGui.QMainWindow):
     def constants(self):
         self.title='Apriori dataset generator'
         self.ends=".data"
-        self.path="/home/user/Desktop/magisterka/apriori/datasets"
+        self.path="/home/user/Desktop/magisterka/apriori/transactions/dataset1/dataset1"
 	self.margin=5.0
         self.x=500.0
         self.y=500.0
@@ -104,6 +104,8 @@ class MainWindow(QtGui.QMainWindow):
         bow.getPlot(dataset)
 
     def searchButton(self):
+        self.path=str(self.getInput("Path"))
+        print(self.path)
 	self.listWidget.clear()
 	sender = self.sender()
 	for root, dirs, files in os.walk(self.path):
