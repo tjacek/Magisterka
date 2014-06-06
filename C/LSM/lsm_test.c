@@ -11,11 +11,12 @@ void test(int k,int n){
   Samples * train=generateSamples(k*2,n);
   //printSamples(train);
   Samples * test=generateSamples(k,n);
-  Vector * theta=linearRegression(test);
+  //test_2();
+  //Vector * theta=linearRegression(train);
   //printSamples(test);
-  //Vector  * theta=learn(train,0.000001,0.01);
- // printVector(theta);
-  double error=mse(theta,test);
+   Vector  * theta=learn(train,0.0001,0.01);
+  printVector(theta);
+  double error=mse(theta,train);
   printf("Error %f \n",error);
 }
 
@@ -30,7 +31,7 @@ Samples * generateSamples(int k,int n){
     return samples;    
 }
 
-double eval2(Vector * x){
+double eval(Vector * x){
   double y;
   double sign=1.0;
   for(int i=0;i<x->n;i++){
@@ -40,7 +41,7 @@ double eval2(Vector * x){
   return y;//+eps();
 }
 
-double eval(Vector * x){
+double eval2(Vector * x){
   double y;
   double sign=1.0;
   //for(int i=0;i<x->n;i++){
@@ -67,5 +68,5 @@ double randomDouble(){
 }
 
 int main(){
-  test(1000,3);
+  test(10,3);
 }

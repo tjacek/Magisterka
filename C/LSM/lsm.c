@@ -12,8 +12,10 @@ double gradient(Vector * theta,Samples * samples,int j);
 Vector * learn(Samples * s,double alpha,double maxErr){
   Vector * theta=makeVector(s->n);
   int iter=0;
+  int maxIter=10000000;
   while(mse(theta,s)>maxErr){
-    if(iter>1000000){
+    if(iter>maxIter){
+      printf(" %d",iter);
       break;
     }
     //printf(" %f",mse(theta,s));
