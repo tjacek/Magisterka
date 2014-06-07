@@ -68,5 +68,5 @@ double randomDouble(){
 }
 
 int main(){
-  test(10,3);
+  test(1000,3);
 }

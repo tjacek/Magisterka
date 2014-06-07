@@ -65,7 +65,7 @@ event_loop(Module, N, ReturnPid, EtsPids) ->
       OtherPid ! get_child_pid_from_list(Children, Id),
       event_loop(Module, N, ReturnPid, EtsPids);
     {result, 0, Result} -> % root zwrocil wynik
-      io:format("Result: ~p~n", [Result]),
+      %io:format("Result: ~p~n", [Result]),
       gen_event:stop(nodes_time),
       node_provider ! {self(), stop},
       unregister(node_provider),

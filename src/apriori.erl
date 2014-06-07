@@ -37,7 +37,7 @@ mine(Data, Options) ->
 
 %	Dict = get_dict(Data),
   case lists:member(seq, Options) of
-    true ->	sequences_apriori(Data, Workers, MinSup);
+    true  ->	sequences_apriori(Data, Workers, MinSup);
     false -> freq_apriori(Data, Workers, MinSup, MinConf)
   end.
 
@@ -45,11 +45,12 @@ sequences_apriori(Data, Workers, MinSup) ->
   SplitData = split_seq_data(Data, Workers),
   WorkerIds = [ supervisor_manager:compute(seq_apriori_worker, [SData]) || SData <- SplitData ],
   DataL = [[D] || D <- lists:usort(lists:flatten(Data))],
-  ?LOG("DataL~p\n", [DataL]),
-  seq_apriori_first(DataL, WorkerIds, MinSup, dict:new()).
+  %?LOG("DataL~p\n", [DataL]),
+  Result=seq_apriori_first(DataL, WorkerIds, MinSup, dict:new()),
+  Result.
 
 freq_apriori(Data, Workers, MinSup, MinConf) ->
-  ?LOG("before split\n", []),
+  %?LOG("before split\n", []),
   SplitData = split_data(Data, Workers),
   %WorkerIds = [ spawn(node(), apriori, apriori_worker, [SData]) || SData <- SplitData ],
   ?LOG("before spawn\n", []),
@@ -90,16 +91,16 @@ seq_apriori_worker(Data) ->
 % @doc Result : {Antecedent,Consequent,support(Antecedent),support(Antecedent u Consequent),Confidence}
 apriori_first(Data, Workers, MinSup, MinConf, Result) ->
   Dict = get_dict(Data),
-  ?LOG("God : Dict~p\n", [dict:to_list(Dict)]),
+  %?LOG("God : Dict~p\n", [dict:to_list(Dict)]),
   % count and prune
   DictLk = let_workers_count(Workers, Dict),
   PrunedLk = prune(DictLk, MinSup),
-  ?LOG("PrunedLk ~p\n", [dict:to_list(PrunedLk)]),
+  %?LOG("PrunedLk ~p\n", [dict:to_list(PrunedLk)]),
 
   % make new
   Initial = dict:fetch_keys(PrunedLk),
   NewSets = make_sets(PrunedLk, Initial, 2),
-  ?LOG("NewSets~p\n", [NewSets]),
+  %?LOG("NewSets~p\n", [NewSets]),
   apriori_steps(2, Initial, NewSets, Workers, MinSup, MinConf, dict:merge(fun (K, V1, V2) -> ?LOG("dicte merge error ~p, ~p, ~p \n",[K, V1, V2]) end, PrunedLk, Result)).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -110,7 +111,7 @@ apriori_steps(_Step, _Initial, [], Workers, _MinSup, MinConf, ResultDict) ->
   prune_rules(Rules, ResultDict, MinConf, []);
 apriori_steps(Step, Initial, Data, Workers, MinSup, MinConf, Result) ->
   Dict = get_dict(Data),
-  ?LOG("God : Dict~p\n", [dict:to_list(Dict)]),
+  %?LOG("God : Dict~p\n", [dict:to_list(Dict)]),
   % count and prune
   DictLk = let_workers_count(Workers, Dict),
   PrunedLk = prune(DictLk, MinSup),
@@ -118,22 +119,22 @@ apriori_steps(Step, Initial, Data, Workers, MinSup, MinConf, Result) ->
 
   % make new
   NewSets = make_sets(PrunedLk, Initial, Step+1),
-  ?LOG("NewSets~p\n", [NewSets]),
+  %?LOG("NewSets~p\n", [NewSets]),
   apriori_steps(Step+1,Initial, NewSets, Workers, MinSup, MinConf, dict:merge(fun (K, V1, V2) -> ?LOG("dict merge error ~p, ~p, ~p \n",[K, V1, V2]) end, PrunedLk, Result)).
 % if empty -> finish
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 seq_apriori_first(Data, Workers, MinSup, Result) ->
   Dict = get_dict(Data),
-  ?DETAIL("God : Dict~p\n", [dict:to_list(Dict)]),
+  %?DETAIL("God : Dict~p\n", [dict:to_list(Dict)]),
   % count and prune
   DictLk = let_workers_count(Workers, Dict),
   PrunedLk = prune(DictLk, MinSup),
-  ?DETAIL("PrunedLk ~p\n", [dict:to_list(PrunedLk)]),
+  %?DETAIL("PrunedLk ~p\n", [dict:to_list(PrunedLk)]),
 
   % make new
   Initial = dict:fetch_keys(PrunedLk),
   NewSets = seq_make_sets(PrunedLk, Initial),
-  ?DETAIL("NewSets~p\n", [NewSets]),
+  %?DETAIL("NewSets~p\n", [NewSets]),
   seq_apriori_steps(Initial, NewSets, Workers, MinSup, dict:merge(fun (K, V1, V2) -> ?LOG("dict merge error~p, ~p, ~p \n",[K, V1, V2]) end, PrunedLk, Result)).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -142,15 +143,15 @@ seq_apriori_steps(_Initial, [], Workers, _MinSup, Result) ->
   lists:sort(fun({_,SupportA}, {_,SupportB}) -> SupportA >= SupportB end, dict:to_list(Result));
 seq_apriori_steps(Initial, Data, Workers, MinSup, Result) ->
   Dict = get_dict(Data),
-  ?DETAIL("God : Dict~p\n", [dict:to_list(Dict)]),
+  %?DETAIL("God : Dict~p\n", [dict:to_list(Dict)]),
   % count and prune
   DictLk = let_workers_count(Workers, Dict),
   PrunedLk = prune(DictLk, MinSup),
-  ?DETAIL("PrunedLk ~p\n", [dict:to_list(PrunedLk)]),
+  %?DETAIL("PrunedLk ~p\n", [dict:to_list(PrunedLk)]),
 
   % make new
   NewSets = seq_make_sets(PrunedLk, Initial),
-  ?DETAIL("NewSets~p\n", [NewSets]),
+  %?DETAIL("NewSets~p\n", [NewSets]),
   seq_apriori_steps(Initial, NewSets, Workers, MinSup, dict:merge(fun (K, V1, V2) -> ?DETAIL("dict merge error~p, ~p, ~p \n",[K, V1, V2]) end, PrunedLk, Result)).
 % if empty -> finish
 
@@ -357,8 +358,9 @@ experiment(MinSup, MinConf, Workers, DatasetName) ->
   Options = [{min_sup, MinSup}, {workers, Workers}, {min_conf, MinConf}, Nodes],
   %Result=apriori:mine(Data, Options),
   Result = mllib:mine(Data, apriori, Options,Nodes),
-  ?LOG("Result: ~w\n", [Result]),
-  Result.
+  %?LOG("Result: ~w\n", [Result]),
+  %Result.
+  ok.
 
 test(MinSup, MinConf, Workers, Nodes) ->
   %Data = mllib:read_mine_data("mine_data"),
@@ -371,6 +373,6 @@ testseq(MinSup, Workers, Nodes) ->
   {ok, Data} = mllib:read_mine_data("rest.txt"),
   Options = [{min_sup, MinSup}, {workers, Workers}, seq],
   Result = mllib:mine(Data, apriori, Options, Nodes),
-  ?LOG("Result: ~w\n", [Result]),
+  %?LOG("Result: ~w\n", [Result]),
   Result.
 
