@@ -5,6 +5,10 @@ def corlMatrix(filename):
     corll,attr=getCorlMatrix(filename)
     return strMatrix(corll,attr)
 
+def entropyMatrix(filename):
+    entropy,attr=getEntropyMatrix(filename)
+    return strMatrix(entropy,attr)
+
 def getCorlMatrix(filename):
     return getMatrix(filename,computeCorelationMatrix)
 
