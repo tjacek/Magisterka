@@ -1,7 +1,7 @@
-Number of customers in database = 100
+Number of customers in database = 2
 Average sequence length = 10
-Average transaction length = 10
-Number of items = 50
+Average transaction length = 2.5
+Number of items = 15
 Repetition-level = 0
 Variation in repetition-level = 0.1
 Large Itemsets:
