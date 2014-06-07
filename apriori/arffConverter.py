@@ -1,8 +1,8 @@
 import representation,callApriori
 
-def saveArffFile(expResult):
-    arff=getArffFile(expResult,True)
-    arrfFile = open('apriori.arff','w')
+def saveArffFile(expResult,filename="apriori.arff"):
+    arff=getArffFile(expResult,False)
+    arrfFile = open(filename,'w')
     arrfFile.write(arff)
     arrfFile.close()
 

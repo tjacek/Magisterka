@@ -21,7 +21,7 @@ class MainWindow(QtGui.QMainWindow):
     def constants(self):
         self.title='Apriori dataset generator'
         self.ends=".data"
-        self.path="/home/user/Desktop/magisterka/apriori/transactions/dataset1/dataset1"
+        self.path="/home/user/Desktop/magisterka/apriori/transactions/dataset1/"
 	self.margin=5.0
         self.x=500.0
         self.y=500.0
@@ -105,7 +105,6 @@ class MainWindow(QtGui.QMainWindow):
 
     def searchButton(self):
         self.path=str(self.getInput("Path"))
-        print(self.path)
 	self.listWidget.clear()
 	sender = self.sender()
 	for root, dirs, files in os.walk(self.path):
@@ -119,9 +118,10 @@ class MainWindow(QtGui.QMainWindow):
 
     def runButton(self):
         items=self.getAllItems()
+        filename=getInput("Output file")
         bounds=self.getBounds()
         results=callApriori.experiment(items,bounds)     
-	arff.saveArffFile(results)
+	arff.saveArffFile(results,filename)
 
     def getAllItems(self):
         allItems=[] 

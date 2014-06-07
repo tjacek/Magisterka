@@ -2,13 +2,16 @@ import os,time
 
 def experiment(datasets,bounds):
     results={}
+    i=0
     for aprioriDataset in datasets:
+        print("Dataset " + str(i) +"\n")
         expsForDataset=[]
         for params in getParams(bounds):
  	    time=execute(params.minSup,params.minConf,params.workers,aprioriDataset)
             params.time=time
             expsForDataset.append(params)
         results[aprioriDataset]=expsForDataset
+        i+=1
     return results
 
 def getParams(bounds):
@@ -57,6 +60,7 @@ def execute(sup,conf,work,data,path="/home/user/Desktop/ML/src"):
     MinConf=str(conf)
     Workers=str(work) 
     Dataset=data 
+    print("MinConf"+ MinConf+ "MinSup" + MinSup +" Workers "+ Workers +" " + Dataset  +"\n")
     postfix=" -run init stop -noshell"
     cmd+=MinSup + " " + MinConf +" " +Workers+" "
     cmd+=Dataset + postfix
@@ -70,8 +74,9 @@ def getTime():
     return int(round(time.time() * 1000))
 
 if __name__ == '__main__':
-    datasets=["/home/user/Desktop/magisterka/apriori/datasets/gen.data",
-      "/home/user/Desktop/magisterka/apriori/datasets/mine.data"]
-    defbounds=Bounds(0.3,0.7,0.3,0.7,1,2)
-    experiment(datasets,defbounds)
-    #print(execute(0.5,0.5,1,"datasets/gen.data"))
+  
+    #defbounds=Bounds(0.3,0.7,0.3,0.7,1,2)
+    #experiment(datasets,defbounds)
+    path1="datasets/old/mine.data"
+    path2="transactions/dataset1/trans11.data"
+    print(execute(0.5,0.5,1,path1))
