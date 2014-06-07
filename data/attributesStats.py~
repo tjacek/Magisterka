@@ -1,5 +1,9 @@
-import scipy.stats as stats,arff
-import numpy as np
+import scipy.stats as stats
+import numpy as np,arff
+
+def corlMatrix(filename):
+    corll,attr=getCorlMatrix(filename)
+    return strMatrix(corll,attr)
 
 def getCorlMatrix(filename):
     return getMatrix(filename,computeCorelationMatrix)
@@ -8,11 +12,10 @@ def getEntropyMatrix(filename):
     return getMatrix(filename,mutualEntropyMatrix)
 
 def getMatrix(filename,compute):
-    data,attr=arff.parseArff(filename)
+    data,attr=arff.parseArff(filename,True)
     series=data.getAllDims()
     corelMatrix=compute(series)
-    printMatrix(corelMatrix,attr)
-    return corelMatrix
+    return corelMatrix,attr
 
 def computeCorelationMatrix(series):
     size=len(series)-1
@@ -26,15 +29,20 @@ def computeCorelationMatrix(series):
     return corelMatrix
 
 def printMatrix(corel,attr):
+    rep=strMatrix(corel,attr)
+    print(rep)
+
+def strMatrix(corel,attr):
     size=len(corel)
-    print(getFirstLine(size))
+    rep=getFirstLine(size)
     for i in range(0,size):
         line=str(i)+": "
         for j in range(0,size):
             value=round(corel[i][j],2) 
             line+=getStr(value)
-        print(line)
-    printAttributes(attr)
+        rep+=line+"\n"
+    rep+=printAttributes(attr)
+    return rep
 
 def getFirstLine(size):
     firstLine="   "
@@ -43,9 +51,11 @@ def getFirstLine(size):
     return firstLine
 
 def printAttributes(attr):
+    value=""
     size=len(attr)
     for i in range(0,size):
-        print(str(i) +" " + attr[i])
+        value+= "\n" + str(i) +" " + attr[i] 
+    return value
 
 def getStr(corel):
    ws=" "
@@ -142,9 +152,6 @@ class Histogram(object):
                 p2=self.px[i]*self.py[j]
                 if(pxy!=0.0 and pxy <p2):
                     print(i,j,pxy,p2,self.px[i],self.py[i])
-                    print(self)
-                    print(self.px)
-                    print(self.py)
 
     def __str__(self):
         return str(self.matrix)
@@ -184,17 +191,3 @@ def entropyDensity(i,j,hist):
         return 0.0
     return  pxy*np.log(1.0/pxy)
 
-def test():
-    #X=[1.0, 1.0, -1.0,-1.0]
-    #Y=[1.0,-1.0,  1,0,-1.0]
-    X=[1.0, 2.0, 3.0,4.0]
-    Y=[2.0, 4.0, 9.0,16.0]
-    #H=Histogram(X,Y,2)
-    #print(H.px)
-    #print(
-    matrix=printMatrix(corelMatrix,attr)
-    print(mutualEntropyMatrix([X,Y]))
-
-if __name__ == '__main__':
-    data=getEntropyMatrix("apriori/apriori.arff")
-    #test()

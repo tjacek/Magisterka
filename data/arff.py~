@@ -30,7 +30,7 @@ def prepareOutput(testfile,outputfile):
     for instance in dataset.instances:
         instance.setLabel(labels[i])
         i+=1
-    arffOutput=toArff(testfile)    
+    arffOutput=toArff(dataset)    
     f=open(outputfile, 'w')
     f.write(arffOutput)
     f.close()

@@ -68,12 +68,15 @@ def attrToText(n,labeled=True):
         s+="@attribute cat {true,false}\n";
     return s +"\n"
 
-def parseArff(filename):
+def parseArff(filename,cat=False):
     arff=readArff(filename)
     attr,data=arff.split("@data\n")
     dim,attrNames=parseAttr(attr)
     points,labels=parsePoints(data)
-    dataset=gen.createNewDataset(points,labels,dim)
+    if(cat):
+        dataset=gen.createNewDataset(points,labels,dim-1)
+    else:
+	dataset=gen.createNewDataset(points,labels,dim)
     return dataset,attrNames
 
 def parseAttr(attr):

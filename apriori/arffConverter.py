@@ -1,4 +1,4 @@
-import representation,callApriori
+import representation,callApriori,re
 
 def saveArffFile(expResult,filename="apriori.arff"):
     arff=getArffFile(expResult,False)
@@ -48,6 +48,45 @@ def getStats(dataset):
         sample+=str(stats[key])+","
     return sample
 
+def parseArff(filename):
+    arff=readArff(filename)
+    attr,data=arff.split("@data\n")
+    dim,attrNames=parseAttr(attr)
+    points,labels=parsePoints(data)
+    dataset=gen.createNewDataset(points,labels,dim)
+    return dataset,attrNames
+
+def readArff(filename):
+    file=open(filename,'r')
+    arff=file.read()
+    file.close()
+    return arff
+
+def parseAttr(attr):
+    lines=attr.split("\n")
+    attrNames=[]
+    reg = re.compile('@attribute(.)+numeric(.)*')
+    dim=0
+    for line in lines:
+	if(reg.match(line)):
+	    dim+=1
+            name=extractAttrName(line)
+            attrNames.append(name) 
+    return dim,attrNames
+
+def extractAttrName(line):
+    line=line.replace("numeric","")
+    return line.replace("@attribute","")
+
+def parsePoints(data):
+    lines=data.split("\n")
+    lines=filter(lambda l: len(l)>0.0,lines)
+    lines=map(lambda x:x.split(","),lines)
+    labels=map(lambda x:x.pop(-1),lines)
+    points=map(toFloat,lines)
+    labels=map(toCat,labels)
+    return points,labels
+
 def discretize(expResult):
     for dataset in expResult.values():
         average=0.0
@@ -60,6 +99,17 @@ def discretize(expResult):
 		result.time="negative"
             else:
                 result.time="positive"
+
+def toFloat(rawPoint):
+    return map(float,rawPoint)
+
+def toCat(raw):
+    p = re.compile(r"true|false")
+    if(p.match(raw)):
+       if(raw=="true"):
+  	   return 1.0
+       return -1.0     
+    return 0.0
 
 example={'/home/user/Desktop/magisterka/apriori/datasets/mine.data': 1269L, '/home/user/Desktop/magisterka/apriori/datasets/gen.data': 1112L}
 example2={

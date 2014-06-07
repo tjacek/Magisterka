@@ -27,8 +27,8 @@ class Dataset(object):
    def getAllDims(self):
        dims=[]
        for i in range(0,self.dim):
-	   dim=self.getDim(i)
-           dims.append(dim)
+	   dim_i=self.getDim(i)
+           dims.append(dim_i)
        return dims
    
    def separate(self):
@@ -65,7 +65,9 @@ class Dataset(object):
 
 class Instance(object):
     def __init__(self,point,category):
-	self.point=point
+	
+        self.point=point
+        self.size=len(point)
 	self.category=category
 
     def toBool(self):
