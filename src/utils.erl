@@ -24,7 +24,8 @@ labels2reals(Labels)->
 
 dot_product(X,Y) -> dot_product(X,Y,0.0).
 dot_product([],[],Acc) -> Acc;
-dot_product([A|Ha],[B|Hb],Acc) -> dot_product(Ha,Hb, A*B +Acc).
+dot_product([A|Ha],[B|Hb],Acc) ->
+  dot_product(Ha,Hb, A*B +Acc).
 
 distance(X,Y) ->  distance(X,Y,0.0).
 distance([],[],Acc) ->  math:sqrt(Acc);
@@ -35,7 +36,6 @@ distance([A|Ha],[B|Hb],Acc) ->
 subs(X,Y) -> subs(X,Y,0.0).
 subs([],[],Acc) -> Acc;
 subs([A|Ha],[B|Hb],Acc) -> subs(Ha,Hb, A-B +Acc).
-
 
 choose_category(Examples) ->
   Labels=get_labels(Examples),

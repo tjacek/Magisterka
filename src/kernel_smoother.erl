@@ -10,19 +10,27 @@
 -author("tjacek").
 
 %% API
--export([test/0,test_regression/1,learn/1,regression/2]).
+-export([test/0,test_regression/1,learn/1,regression/2,apply_regression/2]).
 
 learn(Samples) ->
   {Labels,Instances}=regression:parse_labels(Samples),
-  Y=utils:labels2reals(Labels),
-  {Y,Instances}.
+  {Labels,Instances}.
+
+apply_regression(X0,Model)->
+  Lambda=fun(Xi)->
+    regression(Xi,Model)
+  end,
+  lists:map(Lambda,X0).
 
 regression(X0,Model) ->
   X=getX(Model),
   Y=getY(Model),
   W=get_weights(X0,X),
   Norm=lists:sum(W),
-  R=utils:dot_product(W,Y)/Norm.
+  case Norm of
+     0.0 -> utils:dot_product(W,Y)/0.1;
+     _ -> utils:dot_product(W,Y)
+  end.
 
 getX(Model) ->
   element(2,Model).
@@ -30,7 +38,15 @@ getX(Model) ->
 getY(Model) ->
   element(1,Model).
 
-get_weights(X0,Instances) ->
+get_weights(X0,X)->
+  %io:format("~p ** \n",[X0]),
+  Exp_kernel=get_kernel(10.0),
+  Lambda=fun(Instance) ->
+    Exp_kernel(X0,Instance)
+  end,
+  lists:map(Lambda,X).
+
+get_weight(X0,Instances) ->
   Exp_kernel=get_kernel(1.0),
   K=fun(X) ->
     Exp_kernel(X0,X)

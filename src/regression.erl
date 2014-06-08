@@ -12,14 +12,15 @@
 %% API
 -export([test_regression/2,create_model/3,parse_labels/1]).
 
-test_regression(TestFile,ModelFile) ->
-  X =read_dataset(TestFile),
-  %Model =mllib:read_classifier(ModelFile),
-  Model=create_model(c45,"data/linearInput.arff","kl"),
-  R=get_regresion_function(Model),
-  PredY=lists:map(R,X),
+test_regression(TrainFile,TestFile) ->
+  {Attributes, TrainSet} = mllib:read(arff,[{file,TrainFile}]),
+  {Attributes, TestSet} = mllib:read(arff,[{file,TestFile}]),
+  X=remove_pred_variable(TestSet),
+  Model=kernel_smoother:learn(TrainSet),
+  Y=kernel_smoother:apply_regression(X,Model),
+  %PredY=lists:map(R,X),
   %Error=utils:subs(TrueY,PredY),
-  io:format("~p~n",[PredY]).
+  io:format("~p~n",[Y]).
 
 create_model(Alg,Filename,Output) ->
   {Attributes, Training} = mllib:read(arff,[{file,Filename}]),
@@ -28,27 +29,34 @@ create_model(Alg,Filename,Output) ->
 
 read_dataset(Filename) ->
   {Attributes, Samples} = mllib:read(arff,[{file,Filename}]),
- % Con = fun(X) ->
- %   tuple_to_list(X)
- % end.
   lists:map(fun(X)->tuple_to_list(X) end,Samples).
-  %{Labels,Instances}=parse_labels(Samples).
 
 get_regresion_function(Model)->
   fun(X) ->
     kernel_smoother:regression(X,Model)
   end.
 
+pred_variable(Samples) ->
+  First_tuple=lists:nth(1,Samples),
+  N=tuple_size(First_tuple),
+  Lambda = fun(Tuple) ->
+    element(N,Tuple)
+  end,
+  Y=lists:map(Lambda,Samples).
+
 parse_labels(Samples) ->
   Extract_Labels=fun(Sample) ->
     N=size(Sample),
     element(N,Sample)
   end,
+  Labels=lists:map(Extract_Labels,Samples),
+  Instances =remove_pred_variable(Samples),
+  {Labels,Instances}.
+
+remove_pred_variable(Raw_samples) ->
   Extract_Instances=fun(Sample) ->
     ListSample=tuple_to_list(Sample) ,
     Label=lists:last(ListSample),
     lists:delete(Label,ListSample)
   end,
-  Labels=lists:map(Extract_Labels,Samples),
-  Instances =lists:map(Extract_Instances,Samples),
-  {Labels,Instances}.
+  lists:map(Extract_Instances,Raw_samples).
