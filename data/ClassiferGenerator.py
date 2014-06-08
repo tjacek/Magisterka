@@ -64,8 +64,7 @@ class Dataset(object):
        return s
 
 class Instance(object):
-    def __init__(self,point,category):
-	
+    def __init__(self,point,category):	
         self.point=point
         self.size=len(point)
 	self.category=category
@@ -85,11 +84,16 @@ class Instance(object):
             self.category=1.0
         else:
             self.category=-1.0
+
     def __str__(self):
         s=""
         for cord in self.point:
 	    s+=str(cord)+","
-        s+=self.getLabel()+"\n"
+        if(self.category!=None):
+            s+=self.getLabel()
+        else:
+            s=s[:-1]
+        s+="\n"
         return s
 
 def createNewDataset(reduPoints,labels,dim=3):
@@ -103,7 +107,7 @@ def createNewDataset(reduPoints,labels,dim=3):
 def createUnlabeledDataset(reduPoints,dim=3):
     instances=[]
     for point in reduPoints:
-	instance=Instance(point,0.0)
+	instance=Instance(point,None)
         instances.append(instance)
     return Dataset(len(reduPoints),dim,instances)
 
