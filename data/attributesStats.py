@@ -22,7 +22,7 @@ def getMatrix(filename,compute):
     return corelMatrix,attr
 
 def computeCorelationMatrix(series):
-    size=len(series)-1
+    size=len(series)
     corelMatrix = np.zeros(shape=(size,size))
     for i in range(0,size):
         for j in range(0,size):

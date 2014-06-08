@@ -13,8 +13,7 @@ def analizeDataset(filename):
 
 def regression(filename):
     dataset,attr=arff.parseArff(filename,True)
-    #print(dataset)
-    train,test=arff.saveSplitedArff(dataset,"stats/",filename)
+    train,test=arff.saveSplitedArff(dataset,"stats/",filename,False)
 
 def save(text,filename,prefix,path="stats/"):
     filename=filename.replace(".arff","_"+prefix+".txt")

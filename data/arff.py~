@@ -7,12 +7,13 @@ Created on Mon Nov  4 19:37:42 2013
 
 import re,ClassiferGenerator as gen
 
-def saveSplitedArff(dataset,path,filename):
-    data1,data2=dataset.split(0.3)
+def saveSplitedArff(dataset,path,filename,labeled=True,frac=0.3):
+    data1,data2=dataset.split(frac)
     trainfile=filename.replace(".arff","Train.arff")
-    saveArff(data1,path,trainfile)
+    saveArff(data1,path,trainfile,labeled)
     testfile=filename.replace("Train.arff","Test.arff")
-    saveArff(data2,path,testfile)
+    saveArff(data2,path,testfile,labeled)
+    return trainfile,testfile
 
 def saveArff(dataset,path,filename):
     arff=toArff(dataset)    
@@ -43,10 +44,6 @@ def extractLabels(output):
     clean =lambda x: re.sub(pattern, '', x)
     return map(clean,labels)
 
-def readTestset(testfile):
-    print(testfile)
-    return parseArff(testfile)
-
 def readArff(filename):
     file=open(filename,'r')
     arff=file.read()
@@ -68,12 +65,16 @@ def attrToText(n,labeled=True):
         s+="@attribute cat {true,false}\n";
     return s +"\n"
 
-def parseArff(filename):
+def parseArff(filename,unlabeled=False):
     arff=readArff(filename)
     attr,data=arff.split("@data\n")
     dim,attrNames=parseAttr(attr)
-    points,labels=parsePoints(data)
-    dataset=gen.createNewDataset(points,labels,dim)
+    if(unlabeled):
+        points=parseUnlabeledPoints(data)
+        dataset=gen.createUnlabeledDataset(points,dim)
+    else:
+        points,labels=parsePoints(data)
+	dataset=gen.createNewDataset(points,labels,dim)
     return dataset,attrNames
 
 def parseAttr(attr):
@@ -91,6 +92,13 @@ def parseAttr(attr):
 def extractAttrName(line):
     line=line.replace("numeric","")
     return line.replace("@attribute","")
+
+def parseUnlabeledPoints(data):
+    lines=data.split("\n")
+    lines=filter(lambda l: len(l)>0.0,lines)
+    lines=map(lambda x:x.split(","),lines)
+    points=map(toFloat,lines)
+    return points
 
 def parsePoints(data):
     lines=data.split("\n")

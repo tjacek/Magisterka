@@ -100,6 +100,13 @@ def createNewDataset(reduPoints,labels,dim=3):
         instances.append(instance)
     return Dataset(size,dim,instances)
 
+def createUnlabeledDataset(reduPoints,dim=3):
+    instances=[]
+    for point in reduPoints:
+	instance=Instance(point,0.0)
+        instances.append(instance)
+    return Dataset(size,dim,instances)
+
 def generateDataset(n,dim,pred,scale=10):
     seq=randomSeq(n,dim,scale)
     instances=classification(seq,pred)
