@@ -5,7 +5,7 @@ Created on Thu Dec 26 19:05:45 2013
 @author: tjacek
 """
 import numpy as np
-import mlpy
+import mlpy,histogram as hist
 import matplotlib.pyplot as plt
 import representation as rep
 
@@ -89,6 +89,27 @@ def getPlot(path):
     dataset=rep.readDataset(path)
     vectors=get2DBow(dataset)
     return visualization(vectors)
+
+def getStats(items):
+    stats={}
+    for item in items:
+        print(item)
+        h=getHistogram(item)
+        stats[item]=extracVar(h)
+    return stats
+
+def getHistogram(filename):
+    dataset=rep.readDataset(filename)
+    vectors=get2DBow(dataset)
+    return hist.Histogram(vectors)
+
+def extracVar(h):
+    variables={}
+    variables["min"]=h.minValue()
+    variables["max"]=h.maxValue()
+    variables["var"]=h.var()
+    variables["avg"]=h.u
+    return variables
 
 def test(path="/home/user/Desktop/magisterka/transactions/mine_data"):
     dataset=rep.readDataset(path)

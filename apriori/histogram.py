@@ -9,6 +9,7 @@ class Histogram(object):
         self.size=math.fabs(self.min -self.max)
         self.h=self.size/self.dim
         self.createHist(vector2D)
+        self.u=self.avg()
 
     def createHist(self,vector2D):
         for point in vector2D:
@@ -31,7 +32,7 @@ class Histogram(object):
         for row in self.matrix:
 	    for b in row:
 		value+=b
-        return value/(self.bin*self.bin)
+        return value/(self.dim*self.dim)
 
     def maxValue(self):
         value=self.matrix[0][0]
@@ -49,6 +50,14 @@ class Histogram(object):
 		    value=b
         return value
 
+    def var(self):
+        value=0.0
+        for row in self.matrix:
+	    for x in row:
+		v=(x-self.u)
+                value+=v*v
+        value/=self.dim*self.dim -1.0 
+        return math.sqrt(value)	
 
 def getMax(vector2D):
     point=vector2D[0]
