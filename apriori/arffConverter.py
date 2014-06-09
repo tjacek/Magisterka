@@ -1,23 +1,26 @@
-import representation,callApriori,re
+import representation,callApriori,re,bow
 
-def saveArffFile(expResult,filename="apriori.arff"):
-    arff=getArffFile(expResult,False)
+def saveArffFile(expResult,pca,filename="apriori.arff"):
+    arff=getArffFile(expResult,pca,False)
     arrfFile = open(filename,'w')
     arrfFile.write(arff)
     arrfFile.close()
 
-def getArffFile(expResult,discrete=False):
+def getArffFile(expResult,pca,discrete=False):
     arffFile="@RELATION aprioriDataset\n"
-    arffFile=addAttributes(expResult.keys(),arffFile,discrete)
+    arffFile=addAttributes(expResult.keys(),arffFile,pca,discrete)
     if(discrete):
 	discretize(expResult)
-    arffFile=addSamples(expResult,arffFile)
+    arffFile=addSamples(expResult,pca,arffFile)
     return arffFile
 
-def addAttributes(datasets,arffFile,discrete=False):
-    stats=representation.getAttributes()
+def addAttributes(datasets,arffFile,pca,discrete=False):
+    stats=representation.getAttributes() 
     for attrName in stats:
 	arffFile=addAttribute(attrName,arffFile)
+    if pca!=None:
+	for attrName in bow.pcaStats:
+	    arffFile=addAttribute(attrName,arffFile)
     arffFile=addAttribute("minSup",arffFile)
     arffFile=addAttribute("minConf",arffFile)
     arffFile=addAttribute("workers",arffFile)
@@ -32,11 +35,14 @@ def addAttribute(attrName,arffFile):
     arffFile+=attrName
     return arffFile
 
-def addSamples(expResult,arffFile):
+def addSamples(expResult,pca,arffFile):
     arffFile+="@data\n"    
     for dataset in expResult.keys():
         for instance in expResult[dataset]:
             sample=getStats(dataset)
+            if pca!=None:
+                stats=pca[dataset]
+		sample+=bow.toStr(stats)
             sample+=instance.__str__()
             arffFile+=sample
     return arffFile 

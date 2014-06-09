@@ -48,7 +48,7 @@ class MainWindow(QtGui.QMainWindow):
         inputs.resize(300,400)
         formLayout=QtGui.QFormLayout()
         self.addField("Path",self.path,formLayout)
-        self.addField("Output file","apriori.arff",formLayout)
+        self.addField("Output file","apriori_pca.arff",formLayout)
         self.addField("lower MinSup","0.3",formLayout)
         self.addField("upper MinSup","0.7",formLayout)
         self.addField("lower MinConf","0.3",formLayout)
@@ -119,11 +119,11 @@ class MainWindow(QtGui.QMainWindow):
     def runButton(self):
         items=self.getAllItems()
         filename=self.getInput("Output file")
-        stats=bow.getStats(items)
-        print(stats)
-        #bounds=self.getBounds()
-        #results=callApriori.experiment(items,bounds)     
-	#arff.saveArffFile(results,filename)
+        pca=bow.getStats(items)
+        #print(stats)
+        bounds=self.getBounds()
+        results=callApriori.experiment(items,bounds)     
+	arff.saveArffFile(results,pca,filename)
 
     def getAllItems(self):
         allItems=[] 

@@ -6,7 +6,7 @@ def experiment(datasets,bounds):
     for aprioriDataset in datasets:
         print("Dataset " + str(i) +"\n")
         expsForDataset=[]
-        for params in getParams(bounds):
+        for params in getParams(bounds,aprioriDataset):
  	    time=execute(params.minSup,params.minConf,params.workers,aprioriDataset)
             params.time=time
             expsForDataset.append(params)
@@ -14,12 +14,12 @@ def experiment(datasets,bounds):
         i+=1
     return results
 
-def getParams(bounds):
+def getParams(bounds,name):
     paramsList=[]
     for minSup in getRange(bounds.lowerSup,bounds.upperSup):
 	for minConf in getRange(bounds.lowerConf,bounds.upperConf):
             for workers in getRange(bounds.lowerWorkers,bounds.upperWorkers,1.0):
-                param= AprioriParametrs(minSup,minConf,int(workers))
+                param= AprioriParametrs(name,minSup,minConf,int(workers))
 		paramsList.append(param)
     return paramsList
 
@@ -41,8 +41,9 @@ class Bounds(object):
         self.upperWorkers=int(upperWorkers)
 
 class AprioriParametrs(object):
-    def __init__(self,minSup,minConf,workers,time=0.0):
-	self.minSup=minSup
+    def __init__(self,name,minSup,minConf,workers,time=0.0):
+	self.name=name
+        self.minSup=minSup
 	self.minConf=minConf
 	self.workers=workers
 	self.time=time

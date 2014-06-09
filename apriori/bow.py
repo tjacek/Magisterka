@@ -103,12 +103,22 @@ def getHistogram(filename):
     vectors=get2DBow(dataset)
     return hist.Histogram(vectors)
 
+pcaStats =["min_pca","max_pca","var_pca","avg_pca"]
+
+def toStr(stats):
+    s=""
+    s+=str(stats["min_pca"])+","
+    s+=str(stats["max_pca"])+","
+    s+=str(stats["var_pca"])+","
+    s+=str(stats["avg_pca"])
+    return s
+
 def extracVar(h):
     variables={}
-    variables["min"]=h.minValue()
-    variables["max"]=h.maxValue()
-    variables["var"]=h.var()
-    variables["avg"]=h.u
+    variables["min_pca"]=h.minValue()
+    variables["max_pca"]=h.maxValue()
+    variables["var_pca"]=h.var()
+    variables["avg_pca"]=h.u
     return variables
 
 def test(path="/home/user/Desktop/magisterka/transactions/mine_data"):
