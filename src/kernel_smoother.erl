@@ -40,7 +40,7 @@ getY(Model) ->
 
 get_weights(X0,X)->
   %io:format("~p ** \n",[X0]),
-  Exp_kernel=get_kernel(10.0),
+  Exp_kernel=get_kernel(3.0),
   Lambda=fun(Instance) ->
     Exp_kernel(X0,Instance)
   end,

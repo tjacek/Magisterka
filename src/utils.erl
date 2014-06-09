@@ -11,7 +11,7 @@
 
 %% API
 -export([choose_category/1]).
--export([labels2reals/1,dot_product/2,subs/2,distance/2]).
+-export([labels2reals/1,dot_product/2,subs/2,distance/2,substract/2]).
 
 labels2reals(Labels)->
   Conv=fun(Label) ->
@@ -36,6 +36,12 @@ distance([A|Ha],[B|Hb],Acc) ->
 subs(X,Y) -> subs(X,Y,0.0).
 subs([],[],Acc) -> Acc;
 subs([A|Ha],[B|Hb],Acc) -> subs(Ha,Hb, A-B +Acc).
+
+substract(X,Y) -> substract(X,Y,[]).
+substract([],[],Acc) -> Acc;
+substract([A|Ha],[B|Hb],Acc) ->
+  Sub=abs(A-B),
+  substract(Ha,Hb, [Sub|Acc]).
 
 choose_category(Examples) ->
   Labels=get_labels(Examples),
