@@ -7,6 +7,8 @@ Created on Mon Nov  4 19:37:42 2013
 
 import re,ClassiferGenerator as gen
 
+binaryCategories = ["true","false"]
+
 def saveSplitedArff(dataset,path,filename,labeled=True,frac=0.3):
     data1,data2=dataset.split(frac)
     trainfile=filename.replace(".arff","Train.arff")
@@ -15,8 +17,8 @@ def saveSplitedArff(dataset,path,filename,labeled=True,frac=0.3):
     saveArff(data2,path,testfile,labeled)
     return trainfile,testfile
 
-def saveArff(dataset,path,filename,labeled=True):
-    arff=toArff(dataset,labeled)    
+def saveArff(dataset,path,filename,labeled=True,categories=binaryCategories):
+    arff=toArff(dataset,labeled,categories)    
     myFile = open(path+filename, 'w')
     myFile.write(arff)
     myFile.close()
@@ -50,19 +52,23 @@ def readArff(filename):
     file.close()
     return arff
 
-def toArff(dataset,labeled=True):
-    arff=attrToText(dataset.dim,labeled)
+def toArff(dataset,labeled=True,categories=binaryCategories):
+    arff=attrToText(dataset.dim,labeled,categories)
     arff+="@data\n"
     arff+=str(dataset)
     return arff +"\n"
 
-def attrToText(n,labeled=True):
+def attrToText(n,labeled=True,categories=binaryCategories):
     s="@relation TestData \n \n"  
     for i in range(0,n):
         atrrName= "cord"+str(i)
         s+="@attribute "+ atrrName + " numeric\n"
     if(labeled):
-        s+="@attribute cat {true,false}\n";
+        cats=""
+        for cat in categories:
+	    cats+=cat+","
+        cats=cats[:-1]
+        s+="@attribute cat {" + cats +"}\n";
     return s +"\n"
 
 def parseArff(filename,unlabeled=False):

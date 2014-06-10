@@ -78,6 +78,9 @@ class Instance(object):
     def getLabel(self):
         s= str(self.toBool())
         return s.lower()
+    
+    def setCategory(self,cat):
+        self.category=cat
 
     def setLabel(self,label):
         if(label=="true"):
@@ -85,12 +88,16 @@ class Instance(object):
         else:
             self.category=-1.0
 
+    def removeLast(self):
+        self.point.pop(-1)
+	self.size-=1
+
     def __str__(self):
         s=""
         for cord in self.point:
 	    s+=str(cord)+","
         if(self.category!=None):
-            s+=self.getLabel()
+            s+=self.category
         else:
             s=s[:-1]
         s+="\n"
