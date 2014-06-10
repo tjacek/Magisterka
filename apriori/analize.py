@@ -1,4 +1,4 @@
-import sys,math
+import sys,math,os
 sys.path.append("/home/user/Desktop/magisterka/data")
 import attributesStats as stats,arff
 
@@ -9,8 +9,35 @@ def analizeDataset(filename):
     #save(m1,filename,prefix="corelation")
     #m2=stats.entropyMatrix(filename)
     #save(m2,filename,prefix="entropy")
-    #regression(filename)
-    discretize("stats/",filename,interval)
+    regression(filename)
+    #discretize("stats/",filename,interval)
+
+def regression(filename):
+    train,test=dataForRegression(filename)
+    callC(train,test) 
+
+def dataForRegression(filename,path="/home/user/Desktop/magisterka/apriori/stats/"):
+    dataset,attr=arff.parseArff(filename,True)
+    train,test=arff.saveSplitedArff(dataset,"stats/",filename,False)
+    dataset,attr=arff.parseArff(filename,True)
+    train=saveRaw(dataset,path,train)
+    test=saveRaw(dataset,path,test)
+    return path+train,path+test
+
+def callC(train,test,output="output.txt",path="/home/user/Desktop/ML/C/LSM/"):
+    cmd=path +"lsm " + train +" " + test +" " + output
+    os.system(cmd)
+
+def saveRaw(dataset,path,filename):
+    filename=filename.replace(".arff",".csv")
+    arff.saveCsv(dataset,path,filename)
+    return filename
+
+def save(text,filename,prefix,path="stats/"):
+    filename=filename.replace(".arff","_"+prefix+".txt")
+    myFile = open(path+filename, 'w')
+    myFile.write(text)
+    myFile.close()
 
 def discretize(path,filename,category):
     dataset,attr=arff.parseArff(filename,True)
@@ -21,16 +48,6 @@ def discretize(path,filename,category):
         instance.setCategory(cat)
     disc_filename=filename.replace(".arff","_dics.arff")
     arff.saveArff(dataset,path,disc_filename,disc_filename,getIntervalCategories())
-
-def regression(filename):
-    dataset,attr=arff.parseArff(filename,True)
-    train,test=arff.saveSplitedArff(dataset,"stats/",filename,False)
-
-def save(text,filename,prefix,path="stats/"):
-    filename=filename.replace(".arff","_"+prefix+".txt")
-    myFile = open(path+filename, 'w')
-    myFile.write(text)
-    myFile.close()
 
 def getPredVar(instance):
     return instance.point[instance.size-1]

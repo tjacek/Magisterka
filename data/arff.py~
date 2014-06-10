@@ -67,7 +67,7 @@ def attrToText(n,labeled=True,categories=binaryCategories):
         cats=""
         for cat in categories:
 	    cats+=cat+","
-        cats[:-1]
+        cats=cats[:-1]
         s+="@attribute cat {" + cats +"}\n";
     return s +"\n"
 
