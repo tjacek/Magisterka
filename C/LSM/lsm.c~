@@ -13,16 +13,21 @@ Vector * learn(Samples * s,double alpha,double maxErr){
   Vector * theta=makeVector(s->n);
   int iter=0;
   int maxIter=10000000;
-  while(mse(theta,s)>maxErr){
+   
+  do{
     if(iter>maxIter){
       printf(" %d",iter);
       break;
     }
+    //if(maxIter % 1000){
+    //}
     //printf(" %f",mse(theta,s));
     //printVector(theta);
     train(theta,s,alpha);
     iter++;
-  }
+    double error=mse(theta,s);
+    printf(" %d %f\n",iter,error);
+  }while(error>maxErr);
   return theta;
 }
 

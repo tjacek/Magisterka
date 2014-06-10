@@ -14,7 +14,7 @@ void test(int k,int n){
   //test_2();
   //Vector * theta=linearRegression(train);
   //printSamples(test);
-   Vector  * theta=learn(train,0.0001,0.01);
+   Vector  * theta=learn(train,0.1,0.01);
   printVector(theta);
   double error=mse(theta,train);
   printf("Error %f \n",error);
