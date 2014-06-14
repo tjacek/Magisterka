@@ -35,7 +35,6 @@ experiment(Algorithm,TrainFile,TestFile,Output,Result,Options) ->
   {Attributes, TestSet} = mllib:read(arff,[{file,TestFile}]),
   ClassName=cat,
   {ok, Classifier} = mllib:learn(Attributes, ClassName, TrainSet, Algorithm, Options),
-  io:format("~p \n",["hhhhh"]),
   {TrueLabels,TestList}=regression:parse_labels(TestSet),
   TestInstances=lists:map(fun(X)-> list_to_tuple(X)  end,TestList),
   PredLabels=learn(Classifier,TestInstances),

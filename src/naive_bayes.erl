@@ -182,11 +182,18 @@ classifyComputeProbability(Category, Example, Attributes, CondProb) ->
 
 % For given parameters and argument compute value of Gaussian function
 gaussianFunc({Mean, Variance}, X) ->
-  A = 1 / math:sqrt(2.0 * math:pi() * Variance),
-  Value = A * math:exp( - math:pow((X - Mean), 2.0) / (2.0 * Variance) ),
-  ?LOG("    gaussianFunc(~w, ~w, ~w) = ~w~n", [Mean, Variance, X, Value]),
+  io:format("    gaussianFunc(~w, ~w, ~w)~n", [Mean, Variance, X]),
+  Var =checkVariance(Variance),
+  A = 1 / math:sqrt(2.0 * math:pi() * Var),
+  Value = A * math:exp( - math:pow((X - Mean), 2.0) / (2.0 * Var) ),
+  ?LOG("    gaussianFunc(~w, ~w, ~w) = ~w~n", [Mean, Var, X, Value]),
   Value.
 
+checkVariance(Variance) ->
+  case  0.0<Variance of
+    true -> Variance;
+    false -> 0.01
+  end.
 %%
 %% Extra Functions
 %%
