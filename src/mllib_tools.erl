@@ -373,10 +373,12 @@ count_trainingexamples_categories([{_DataAtribs, Category} = _TrainingExamples|T
   count_trainingexamples_categories(TrainingExamples, increase_category_class(Category, CategoryCounters)).
 
 increase_category_class(Category, [{Category, N}|CategoryCounters]) ->
+  %io:format("~p \n",[Category]),
   [{Category, N+1}|CategoryCounters];
 increase_category_class(Category, [_Other|CategoryCounters]) ->
   [_Other|increase_category_class(Category, CategoryCounters)].
-
+%increase_category_class(Category,CategoryCounters) ->
+%  [{Category, 1}|CategoryCounters].
 %% -----------------------------------------------------------------------------
 
 
@@ -410,6 +412,7 @@ get_n_attribute(Attributes, AttributePos) ->
 % @spec exclude(List, Number) -> ListWithoutNthElement where List = [any()], Number = integer(), ListWithoutNthElement = [any()]
 % @doc Remove nth argument from the list.
 exclude(List, Number) ->
+  io:format("~p ~p\n",[is_list(List),Number]),
   exclude_no(List, Number, 1, []).
 
 exclude_no([ToReturn | List], Number, Number, Acu) ->

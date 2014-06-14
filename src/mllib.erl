@@ -263,9 +263,11 @@ choose_class(Attributes, TrainingExamples, ClassName) ->
         continuous -> {error, not_supported};
         _Supported ->
 
-          {NewAttributes, FutureClass} = mllib_tools:exclude(Attributes, Pos),
+          {NewAttributes, FutureClass} = %utils:exclude(Attributes, Pos),
+           mllib_tools:exclude(Attributes, Pos),
           Class = #class{ name = FutureClass#attribute.name, categories = FutureClass#attribute.values },
-
+          %io:format("~p \n",[TE]),
+          %io:format("~p \n",[Pos]),
           NewTrainingExamples = [ fetch_class(tuple_to_list(TE), Pos) || TE <- TrainingExamples ],
 
           {NewAttributes, Class, NewTrainingExamples}
@@ -709,7 +711,8 @@ fix_positions([], Acc) ->
 
 
 fetch_class(TE, Pos) ->
-  {Example, Category} = mllib_tools:exclude(TE, Pos),
+  {Example, Category} =  %utils:exclude(TE, Pos),
+                       mllib_tools:exclude(TE, Pos),
   ?DETAIL("~p ~p~n", [TE, Example]),
   {list_to_tuple(Example), Category}.
 

@@ -10,8 +10,33 @@
 -author("tjacek").
 
 %% API
--export([choose_category/1]).
+-export([choose_category/2]).
 -export([labels2reals/1,dot_product/2,subs/2,distance/2,substract/2]).
+
+
+get_attribute_position(Attributes, AttributeName) ->
+   Pos=mllib_tools:get_attribute_pos(Attributes, AttributeName),
+   N= length(Attributes),
+   case  Pos<N of
+     true -> Pos;
+     false -> N
+   end. 
+
+exclude(List,Number) ->
+  case length(List) < Number of
+    true  -> del_last(List);
+    false -> del_last(List)
+  end.
+
+del_nth_from_list( N,List) ->
+  {L1, [ToReturn|L2]} = lists:split(N-1, List),
+  New_list=L1 ++ L2,
+  {New_list,ToReturn}.
+
+del_last(List) ->
+  Label=lists:last(List),
+  New_list=lists:delete(Label,List),
+  {New_list,Label}.
 
 labels2reals(Labels)->
   Conv=fun(Label) ->
@@ -43,10 +68,17 @@ substract([A|Ha],[B|Hb],Acc) ->
   Sub=abs(A-B),
   substract(Ha,Hb, [Sub|Acc]).
 
-choose_category(Examples) ->
+choose_category(Examples,DefaultCategory) ->
+  %io:format("Examples  ~p \n",[Examples]),
   Labels=get_labels(Examples),
+  %io:format("Labels  ~p \n",[Examples]),
   Categories=count_categories(Labels),
-  find_most_comon(Categories).
+  io:format("Categories ~p \n",[dict:to_list(Categories)]),
+  N = dict:size(Categories),
+  case 0<N of
+    true -> find_most_comon(Categories);
+    false -> DefaultCategory
+  end.
 
 get_labels(Examples) ->
   lists:map(fun(Tuple) ->element(2,Tuple) end,Examples).
