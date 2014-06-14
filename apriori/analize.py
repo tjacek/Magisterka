@@ -46,7 +46,7 @@ def classification(train,test):
     print(test)
     trainD=discretize("",train.replace(".csv",".arff"),interval)
     testD=discretize("",test.replace(".csv",".arff"),interval)
-    callClass("naive_bayes",trainD,testD,output="stats/output.arff",stats="stats/stats.txt") 
+    callClass("nearest_neighbors",trainD,testD,output="stats/output.arff",stats="stats/stats.txt") 
 
 def callClass(alg,train,test,output,stats,path="/home/user/Desktop/ML/src"):
     cmd="erl -pa " + path +" -run test_classifer run_exp "
@@ -62,7 +62,8 @@ def discretize(path,filename,category):
         cat=category(y)
         instance.removeLast()
         instance.setCategory(cat)
-    disc_filename=filename.replace(".arff","_dics.arff")
+    dataset.dim-=1
+    disc_filename=filename.replace(".arff","_disc.arff")
     arff.saveArff(dataset,path,disc_filename,disc_filename,getIntervalCategories())
     return disc_filename
 

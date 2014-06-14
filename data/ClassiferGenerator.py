@@ -30,6 +30,11 @@ class Dataset(object):
 	   dim_i=self.getDim(i)
            dims.append(dim_i)
        return dims
+
+   def dropLast(self):
+       for instance in self.instances:
+           instance.dropLast()
+           self.dim-=1
    
    def separate(self):
        dataSeries={}
@@ -74,6 +79,10 @@ class Instance(object):
             return True
         else:
             return False    
+    
+    def dropLast(self):
+        del self.point[-1]
+        self.size-=1
 
     def getLabel(self):
         s= str(self.toBool())
