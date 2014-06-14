@@ -46,7 +46,7 @@ def classification(train,test):
     print(test)
     trainD=discretize("",train.replace(".csv",".arff"),interval)
     testD=discretize("",test.replace(".csv",".arff"),interval)
-    callClass("nearest_neighbors",trainD,testD,output="stats/output.arff",stats="stats/stats.txt") 
+    callClass("c45",trainD,testD,output="stats/output.arff",stats="stats/stats.txt") 
 
 def callClass(alg,train,test,output,stats,path="/home/user/Desktop/ML/src"):
     cmd="erl -pa " + path +" -run test_classifer run_exp "
@@ -75,7 +75,7 @@ def orderOfMagnidude(t,maxOrder=4):
     if(order<1):
         return 0
     if(t>maxOrder):
-	return maxOrder + 1
+	return maxOrder
     return "order"+str(order)
 
 def getMagnidudeCategories(n=4):
@@ -87,8 +87,8 @@ def getMagnidudeCategories(n=4):
 def interval(t,order=4,maxIterval=4):
     order=math.pow(10.0,order)
     inter=int((maxIterval* t) / order)
-    if(inter>order):
-        inter=order+1
+    if(inter>maxIterval):
+        inter=maxIterval
     return "interval"+str(inter)
 
 def getIntervalCategories(n=4):
