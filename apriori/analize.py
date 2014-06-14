@@ -9,12 +9,14 @@ def analizeDataset(filename):
     #save(m1,filename,prefix="corelation")
     #m2=stats.entropyMatrix(filename)
     #save(m2,filename,prefix="entropy")
-    regression(filename)
+    train,test=dataForRegression(filename)
     #discretize("stats/",filename,interval)
+    classification(train,test)
 
 def regression(filename):
     train,test=dataForRegression(filename)
-    callC(train,test) 
+    #callC(train,test) 
+    return train,test
 
 def dataForRegression(filename,path="/home/user/Desktop/magisterka/apriori/stats/"):
     dataset,attr=arff.parseArff(filename,True)
@@ -39,6 +41,20 @@ def save(text,filename,prefix,path="stats/"):
     myFile.write(text)
     myFile.close()
 
+def classification(train,test):
+    print(train)
+    print(test)
+    trainD=discretize("",train.replace(".csv",".arff"),interval)
+    testD=discretize("",test.replace(".csv",".arff"),interval)
+    callClass("naive_bayes",trainD,testD,output="stats/output.arff",stats="stats/stats.txt") 
+
+def callClass(alg,train,test,output,stats,path="/home/user/Desktop/ML/src"):
+    cmd="erl -pa " + path +" -run test_classifer run_exp "
+    cmd+=alg + " " + train
+    cmd+=" " + test+" " + output +" " + stats
+    cmd+=" -run init stop -noshell "   
+    os.system(cmd)
+
 def discretize(path,filename,category):
     dataset,attr=arff.parseArff(filename,True)
     for instance in dataset.instances:
@@ -48,6 +64,7 @@ def discretize(path,filename,category):
         instance.setCategory(cat)
     disc_filename=filename.replace(".arff","_dics.arff")
     arff.saveArff(dataset,path,disc_filename,disc_filename,getIntervalCategories())
+    return disc_filename
 
 def getPredVar(instance):
     return instance.point[instance.size-1]

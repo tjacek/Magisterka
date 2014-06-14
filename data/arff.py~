@@ -23,6 +23,12 @@ def saveArff(dataset,path,filename,labeled=True,categories=binaryCategories):
     myFile.write(arff)
     myFile.close()
 
+def saveCsv(dataset,path,filename):
+    csv=str(dataset)
+    myFile = open(path+filename, 'w')
+    myFile.write(csv)
+    myFile.close()
+
 def prepareOutput(testfile,outputfile):
     f=open(outputfile,'r')
     output=f.read()

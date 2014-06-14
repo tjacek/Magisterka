@@ -82,6 +82,11 @@ class Instance(object):
     def setCategory(self,cat):
         self.category=cat
 
+    def getCategory(self):    
+        if(type(self.category)==type("s")):
+            return self.category
+        return self.getLabel()
+
     def setLabel(self,label):
         if(label=="true"):
             self.category=1.0
@@ -97,7 +102,7 @@ class Instance(object):
         for cord in self.point:
 	    s+=str(cord)+","
         if(self.category!=None):
-            s+=self.category()
+            s+= self.getCategory()#self.category
         else:
             s=s[:-1]
         s+="\n"
@@ -182,5 +187,13 @@ def sphere(point):
     else:
         return 0.0
 
+def layers(point):
+    dist=sum(map(lambda x:x*x,point))
+    if(math.sqrt(dist)<3.0):
+        return "cat1"
+    if(math.sqrt(dist)<10.0):
+        return "cat2"
+    return "cat3"
+ 
 predDir ={ "Linear":linearPredict,"NonLinear":nonLinearPredict,
-"Box":box,"Sphere":sphere}
+"Box":box,"Sphere":sphere,"Layers":layers}

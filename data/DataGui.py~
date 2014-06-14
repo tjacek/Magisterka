@@ -161,7 +161,7 @@ class ArffWindow(MainWindow):
     def initGens(self):
         self.gen_combo = QtGui.QComboBox()
         generators = ["Linear", "Nonlinear"]
-        for generator in generators:
+        for generator in gen.predDir.keys():
             self.gen_combo.addItem(generator)
         self.layout.addWidget(self.gen_combo)
 

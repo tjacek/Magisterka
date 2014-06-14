@@ -34,7 +34,7 @@ def prepareOutput(testfile,outputfile):
     output=f.read()
     f.close()
     labels=extractLabels(output)
-    dataset=readTestset(testfile)[0]
+    dataset=parseArff(testfile)[0]
     i=0
     for instance in dataset.instances:
         instance.setLabel(labels[i])
