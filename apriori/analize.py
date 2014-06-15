@@ -4,14 +4,38 @@ import attributesStats as stats,arff
 
 filename="apriori.arff"
 
-def analizeDataset(filename):
-    #m1=stats.corlMatrix(filename)
-    #save(m1,filename,prefix="corelation")
-    #m2=stats.entropyMatrix(filename)
-    #save(m2,filename,prefix="entropy")
-    train,test=dataForRegression(filename)
+def analizeDataset(filename,path="stats/"):
+    fullPath=createDir(filename,path)
+    fullText=matrixs(filename,fullPath)
+    #train,test=dataForRegression(filename)
     #discretize("stats/",filename,interval)
-    classification(train,test)
+    #classification(train,test)
+
+def createDir(filename,path):
+    dirName=filename.replace(".arff","")
+    fullPath=path+dirName
+    os.system("mkdir "+fullPath)
+    return fullPath +"/"
+
+def matrixs(filename,path):
+    m1=stats.corlMatrix(filename)
+    save(m1,filename,"corelation",path)
+    m2=stats.entropyMatrix(filename)
+    save(m2,filename,"entropy",path)
+    return path+filename
+
+def save(text,filename,prefix,path):
+    fullName=filename.replace(".arff","_"+prefix+".txt")
+    fullPath=path+fullName
+    print(fullPath)
+    myFile = open(fullPath, 'w')
+    myFile.write(text)
+    myFile.close()
+
+def splitData(filename,folder,path="/home/user/Desktop/magisterka/apriori/"):
+    dataset,attr=arff.parseArff(filename,True)
+    train,test=arff.saveSplitedArff(dataset,"folder,filename,False")
+    return path+folder+train,path+test
 
 def regression(filename):
     train,test=dataForRegression(filename)
@@ -35,18 +59,12 @@ def saveRaw(dataset,path,filename):
     arff.saveCsv(dataset,path,filename)
     return filename
 
-def save(text,filename,prefix,path="stats/"):
-    filename=filename.replace(".arff","_"+prefix+".txt")
-    myFile = open(path+filename, 'w')
-    myFile.write(text)
-    myFile.close()
-
 def classification(train,test):
     print(train)
     print(test)
     trainD=discretize("",train.replace(".csv",".arff"),interval)
     testD=discretize("",test.replace(".csv",".arff"),interval)
-    callClass("c45",trainD,testD,output="stats/output.arff",stats="stats/stats.txt") 
+    callClass("naive_bayes",trainD,testD,output="stats/output.arff",stats="stats/stats.txt") 
 
 def callClass(alg,train,test,output,stats,path="/home/user/Desktop/ML/src"):
     cmd="erl -pa " + path +" -run test_classifer run_exp "
