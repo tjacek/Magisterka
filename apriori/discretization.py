@@ -1,3 +1,5 @@
+import arff,sys,math,os
+
 def discretize(path,filename,category):
     dataset,attr=arff.parseArff(filename,True)
     for instance in dataset.instances:

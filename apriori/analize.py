@@ -1,6 +1,6 @@
 import sys,math,os
 sys.path.append("/home/user/Desktop/magisterka/data")
-import attributesStats as stats,arff
+import attributesStats as stats,arff,discretization as disc
 
 filename="apriori.arff"
 dirPath="/home/user/Desktop/magisterka/apriori/"
@@ -13,9 +13,9 @@ def analizeDataset(filename,path="stats/"):
     train,test=splitData(filename,fullPath)
     train=fullPath + train
     test=fullPath + test
-    regression(train,test,dirName,fullPath)
-    #discretize("stats/",filename,interval)
-    #classification(train,test)
+    #regression(train,test,dirName,fullPath)
+    trainD,testD=discretize(train,test,fullPath,disc.interval)
+    classification(trainD,testD)
 
 def createDir(filename,path):
     dirName=filename.replace(".arff","")
@@ -76,12 +76,19 @@ def saveRaw(dataset,path,filename):
     arff.saveCsv(dataset,"",filename)
     return filename
 
+def discretize(train,test,fullPath, category):
+     print(train)
+     trainDisc=disc.discretize("",train,category) 
+     testDisc =disc.discretize("",test,category) 
+     return trainDisc,testDisc
+
 def classification(train,test):
-    print(train)
-    print(test)
-    trainD=discretize("",train.replace(".csv",".arff"),interval)
-    testD=discretize("",test.replace(".csv",".arff"),interval)
-    callClass("naive_bayes",trainD,testD,output="stats/output.arff",stats="stats/stats.txt") 
+    algs=["c45","naive_bayes","nearest_neighbors"]  
+    for alg in algs:
+        output=test.replace("Test_disc.arff","_"+alg+".arff")
+        stats=test.replace("Test_disc.arff","_"+alg+"_stats.txt")
+        print(alg +" " + train +" " +test+" "+output+" "+stats)
+        callClass(alg,train,test,output,stats) 
 
 def callClass(alg,train,test,output,stats,path="/home/user/Desktop/ML/src"):
     cmd="erl -pa " + path +" -run test_classifer run_exp "
