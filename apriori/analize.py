@@ -13,9 +13,7 @@ def analizeDataset(filename,path="stats/"):
     train,test=splitData(filename,fullPath)
     train=fullPath + train
     test=fullPath + test
-    print(train+"\n")
-    print(test+"\n")
-    regression(train,test)
+    regression(train,test,dirName,fullPath)
     #discretize("stats/",filename,interval)
     #classification(train,test)
 
@@ -43,10 +41,9 @@ def splitData(filename,path="/stats/apriori/"):
     train,test=arff.saveSplitedArff(dataset,path,filename,False)
     return train,test
 
-def regression(trainFile,testFile):
-    npRegression(trainFile,testFile)
-    #callC(train,test) 
-    #return train,test
+def regression(train,test,dirName,path):
+    #npRegression(train,test)
+    regressionC(train,test,dirName,path)
 
 def npRegression(trainFile,testFile,erlPath="/home/user/Desktop/ML/src"):
     cmd="erl -pa " + erlPath +" -run regression run_exp "
@@ -55,21 +52,28 @@ def npRegression(trainFile,testFile,erlPath="/home/user/Desktop/ML/src"):
     print(cmd)   
     os.system(cmd)
 
-def dataForRegression(filename,path="/home/user/Desktop/magisterka/apriori/stats/"):
-    dataset,attr=arff.parseArff(filename,True)
-    train,test=arff.saveSplitedArff(dataset,"stats/",filename,False)
-    dataset,attr=arff.parseArff(filename,True)
-    train=saveRaw(dataset,path,train)
-    test=saveRaw(dataset,path,test)
-    return path+train,path+test
+def regressionC(train,test,dirName,path):
+    trainCSV,testCSV=dataForC(train,test,path)
+    output=dirName+"_lsm.txt"
+    callC(trainCSV,testCSV,output)
 
-def callC(train,test,output="output.txt",path="/home/user/Desktop/ML/C/LSM/"):
-    cmd=path +"lsm " + train +" " + test +" " + output
+def dataForC(train,test,path):
+    trainCSV=toCSV(train,path)
+    testCSV=toCSV(test,path)
+    return trainCSV,testCSV
+
+def toCSV(filename,path):
+    dataset,attr=arff.parseArff(filename,True)
+    return saveRaw(dataset,path,filename)
+
+def callC(train,test,output="output.txt",cpath="/home/user/Desktop/ML/C/LSM/"):
+    print(train)
+    cmd=cpath +"lsm " + train +" " + test +" " + output
     os.system(cmd)
 
 def saveRaw(dataset,path,filename):
     filename=filename.replace(".arff",".csv")
-    arff.saveCsv(dataset,path,filename)
+    arff.saveCsv(dataset,"",filename)
     return filename
 
 def classification(train,test):
