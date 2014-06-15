@@ -1,0 +1,57 @@
+#include "trainPerceptron.c"
+#include <string.h>
+
+double toDouble(int i,char * line){
+   int a=((int) line[i]) -48;
+   int b=((int) line[i+2]) -48;
+   return (double) a + (((double) b)/10);
+}
+
+double strToDouble(char c){
+   if(c=='t'){
+       return 1.0;
+   }else{
+       return -1.0;
+   }
+}
+
+double * convertLine(char * line){
+    double *x=(double*) malloc(4*sizeof(double));
+    x[0]=toDouble(1,line);
+   // printf(" %f\n",x[0]);
+    x[1]=toDouble(5,line);
+   // printf(" %f\n",x[1]);
+    x[2]=toDouble(9,line);
+   // printf(" %f\n",x[2]);
+    x[3]=strToDouble(line[13]);
+   // printf(" %f\n",x[3]);
+    return x;
+}
+
+void fromFile(Dataset * d){
+    FILE * fr= fopen("train.txt","rt");
+    char line[80];
+    int i=0;
+    while( i<d->n && (fgets(line,80,fr) != NULL)){
+        //printf("%s",line);
+        double * x=convertLine(strstr(line,"{"));
+        d->samples[i][1]= x[0];
+        d->samples[i][2]= x[1];
+        d->samples[i][3]= x[2];
+        d->labels[i]=x[3];
+        i++;
+    }
+}
+
+Perceptron * createPerceptron(int n,int k){
+    Dataset * d = makeDataset(n,k);
+    fromFile(d);
+    Perceptron * p=train2( d,0.01);
+    //printPercept(p);
+    //printDataset(d);
+    return p;
+}
+
+/*int main(){
+    createPerceptron(100,3);
+}*/

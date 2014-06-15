@@ -13,7 +13,7 @@ def saveSplitedArff(dataset,path,filename,labeled=True,frac=0.3):
     data1,data2=dataset.split(frac)
     trainfile=filename.replace(".arff","Train.arff")
     saveArff(data1,path,trainfile,labeled)
-    testfile=filename.replace("Train.arff","Test.arff")
+    testfile=filename.replace(".arff","Test.arff")
     saveArff(data2,path,testfile,labeled)
     return trainfile,testfile
 

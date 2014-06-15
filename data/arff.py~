@@ -12,12 +12,15 @@ binaryCategories = ["true","false"]
 def saveSplitedArff(dataset,path,filename,labeled=True,frac=0.3):
     data1,data2=dataset.split(frac)
     trainfile=filename.replace(".arff","Train.arff")
+    #print(trainfile)
     saveArff(data1,path,trainfile,labeled)
-    testfile=filename.replace("Train.arff","Test.arff")
+    testfile=filename.replace(".arff","Test.arff")
+    #print(testfile)
     saveArff(data2,path,testfile,labeled)
     return trainfile,testfile
 
 def saveArff(dataset,path,filename,labeled=True,categories=binaryCategories):
+    print(path)
     arff=toArff(dataset,labeled,categories)    
     myFile = open(path+filename, 'w')
     myFile.write(arff)
@@ -34,7 +37,7 @@ def prepareOutput(testfile,outputfile):
     output=f.read()
     f.close()
     labels=extractLabels(output)
-    dataset=readTestset(testfile)[0]
+    dataset=parseArff(testfile)[0]
     i=0
     for instance in dataset.instances:
         instance.setLabel(labels[i])

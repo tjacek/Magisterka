@@ -41,10 +41,6 @@ int activation(Perceptron * p,double * x){
     }
 } 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 4a896bf5cfdcb3d8011a89cf48d3eead0c71a50d
 void printPercept(Perceptron * p){
    int i;
    for(i=0;i<p->n;i++){

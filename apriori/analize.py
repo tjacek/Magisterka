@@ -3,11 +3,16 @@ sys.path.append("/home/user/Desktop/magisterka/data")
 import attributesStats as stats,arff
 
 filename="apriori.arff"
+dirPath="/home/user/Desktop/magisterka/apriori/"
 
 def analizeDataset(filename,path="stats/"):
-    fullPath=createDir(filename,path)
+    dirName=filename.replace(".arff","")
+    fullPath=dirPath+path+dirName+"/"
+    createDir(filename,path)
     fullText=matrixs(filename,fullPath)
-    #train,test=dataForRegression(filename)
+    train,test=splitData(filename,fullPath)
+    print(train+"\n")
+    print(test+"\n")
     #discretize("stats/",filename,interval)
     #classification(train,test)
 
@@ -15,7 +20,6 @@ def createDir(filename,path):
     dirName=filename.replace(".arff","")
     fullPath=path+dirName
     os.system("mkdir "+fullPath)
-    return fullPath +"/"
 
 def matrixs(filename,path):
     m1=stats.corlMatrix(filename)
@@ -27,15 +31,14 @@ def matrixs(filename,path):
 def save(text,filename,prefix,path):
     fullName=filename.replace(".arff","_"+prefix+".txt")
     fullPath=path+fullName
-    print(fullPath)
     myFile = open(fullPath, 'w')
     myFile.write(text)
     myFile.close()
 
-def splitData(filename,folder,path="/home/user/Desktop/magisterka/apriori/"):
+def splitData(filename,path="/stats/apriori/"):
     dataset,attr=arff.parseArff(filename,True)
-    train,test=arff.saveSplitedArff(dataset,"folder,filename,False")
-    return path+folder+train,path+test
+    train,test=arff.saveSplitedArff(dataset,path,filename,False)
+    return train,test
 
 def regression(filename):
     train,test=dataForRegression(filename)
