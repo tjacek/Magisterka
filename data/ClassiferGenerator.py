@@ -39,7 +39,7 @@ class Dataset(object):
    def separate(self):
        dataSeries={}
        for instance in self.instances:
-	   cat=instance.getLabel()
+	   cat=instance.getCategory()
            dataSeries.setdefault(cat,[])
 	   dataSeries[cat].append(instance)
        for key in dataSeries:

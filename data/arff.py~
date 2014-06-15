@@ -12,15 +12,12 @@ binaryCategories = ["true","false"]
 def saveSplitedArff(dataset,path,filename,labeled=True,frac=0.3):
     data1,data2=dataset.split(frac)
     trainfile=filename.replace(".arff","Train.arff")
-    #print(trainfile)
     saveArff(data1,path,trainfile,labeled)
     testfile=filename.replace(".arff","Test.arff")
-    #print(testfile)
     saveArff(data2,path,testfile,labeled)
     return trainfile,testfile
 
 def saveArff(dataset,path,filename,labeled=True,categories=binaryCategories):
-    print(path)
     arff=toArff(dataset,labeled,categories)    
     myFile = open(path+filename, 'w')
     myFile.write(arff)
@@ -121,6 +118,7 @@ def parsePoints(data):
     lines=map(lambda x:x.split(","),lines)
     labels=map(lambda x:x.pop(-1),lines)
     points=map(toFloat,lines)
+    print(labels)
     labels=map(toCat,labels)
     return points,labels
 

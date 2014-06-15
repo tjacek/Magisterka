@@ -118,7 +118,8 @@ def parsePoints(data):
     lines=map(lambda x:x.split(","),lines)
     labels=map(lambda x:x.pop(-1),lines)
     points=map(toFloat,lines)
-    labels=map(toCat,labels)
+    #print(labels)
+    #labels=map(toCat,labels)
     return points,labels
 
 def toFloat(rawPoint):

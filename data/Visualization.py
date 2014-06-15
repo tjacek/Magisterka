@@ -7,7 +7,7 @@ Created on Mon Nov  4 17:49:27 2013
 import numpy as np,mlpy,matplotlib.pyplot as plt,ClassiferGenerator as gen
 from mpl_toolkits.mplot3d import Axes3D
 
-colors=['r','b','g']
+colors=['r','b','b','y','g']
 
 def visualizeLabels(dataset):
     if(dataset.dim>3):
@@ -19,6 +19,7 @@ def visualizeLabels(dataset):
     if(dataset.dim==2):
         visualizeLabels2D(dataSeries)
         return
+    #print(dataSeries)
     visualizeLabels3D(dataSeries)
 
 def visualizeLabels3D(dataSeries):
@@ -27,6 +28,8 @@ def visualizeLabels3D(dataSeries):
     i=0
     for key in dataSeries.keys():
        prepData=prepare(dataSeries[key])
+       print(key+ str(len(prepData[0])))
+       #if(i>0):
        ax.scatter(prepData[0],prepData[1],prepData[2],c=colors[i],marker='o')
        i+=1 
     ax.set_xlabel("X")
