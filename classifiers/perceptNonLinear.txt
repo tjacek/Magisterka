@@ -1,7 +1,0 @@
-{classifier,perceptron,
-            [{attribute,z,continuous,{min,max}},
-             {attribute,x,continuous,{min,max}},
-             {attribute,y,continuous,{min,max}},
-             {attribute,cat,nominal,[true,false]}],
-            cat,
-            [-1.01,2.97,3.85,-12.95]}
