@@ -13,9 +13,9 @@ def analizeDataset(filename,path="stats/"):
     train,test=splitData(filename,fullPath)
     train=fullPath + train
     test=fullPath + test
-    #regression(train,test,dirName,fullPath)
-    trainD,testD=discretize(train,test,fullPath,disc.interval)
-    classification(trainD,testD)
+    regression(train,test,fullPath+dirName,fullPath)
+    #trainD,testD=discretize(train,test,fullPath,disc.interval)
+    #classification(trainD,testD)
 
 def createDir(filename,path):
     dirName=filename.replace(".arff","")
@@ -42,12 +42,13 @@ def splitData(filename,path="/stats/apriori/"):
     return train,test
 
 def regression(train,test,dirName,path):
-    #npRegression(train,test)
+    npRegression(train,test,dirName)
     regressionC(train,test,dirName,path)
 
-def npRegression(trainFile,testFile,erlPath="/home/user/Desktop/ML/src"):
+def npRegression(trainFile,testFile,dirName,erlPath="/home/user/Desktop/ML/src"):
+    output=dirName+"_npr.txt"
     cmd="erl -pa " + erlPath +" -run regression run_exp "
-    cmd+=trainFile + " " + testFile
+    cmd+=trainFile + " " + testFile +" "+ output
     cmd+=" -run init stop -noshell "
     print(cmd)   
     os.system(cmd)
