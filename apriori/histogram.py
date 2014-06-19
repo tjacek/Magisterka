@@ -35,34 +35,29 @@ class Histogram(object):
         return value/(self.dim*self.dim)
 
     def maxValue(self):
-        value=self.matrix[0][0]
-        for row in self.matrix:
-	    for b in row:
-		if(value<b):
-		    value=b
-        return value
+        allBins=self.getSortedBins()
+        return allBins[0]
 
     def minValue(self):
-        value=self.matrix[0][0]
-        for row in self.matrix:
-	    for b in row:
-		if(value>b):
-		    value=b
-        return value
+        allBins=self.getSortedBins()
+        return allBins[-1]
 
     def mediana(self):
-	allBins=self.matrix.flatten()
-        allBins.sort()
-        allBins=filter(lambda x: x != 0.0, allBins)
-        print(allBins)
+        allBins=self.getSortedBins()
         center=float(len(allBins))
         if(center % 2 ==0):
-           return allBins[center/2]
+           return allBins[int(center/2)]
         else:
            med= int(center /2)
            a=allBins[med]
            b=allBins[med+1]
            return (a+b)/2.0
+
+    def getSortedBins(self):
+        allBins=self.matrix.flatten()
+        allBins=filter(lambda x: x != 0.0, allBins)
+        allBins.sort()
+        return allBins     
 
     def var(self):
         value=0.0
