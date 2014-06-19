@@ -28,7 +28,7 @@ def visualizeLabels3D(dataSeries):
     i=0
     for key in dataSeries.keys():
        prepData=prepare(dataSeries[key])
-       print(key+ str(len(prepData[0])))
+       print(str(i)+ str(len(prepData)))
        #if(i>0):
        ax.scatter(prepData[0],prepData[1],prepData[2],c=colors[i],marker='o')
        i+=1 

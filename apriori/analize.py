@@ -91,6 +91,7 @@ def classification(train,test):
         stats=test.replace("Test_disc.arff","_"+alg+"_stats.txt")
         print(alg +" " + train +" " +test+" "+output+" "+stats)
         callClass(alg,train,test,output,stats) 
+        arff.prepareOutput(test,output)
 
 def callClass(alg,train,test,output,stats,path="/home/user/Desktop/ML/src"):
     cmd="erl -pa " + path +" -run test_classifer run_exp "
