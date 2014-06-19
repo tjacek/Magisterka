@@ -135,6 +135,7 @@ class MainWindow(QtGui.QMainWindow):
         else:
             results=callApriori.experiment(items,bounds)     
 	    arff.saveArffFile(results,None,filename)
+        print("Dataset created")
 
     def pca(self):
         attr=str(self.attr_combo.currentText())

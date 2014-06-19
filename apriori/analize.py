@@ -2,20 +2,21 @@ import sys,math,os
 sys.path.append("/home/user/Desktop/magisterka/data")
 import attributesStats as stats,arff,discretization as disc
 
-filename="apriori.arff"
+filename="first.arff"
 dirPath="/home/user/Desktop/magisterka/apriori/"
 
 def analizeDataset(filename,path="stats/"):
     dirName=filename.replace(".arff","")
     fullPath=dirPath+path+dirName+"/"
-    createDir(filename,path)
-    fullText=matrixs(filename,fullPath)
+    #createDir(filename,path)
+    #fullText=matrixs(filename,fullPath)
     train,test=splitData(filename,fullPath)
     train=fullPath + train
     test=fullPath + test
-    regression(train,test,fullPath+dirName,fullPath)
-    #trainD,testD=discretize(train,test,fullPath,disc.interval)
-    #classification(trainD,testD)
+    #regression(train,test,fullPath+dirName,fullPath)
+    categories=disc.getMagnidudeCategories()
+    trainD,testD=discretize (train,test,fullPath,disc.orderOfMagnidude,categories)
+    classification(trainD,testD)
 
 def createDir(filename,path):
     dirName=filename.replace(".arff","")
@@ -77,10 +78,10 @@ def saveRaw(dataset,path,filename):
     arff.saveCsv(dataset,"",filename)
     return filename
 
-def discretize(train,test,fullPath, category):
+def discretize(train,test,fullPath, category,categories):
      print(train)
-     trainDisc=disc.discretize("",train,category) 
-     testDisc =disc.discretize("",test,category) 
+     trainDisc=disc.discretize("",train,category,categories) 
+     testDisc =disc.discretize("",test,category,categories) 
      return trainDisc,testDisc
 
 def classification(train,test):

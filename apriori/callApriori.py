@@ -18,18 +18,23 @@ def getParams(bounds,name):
     paramsList=[]
     for minSup in getRange(bounds.lowerSup,bounds.upperSup):
 	for minConf in getRange(bounds.lowerConf,bounds.upperConf):
-            for workers in getRange(bounds.lowerWorkers,bounds.upperWorkers,1.0):
+            for workers in getWorkersRange(bounds):
                 param= AprioriParametrs(name,minSup,minConf,int(workers))
 		paramsList.append(param)
     return paramsList
 
-def getRange(a,b,h=0.1):
+def getRange(a,b,h=0.2):
     det=b-a
     size=int(det/h)
     interval=[]
     for i in range(0,size):
 	interval.append(a+i*h)
     return interval
+
+def getWorkersRange(bounds):
+    l=int(bounds.lowerWorkers)
+    u=int(bounds.upperWorkers)
+    return range(l,u)
 
 class Bounds(object):
     def __init__(self,lowerSup,upperSup,lowerConf,upperConf,lowerWorkers,upperWorkers):
