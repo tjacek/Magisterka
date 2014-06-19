@@ -111,7 +111,7 @@ def toStr(stats):
     s+=str(stats["min_pca"])+","
     s+=str(stats["max_pca"])+","
     s+=str(stats["var_pca"])+","
-    s+=str(stats["avg_pca"])
+    s+=str(stats["avg_pca"])+","
     return s
 
 def extracVar(h):
