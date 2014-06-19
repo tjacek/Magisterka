@@ -122,10 +122,12 @@ def extracVar(h):
     return variables
 
 def test(path="/home/user/Desktop/magisterka/transactions/mine_data"):
-    dataset=rep.readDataset(path)
-    vectors=get2DBow(dataset)
-    print(vectors)
-    visualization(vectors)
+    h=getHistogram(path)
+    print(h.mediana())
+    #dataset=rep.readDataset(path)
+    #vectors=get2DBow(dataset)
+    #print(vectors)
+    #visualization(vectors)
 
 def test2(path="datasets/mine.data"):
     dataset=rep.readDataset(path)
@@ -134,5 +136,5 @@ def test2(path="datasets/mine.data"):
     print(var)
 
 if __name__ == '__main__':
-    test("datasets/mine.data")
+    test("datasets/default.data")
 

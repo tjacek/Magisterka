@@ -50,6 +50,20 @@ class Histogram(object):
 		    value=b
         return value
 
+    def mediana(self):
+	allBins=self.matrix.flatten()
+        allBins.sort()
+        allBins=filter(lambda x: x != 0.0, allBins)
+        print(allBins)
+        center=float(len(allBins))
+        if(center % 2 ==0):
+           return allBins[center/2]
+        else:
+           med= int(center /2)
+           a=allBins[med]
+           b=allBins[med+1]
+           return (a+b)/2.0
+
     def var(self):
         value=0.0
         for row in self.matrix:
