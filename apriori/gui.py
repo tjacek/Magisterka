@@ -23,8 +23,8 @@ class MainWindow(QtGui.QMainWindow):
         self.ends=".data"
         self.path="/home/user/Desktop/magisterka/apriori/transactions/dataset1/"
 	self.margin=5.0
-        self.x=500.0
-        self.y=500.0
+        self.x=600.0
+        self.y=600.0
 
     def initWidget(self):
         widget = QtGui.QWidget(self)
@@ -45,7 +45,7 @@ class MainWindow(QtGui.QMainWindow):
 
     def initInputs(self):
         inputs = QtGui.QWidget()
-        inputs.resize(300,400)
+        inputs.resize(500,400)
         formLayout=QtGui.QFormLayout()
         self.addField("Path",self.path,formLayout)
         self.addField("Output file","apriori_pca.arff",formLayout)
@@ -57,6 +57,7 @@ class MainWindow(QtGui.QMainWindow):
         self.addField("upper Workers","2",formLayout)
         inputs.setLayout(formLayout)
         self.layout.addWidget(inputs)
+        self.initCombo()
 
     def initButtons(self):
 	self.buttons = QtGui.QWidget()
@@ -72,6 +73,13 @@ class MainWindow(QtGui.QMainWindow):
         buttonsLayout.addWidget(runButton)
         self.buttons.setLayout(buttonsLayout)
         self.layout.addWidget(self.buttons)
+
+    def initCombo(self):
+	self.attr_combo = QtGui.QComboBox()
+        attributes = ["stats","pca"] 
+        for attr in attributes:
+            self.attr_combo.addItem(attr)
+        self.layout.addWidget(self.attr_combo)
 
     def addButton(self,name,listener):
         button = QtGui.QPushButton(name, self)
@@ -119,12 +127,19 @@ class MainWindow(QtGui.QMainWindow):
     def runButton(self):
         items=self.getAllItems()
         filename=self.getInput("Output file")
-        pca=bow.getStats(items)
-        #print(stats)
         bounds=self.getBounds()
-        results=callApriori.experiment(items,bounds)     
-	arff.saveArffFile(results,pca,filename)
+        if(self.pca()):
+            pca=bow.getStats(items)
+            results=callApriori.experiment(items,bounds)     
+	    arff.saveArffFile(results,pca,filename)
+        else:
+            results=callApriori.experiment(items,bounds)     
+	    arff.saveArffFile(results,None,filename)
 
+    def pca(self):
+        attr=str(self.attr_combo.currentText())
+        return attr=="pca"
+    
     def getAllItems(self):
         allItems=[] 
         for i in range(0,self.listWidget.count()):
