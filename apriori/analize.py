@@ -2,13 +2,13 @@ import sys,math,os
 sys.path.append("/home/user/Desktop/magisterka/data")
 import attributesStats as stats,arff,discretization as disc
 
-filename="first_pca.arff"
+filename="first.arff"
 dirPath="/home/user/Desktop/magisterka/apriori/"
 
 def analizeDataset(filename,path="stats/"):
     dirName=filename.replace(".arff","")
     fullPath=dirPath+path+dirName+"/"
-    createDir(filename,path)
+    #createDir(filename,path)
     #fullText=matrixs(filename,fullPath)
     train,test=splitData(filename,fullPath)
     train=fullPath + train
@@ -16,7 +16,7 @@ def analizeDataset(filename,path="stats/"):
     #regression(train,test,fullPath+dirName,fullPath)
     categories=disc.getMagnidudeCategories()
     trainD,testD=discretize (train,test,fullPath,disc.orderOfMagnidude,categories)
-    classification(trainD,testD)
+    classification(trainD,testD,categories)
 
 def createDir(filename,path):
     dirName=filename.replace(".arff","")
@@ -79,19 +79,18 @@ def saveRaw(dataset,path,filename):
     return filename
 
 def discretize(train,test,fullPath, category,categories):
-     print(train)
      trainDisc=disc.discretize("",train,category,categories) 
      testDisc =disc.discretize("",test,category,categories) 
      return trainDisc,testDisc
 
-def classification(train,test):
+def classification(train,test,categories):
     algs=["c45","naive_bayes","nearest_neighbors"]  
     for alg in algs:
         output=test.replace("Test_disc.arff","_"+alg+".arff")
         stats=test.replace("Test_disc.arff","_"+alg+"_stats.txt")
-        print(alg +" " + train +" " +test+" "+output+" "+stats)
+        #print(alg +" " + train +" " +test+" "+output+" "+stats)
         callClass(alg,train,test,output,stats) 
-        arff.prepareOutput(test,output)
+        arff.prepareOutput(test,output,categories)
 
 def callClass(alg,train,test,output,stats,path="/home/user/Desktop/ML/src"):
     cmd="erl -pa " + path +" -run test_classifer run_exp "

@@ -29,7 +29,7 @@ def saveCsv(dataset,path,filename):
     myFile.write(csv)
     myFile.close()
 
-def prepareOutput(testfile,outputfile):
+def prepareOutput(testfile,outputfile,Categories=binaryCategories):
     f=open(outputfile,'r')
     output=f.read()
     f.close()
@@ -37,9 +37,9 @@ def prepareOutput(testfile,outputfile):
     dataset=parseArff(testfile)[0]
     i=0
     for instance in dataset.instances:
-        instance.setLabel(labels[i])
+        instance.setCategory(labels[i])
         i+=1
-    arffOutput=toArff(dataset)    
+    arffOutput=toArff(dataset,True,Categories)
     f=open(outputfile, 'w')
     f.write(arffOutput)
     f.close()
