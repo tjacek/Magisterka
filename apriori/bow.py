@@ -116,11 +116,11 @@ def toStr(stats):
 
 def extracVar(h):
     variables={}
-    variables["mediana_pca"]=h.mediana()
-    variables["min_pca"]=h.minValue()
-    variables["max_pca"]=h.maxValue()
-    variables["var_pca"]=h.var()
-    variables["avg_pca"]=h.u
+    variables["mediana_pca"]=round(h.mediana(),2)
+    variables["min_pca"]=round(h.minValue(),2)
+    variables["max_pca"]=round(h.maxValue(),2)
+    variables["var_pca"]=round(h.var(),2)
+    variables["avg_pca"]=round(h.u,2)
     return variables
 
 def test(path="/home/user/Desktop/magisterka/transactions/mine_data"):

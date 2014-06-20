@@ -80,11 +80,14 @@ def getStats(path):
     avgItems,varItems=itemsStats(items,dataset)
     stats["transactions"]=len(dataset)
     stats["items"]=len(items)   
-    stats["avg_transaction"]=avgTrans
-    stats["var_transaction"]=varTrans
-    stats["avg_items"]=avgItems
-    stats["var_items"]=varItems
+    stats["avg_transaction"]=cut(avgTrans)
+    stats["var_transaction"]=cut(varTrans)
+    stats["avg_items"]=cut(avgItems)
+    stats["var_items"]=cut(varItems)
     return stats
+
+def cut(number)
+    return round(number,2)
 
 def test():
     path="datasets/mine.data"
