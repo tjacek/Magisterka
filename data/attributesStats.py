@@ -1,8 +1,9 @@
 import scipy.stats as stats
-import numpy as np,arff
+import numpy as np,arff,math
 
 def corlMatrix(filename):
     corll,attr=getCorlMatrix(filename)
+    printMatrix(corll,attr)
     return strMatrix(corll,attr)
 
 def entropyMatrix(filename):
@@ -62,6 +63,11 @@ def printAttributes(attr):
     return value
 
 def getStr(corel):
+    if(not math.isnan(corel)):
+        return toStr(corel)
+    return "Nan"
+
+def toStr(corel):
    ws=" "
    if(corel==-0.0):
       corel=0.0

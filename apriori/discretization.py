@@ -16,15 +16,15 @@ def discretize(path,filename,category,categories):
 def getPredVar(instance):
     return instance.point[instance.size-1]
 
-def orderOfMagnidude(t,maxOrder=4):
-    order=int(math.log(t,10)) -3
-    if(order<1):
+def orderOfMagnidude(t,maxOrder=5):
+    order=int(math.log(t,10))-3
+    if(order<0):
         return orderCat(0)
-    if(t>maxOrder):
+    if(order>maxOrder):
 	return orderCat(maxOrder)
     return orderCat(order)
 
-def getMagnidudeCategories(n=4):
+def getMagnidudeCategories(n=5):
     cats=[]
     for i in range(0,n+1):
         cats.append(orderCat(i))

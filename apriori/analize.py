@@ -2,13 +2,13 @@ import sys,math,os
 sys.path.append("/home/user/Desktop/magisterka/data")
 import attributesStats as stats,arff,discretization as disc
 
-filename="first.arff"
+filename="first_pca.arff"
 dirPath="/home/user/Desktop/magisterka/apriori/"
 
 def analizeDataset(filename,path="stats/"):
     dirName=filename.replace(".arff","")
     fullPath=dirPath+path+dirName+"/"
-    #createDir(filename,path)
+    createDir(filename,path)
     #fullText=matrixs(filename,fullPath)
     train,test=splitData(filename,fullPath)
     train=fullPath + train

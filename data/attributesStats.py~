@@ -3,6 +3,7 @@ import numpy as np,arff
 
 def corlMatrix(filename):
     corll,attr=getCorlMatrix(filename)
+    printMatrix(corll,attr)
     return strMatrix(corll,attr)
 
 def entropyMatrix(filename):
@@ -22,7 +23,7 @@ def getMatrix(filename,compute):
     return corelMatrix,attr
 
 def computeCorelationMatrix(series):
-    size=len(series)-1
+    size=len(series)
     corelMatrix = np.zeros(shape=(size,size))
     for i in range(0,size):
         for j in range(0,size):
@@ -62,6 +63,11 @@ def printAttributes(attr):
     return value
 
 def getStr(corel):
+    if(not math.isnan(corel)):
+        return toStr(corel)
+    return "Nan"
+
+def toStr(corel):
    ws=" "
    if(corel==-0.0):
       corel=0.0

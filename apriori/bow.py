@@ -103,12 +103,12 @@ def getHistogram(filename):
     vectors=get2DBow(dataset)
     return hist.Histogram(vectors)
 
-pcaStats =["mediana_pca","min_pca","max_pca","var_pca","avg_pca"]
+pcaStats =["mediana_pca","max_pca","var_pca","avg_pca"]
 
 def toStr(stats):
     s=""
     s+=str(stats["mediana_pca"])+","
-    s+=str(stats["min_pca"])+","
+    #s+=str(stats["min_pca"])+","
     s+=str(stats["max_pca"])+","
     s+=str(stats["var_pca"])+","
     s+=str(stats["avg_pca"])+","
@@ -117,7 +117,7 @@ def toStr(stats):
 def extracVar(h):
     variables={}
     variables["mediana_pca"]=round(h.mediana(),2)
-    variables["min_pca"]=round(h.minValue(),2)
+    #variables["min_pca"]=round(h.minValue(),2)
     variables["max_pca"]=round(h.maxValue(),2)
     variables["var_pca"]=round(h.var(),2)
     variables["avg_pca"]=round(h.u,2)
