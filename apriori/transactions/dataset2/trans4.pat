@@ -11,9 +11,9 @@ Large Itemsets:
 	Average confidence in a rule = 0.75
 	Variation in the confidence = 0.1
 Large Sequences:
-	Number of patterns = 1652
+	Number of patterns = 3490
 	Average length of pattern = 4
-	Correlation between consecutive patterns = 0.649377
-	Average confidence in a rule = 0.151715
+	Correlation between consecutive patterns = 0.425055
+	Average confidence in a rule = 0.847278
 	Variation in the confidence = 0.1
 
