@@ -86,7 +86,7 @@ def getStats(path):
     stats["var_items"]=cut(varItems)
     return stats
 
-def cut(number)
+def cut(number):
     return round(number,2)
 
 def test():

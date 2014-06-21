@@ -17,7 +17,7 @@ def experiment(datasets,bounds):
 def getParams(bounds,name):
     paramsList=[]
     for minSup in getRange(bounds.lowerSup,bounds.upperSup):
-	for minConf in getRange(bounds.lowerConf,bounds.upperConf):
+	for minConf in getRange(bounds.lowerConf,bounds.upperConf,0.3):
             for workers in getWorkersRange(bounds):
                 param= AprioriParametrs(name,minSup,minConf,int(workers))
 		paramsList.append(param)
@@ -31,10 +31,11 @@ def getRange(a,b,h=0.2):
 	interval.append(a+i*h)
     return interval
 
-def getWorkersRange(bounds):
+def getWorkersRange(bounds,h=2):
     l=int(bounds.lowerWorkers)
     u=int(bounds.upperWorkers)
-    return range(l,u)
+    worker=list(range(l,u))
+    return map(lambda x:2*x,worker)
 
 class Bounds(object):
     def __init__(self,lowerSup,upperSup,lowerConf,upperConf,lowerWorkers,upperWorkers):
