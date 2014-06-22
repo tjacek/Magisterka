@@ -1,7 +1,7 @@
-Number of customers in database = 500
-Average sequence length = 10
+Number of customers in database = 2000
+Average sequence length = 15
 Average transaction length = 2.5
-Number of items = 15
+Number of items = 10
 Repetition-level = 0
 Variation in repetition-level = 0.1
 Large Itemsets:
@@ -11,9 +11,9 @@ Large Itemsets:
 	Average confidence in a rule = 0.75
 	Variation in the confidence = 0.1
 Large Sequences:
-	Number of patterns = 3636
-	Average length of pattern = 2
-	Correlation between consecutive patterns = 0.718423
-	Average confidence in a rule = 0.811571
+	Number of patterns = 1223
+	Average length of pattern = 6
+	Correlation between consecutive patterns = 0.750086
+	Average confidence in a rule = 0.638986
 	Variation in the confidence = 0.1
 
