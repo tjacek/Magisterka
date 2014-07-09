@@ -23,8 +23,8 @@ def experiments(datasets):
         expsForDataset=[]
         minSup=[0.1,0.4,0.8]
         minConf=[0.2,0.4,0.7]
-        items=[1]#,2,4]
-        dataset_workers=[1]#,2,4]
+        items=[1,2]
+        dataset_workers=[1,2]
         args=getArguments(datasetName,minSup,minConf,items,dataset_workers)
         for params in args:
  	    time=execute(params,datasetName)
@@ -64,7 +64,7 @@ class AlgParametrs(object):
 def getTime():
     return int(round(time.time() * 1000))
 
-def execute(params,Dataset,path="/home/user/Desktop/ML2/"): 
+def execute(params,Dataset,path="/root/ML2/"): 
     cmd ="erl -pa " + path +" -run apriori_cyclic extCall " 
     MinSup=str(params.minSup)
     MinConf=str(params.minConf)
